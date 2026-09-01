@@ -17,13 +17,13 @@
 #include "user_mb_app.h"
 
 /* Private user code ---------------------------------------------------------*/
-/* ÀëÉ¢ÊäÈë±äÁ¿ */
+/* ç¦»æ•£è¾“å…¥ç¼“å†²åŒºï¼ˆåªè¯»ï¼‰ */
 extern UCHAR ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES / 8];
-/* ÏßÈ¦ */
+/* çº¿åœˆç¼“å†²åŒºï¼ˆè¯»å†™ï¼‰ */
 extern UCHAR ucSCoilBuf[S_COIL_NCOILS / 8];
-/* ÊäÈë¼Ä´æÆ÷ */
+/* è¾“å…¥å¯„å­˜å™¨ç¼“å†²åŒºï¼ˆåªè¯»ï¼‰ */
 extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
-/* ±£³Ö¼Ä´æÆ÷ */
+/* ä¿æŒå¯„å­˜å™¨ç¼“å†²åŒºï¼ˆè¯»å†™ï¼‰ */
 extern USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS];
 int16_t adc_value = 0;
 
@@ -48,27 +48,27 @@ int main(void)
 {
     // uint8_t num = 0;
 
-    HAL_Init();                     /* ³õÊ¼»¯HAL¿â */
-    stm32_clock_init(RCC_PLL_MUL9); /* ÉèÖÃÊ±ÖÓ, 72Mhz */
+    HAL_Init();                     /* åˆå§‹åŒ–HAL */
+    stm32_clock_init(RCC_PLL_MUL9); /* åˆå§‹åŒ–æ—¶é’Ÿä¸º72Mhz */
 
-    /* ¹Ü½ÅÊ±ÖÓ¼°GPIO³õÊ¼»¯ */
+    /* åˆå§‹åŒ–GPIO */
     APPGPIO_INIT();
-    /* ADC³õÊ¼»¯ */
+    /* ADCåˆå§‹åŒ– */
     MX_ADC1_Init();
-    /* ¶¨Ê±Æ÷4³õÊ¼»¯ */
+    /* å®šæ—¶å™¨4åˆå§‹åŒ– */
     MX_TIM4_Init();
 
-    /* Modbus³õÊ¼»¯ */
+    /* Modbusä»ç«™åˆå§‹åŒ– */
     eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE);
     //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
 
-    /* Æô¶¯Mdobus */
+    /* å¯ç”¨Modbusä»ç«™ */
     eMBEnable();
 
-    uart_init(115200); // ³õÊ¼»¯´®¿Ú1
+    uart_init(115200); // åˆå§‹åŒ–ä¸²å£1
 
-    printf("hello world 66666\r\n"); // ·¢ËÍhello world 66666µ½´®¿Ú1
-    HAL_Delay(4000);
+    printf("hello world 66666\r\n"); //  ä¸²å£1  æ‰“å° hello world 66666
+    HAL_Delay(4000);  //  å»¶æ—¶4ç§’
 
     while (1)
     {
@@ -76,36 +76,32 @@ int main(void)
         usSRegHoldBuf[2] = adc_value;
         key_scan();
         Led_scan();
-        //  //  // ÔÚ main.c ÖĞÌí¼Ó²âÊÔ´úÂë
+
         // uint8_t test_byte = 0xAA;
-        // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // Ö±½Ó·¢ËÍ²âÊÔ×Ö½Ú
-        // /* ¸üĞÂ±£³Ö¼Ä´æÆ÷Öµ */       // usSRegHoldBuf[0] = HAL_GetTick() & 0xff;               // »ñÈ¡Ê±¼ä´Á Ìá³ö1ÖÁ8Î»
-        // /* ¸üĞÂÊäÈë¼Ä´æÆ÷Öµ */       // usSRegInBuf[0] = HAL_GetTick() & 0xff;               // »ñÈ¡Ê±¼ä´Á Ìá³ö1ÖÁ8Î»
-        // /* ¸üĞÂÏßÈ¦ */              // ucSCoilBuf[0] = HAL_GetTick() & 0xff;               // »ñÈ¡Ê±¼ä´Á Ìá³ö1ÖÁ8Î»
-        // /* ÀëÉ¢ÊäÈë±äÁ¿ */          // ucSDiscInBuf[0] = HAL_GetTick() & 0xff;          // »ñÈ¡Ê±¼ä´Á Ìá³ö1ÖÁ8Î»
+        // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // ä¸²å£2  æ‰“å° 0xAA
         
-        // /* ¿ÉÒÔ²»ÓÃÑÓÊ±£¬Èç¹ûÑÓÊ±Ê±¼ä¹ı³¤Ö÷»ú»átimeout */
+        // /* 1ç§’è½®è¯¢ä¸€æ¬¡Modbusä»ç«™ï¼Œå¤„ç†æ•°æ®äº¤æ¢ */
         HAL_Delay(1000);
 
-        /*´Ó»úÂÖÑ¯*/
+        /* è½®è¯¢Modbusä»ç«™ */
         eMBPoll();
     }
 }
 
-// ½â¾ö __aeabi_assert Î´¶¨ÒåÎÊÌâ
+//  __aeabi_assert å‡½æ•°ï¼Œç”¨äºæ–­è¨€æ£€æŸ¥
 void __aeabi_assert(const char *expr, const char *file, int line)
 {
-    // ¿ÕÊµÏÖ£¬¶ÏÑÔÊ§°ÜÊ±½øÈëËÀÑ­»·
+    // æ–­è¨€æ£€æŸ¥å¤±è´¥æ—¶å¾ªç¯ç­‰å¾…
     while (1)
         ;
 }
 
 void Error_Handler(void)
 {
-    /* ÓÃ»§´íÎó´¦Àí£¬³öÏÖHAL³õÊ¼»¯Ê§°Ü¾Í¿¨ËÀÔÚÕâÀï */
+    /* åˆå§‹åŒ–HALå¤±è´¥ */
     while (1)
     {
-        // ¿ÉÒÔÔÚÕâÀï¼ÓLEDÉÁË¸£¬ÌáÊ¾³ö´í
+        // é—ªçƒLEDé—ªçƒé”™è¯¯ä¿¡æ¯
     }
 }
 
