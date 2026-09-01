@@ -28,26 +28,26 @@ static eMBEventType eQueuedEvent;
 static BOOL xEventInQueue;
 
 /* ----------------------- Start implementation -----------------------------*/
-// ³õÊ¼»¯ÊÂ¼ş¶ÓÁĞ
+// äº‹ä»¶é˜Ÿåˆ—åˆå§‹åŒ–
 BOOL xMBPortEventInit(void)
 {
     xEventInQueue = FALSE;
     return TRUE;
 }
 
-// ·¢ËÍÊÂ¼şµ½¶ÓÁĞ
+// äº‹ä»¶é˜Ÿåˆ—å‘é€äº‹ä»¶
 BOOL xMBPortEventPost(eMBEventType eEvent)
 {
     xEventInQueue = TRUE;
     eQueuedEvent = eEvent;
 
-    // Ö´ĞĞ¹¦ÄÜÂë´¦Àíº¯Êı
-    if (eEvent == EV_EXECUTE) //ÈÎÎñÖĞÔËĞĞµÄÊ¹ÓÃÊÇÈÎÎñ¼¶µÄ
+    // äº‹ä»¶é˜Ÿåˆ—å‘é€äº‹ä»¶
+    if (eEvent == EV_EXECUTE) // æ‰§è¡Œäº‹ä»¶
     {
-        // Ö´ĞĞ¹¦ÄÜÂë´¦Àíº¯Êı
+        // é€šçŸ¥ä»»åŠ¡æ‰§è¡Œäº‹ä»¶
         // xTaskNotify(xMBTaskHandle, (uint32_t)eEvent, eSetValueWithOverwrite);
     }
-    else if (eEvent == EV_FRAME_RECEIVED) //ÖĞ¶ÏÖĞÔËĞĞµÄÊ¹ÓÃÊÇÖĞ¶Ï¼¶µÄ
+    else if (eEvent == EV_FRAME_RECEIVED) // å¸§æ¥æ”¶äº‹ä»¶
     {
         // BaseType_t xHigherPriorityTaskWoken;
         // BaseType_t sendStatus;
@@ -58,7 +58,7 @@ BOOL xMBPortEventPost(eMBEventType eEvent)
 
     return TRUE;
 }
-// ´Ó¶ÓÁĞ»ñÈ¡ÊÂ¼ş
+// äº‹ä»¶é˜Ÿåˆ—è·å–äº‹ä»¶
 BOOL xMBPortEventGet(eMBEventType *eEvent)
 {
     BOOL xEventHappened = FALSE;

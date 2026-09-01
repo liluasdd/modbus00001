@@ -96,15 +96,15 @@
 //     return ( USHORT )( ucCRCHi << 8 | ucCRCLo );
 // }
 
-//ĞÂ¼ÓµÄ´úÂë
+//ï¿½Â¼ÓµÄ´ï¿½ï¿½ï¿½
 #include <stdint.h>
 #include <string.h>
 
-// Modbus CRC±ê×¼²ÎÊı
+// Modbus CRCï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½
 #define CRC16_INIT_VAL 0xFFFF
 #define CRC16_POLY     0xA001
 
-// ²âÊÔ±¨ÎÄ£º01 03 00 00 00 01 ±ê×¼CRC=0x0A84£¬Ö¡ÄÚ´æ´¢ 0x84 0x0A
+// ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Ä£ï¿½01 03 00 00 00 01 ï¿½ï¿½×¼CRC=0x0A84ï¿½ï¿½Ö¡ï¿½Ú´æ´¢ 0x84 0x0A
 uint8_t test_frame[] = {0x01,0x03,0x00,0x00,0x00,0x01};
 
 const uint16_t mb_crc_table[] = {
@@ -142,11 +142,11 @@ const uint16_t mb_crc_table[] = {
 0x8201,0x42C0,0x4380,0x8341,0x4100,0x81C1,0x8081,0x4040
 };
 
-/** ²é±í·¨
- * @brief ¼ÆËãCRC16Ğ£ÑéÖµ
- * @param data ÊäÈëÊı¾İÖ¸Õë
- * @param len Êı¾İ³¤¶È
- * @return uint16_t CRC16Ğ£ÑéÖµ
+/** 
+ * @brief è®¡ç®—CRC16å€¼
+ * @param data æ•°æ®æŒ‡é’ˆ
+ * @param len æ•°æ®é•¿åº¦
+ * @return uint16_t CRC16å€¼
  */
 // uint16_t CRC16_TableCalc(uint8_t *pucFrame, uint16_t usLen)
 USHORT usMBCRC16( UCHAR * pucFrame, USHORT usLen )
@@ -163,10 +163,10 @@ USHORT usMBCRC16( UCHAR * pucFrame, USHORT usLen )
 }
 
 /**
- * @brief CRC16-Modbus ÖğÎ»¼ÆËã·¨
- * @param data Êı¾İÖ¸Õë
- * @param len Êı¾İ³¤¶È
- * @return CRC16½á¹û
+ * @brief CRC16-Modbus ä½è®¡ç®—
+ * @param data æ•°æ®æŒ‡é’ˆ
+ * @param len æ•°æ®é•¿åº¦
+ * @return uint16_t CRC16å€¼
  */
 uint16_t CRC16_BitCalc(uint8_t *data, uint16_t len)
 {
@@ -175,7 +175,7 @@ uint16_t CRC16_BitCalc(uint8_t *data, uint16_t len)
     for(i = 0; i < len; i++)
     {
         crc ^= data[i];
-        // µ¥×Ö½ÚÑ­»·8´ÎÒÆÎ»
+        // å¾ªç¯å¤„ç†8ä½
         for(j = 0; j < 8; j++)
         {
             if(crc & 0x0001)

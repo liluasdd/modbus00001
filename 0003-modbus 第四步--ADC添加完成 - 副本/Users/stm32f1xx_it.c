@@ -174,13 +174,13 @@ void TIM4_IRQHandler(void)
   /* USER CODE END TIM4_IRQn 0 */
   // HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
-  //ÐÂ¼Ó
+  // å®šæ—¶å™¨ä¸­æ–­
   if (TIM4->SR & (1 << 0))
   {
-    // µ÷ÓÃ¶¨Ê±Æ÷ÖÐ¶Ï·þÎñº¯Êý,Í¨ÖªÐ­ÒéÕ» 3.5×Ö·ûµÈ´ýÊ±¼äÒÑµ½£¬³¬Ê±
+    // å®šæ—¶å™¨ä¸­æ–­
     prvvTIMERExpiredISR();
 
-    TIM4->SR &= ~(1 << 0); // Çå³ý¸üÐÂÖÐ¶Ï±êÖ¾Î»
+    TIM4->SR &= ~(1 << 0); // æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
   }
   // prvvTIMERExpiredISR();
   /* USER CODE END TIM4_IRQn 1 */
@@ -189,11 +189,11 @@ void TIM4_IRQHandler(void)
 /**
  * @brief This function handles USART2 global interrupt.
  */
-// xMBRTUReceiveFSM() »º´æ×Ö½Ú£¬ÓÃÓÚ½ÓÊÕÍêÕûµÄModbusÖ¡
-// xMBRTUReceiveFSM() ´¦Àí½ÓÊÕµÄ×Ö½Ú£¬¸ù¾Ý×´Ì¬»úµÄµ±Ç°×´Ì¬½øÐÐ´¦Àí
+// xMBRTUReceiveFSM() æŽ¥æ”¶ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbusæŽ¥æ”¶æ•°æ®
+// xMBRTUReceiveFSM() å‘é€ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbuså‘é€æ•°æ®
 void USART2_IRQHandler(void)
 {
-  // // ½ÓÊÕÖÐ¶Ï´¦Àí
+  // // æŽ¥æ”¶ä¸­æ–­
   // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET)
   // {
   //   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
@@ -203,7 +203,7 @@ void USART2_IRQHandler(void)
   //   }
   // }
 
-  // // ·¢ËÍÖÐ¶Ï´¦Àí
+  // // å‘é€ä¸­æ–­
   // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) != RESET)
   // {
   //   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET)
@@ -220,12 +220,12 @@ void USART2_IRQHandler(void)
   /* USER CODE BEGIN USART2_IRQn 1 */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
   {
-    prvvUARTRxISR(); // ½ÓÊÕÖÐ¶Ï
+    prvvUARTRxISR(); // æŽ¥æ”¶ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbusæŽ¥æ”¶æ•°æ®
   }
 
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET)
   {
-    prvvUARTTxReadyISR(); // ·¢ËÍÖÐ¶Ï
+    prvvUARTTxReadyISR(); // å‘é€ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbuså‘é€æ•°æ®
   }
 
   HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
@@ -234,13 +234,7 @@ void USART2_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // ¶¨Ê±Æ÷ÖÐ¶Ï»Øµ÷º¯Êý£¬ÓÃÓÚÁ¬½Óporttimer.cÎÄ¼þµÄº¯Êý
-{
-  /* NOTE : This function Should not be modified, when the callback is needed,
-            the __HAL_TIM_PeriodElapsedCallback could be implemented in the user file
-   */
-  prvvTIMERExpiredISR();
-}
+
 /******************************************************************************/
 /*                 STM32F1xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

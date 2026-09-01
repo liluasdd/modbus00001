@@ -33,37 +33,37 @@
 /* ----------------------- Start implementation -----------------------------*/
 
 /*
- *¶¨Ê±Æ÷¶Ë¿ÚµÄ³õÊ¼»¯º¯Êý// ³õÊ¼»¯¶¨Ê±Æ÷
- *ºËÐÄ»úÖÆ
- *³õÊ¼»¯¶¨Ê±Æ÷£ºÉèÖÃ¶¨Ê±Æ÷µÄ³¬Ê±Ê±¼ä
- *Ð­ÒéÅäºÏ£ºÓë FreeModbus Ð­ÒéÕ»µÄ¶¨Ê±Æ÷»Øµ÷º¯ÊýÅäºÏÊ¹ÓÃ
+ * åˆå§‹åŒ–å®šæ—¶å™¨
+ * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
  */
-BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // ¶¨Ê±Æ÷³õÊ¼»¯Ö±½Ó·µ»ØTRUE£¬ÒÑ¾­ÔÚmianº¯Êý³õÊ¼»¯¹ý
+BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // åˆå§‹åŒ–å®šæ—¶å™¨1
 {
-	// __HAL_RCC_TIM4_CLK_ENABLE();  // Ìæ´úÖ±½Ó¼Ä´æÆ÷²Ù×÷
-	// RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // Ê¹ÄÜ¶¨Ê±Æ÷4Ê±ÖÓ
-	RCC->APB1ENR |= (1 << 2);			// Ê¹ÄÜ¶¨Ê±Æ÷4Ê±ÖÓ  //RCC->APB1ENR |= 0x04;
-	TIM4->ARR = usTim1Timerout50us - 1; // ¶¨Ê±Æ÷4µÄ×Ô¶¯ÖØ×°ÔØ¼Ä´æÆ÷ÉèÖÃÎª50us³¬Ê±Ê±¼ä
+	// __HAL_RCC_TIM4_CLK_ENABLE();  // åˆå§‹åŒ–å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½
+	// RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // åˆå§‹åŒ–å®šæ—¶å™¨4ä½¿èƒ½ä½
+	RCC->APB1ENR |= (1 << 2);			// åˆå§‹åŒ–å®šæ—¶å™¨4ä½¿èƒ½ä½  //RCC->APB1ENR |= 0x04;
+	TIM4->ARR = usTim1Timerout50us - 1; // åˆå§‹åŒ–å®šæ—¶å™¨4è‡ªåŠ¨é‡è£…è½½å¯„å­˜å™¨
 	TIM4->PSC = 3599;					// 72MHz/3600 = 20k = 50us
-	TIM4->DIER |= 1 << 0;				// Ê¹ÄÜ¸üÐÂÖÐ¶ÏÊ¹ÄÜÎ» // TIM4->DIER |= TIM_DIER_UIE; // Ê¹ÄÜ¸üÐÂÖÐ¶Ï
+	TIM4->DIER |= 1 << 0;				// TIM4->DIER |= TIM_DIER_UIE; // åˆå§‹åŒ–å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­ä½¿èƒ½ä½
 
-	// HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // ÉèÖÃ¶¨Ê±Æ÷4ÖÐ¶ÏÓÅÏÈ¼¶Îª0,×ÓÓÅÏÈ¼¶Îª0
+	// HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­ä¼˜å…ˆçº§ä¸º0
 
-	// NVICInit(1,0,TIM4_IRQn,4);// ×éËÄ£¬ÓÅÏÈ¼¶Îª0£¬×ÓÓÅÏÈ¼¶Îª0£¬Ê¹ÄÜ¶¨Ê±Æ÷4ÖÐ¶Ï
-	/*³õÊ¼»¯Ê±²»ÓÃÊ¹ÄÜ*/
-	// HAL_NVIC_EnableIRQ(TIM4_IRQn);		   // Ê¹ÄÜ¶¨Ê±Æ÷4ÖÐ¶Ï
+	// NVICInit(1,0,TIM4_IRQn,4);// åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­ä¼˜å…ˆçº§ä¸º0
+	// HAL_NVIC_EnableIRQ(TIM4_IRQn);		   // åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­
 
 	return TRUE;
 }
 
-// Ê¹ÄÜ¶¨Ê±Æ÷ÖÐ¶Ï
+/*
+ * å¯ç”¨å®šæ—¶å™¨
+ * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
+ */
 inline void
-vMBPortTimersEnable() // Ê¹ÄÜ¶¨Ê±Æ÷ÖÐ¶Ï
+vMBPortTimersEnable() // å¯ç”¨å®šæ—¶å™¨1
 {
-	/* Ê¹ÄÜ¶¨Ê±Æ÷4ÖÐ¶Ï */
-	// TIM4->CNT = 0;		 // ÖØÖÃ¶¨Ê±Æ÷4¼ÆÊýÆ÷
-	// TIM4->CR1 |= 1 << 0; // Ê¹ÄÜ¶¨Ê±Æ÷4¼ÆÊýÆ÷
-	// TIM4->CR1 |= 1 << 1; // Ê¹ÄÜ¶¨Ê±Æ÷4Ê¹ÄÜÎ»
+	/* å¯ç”¨å®šæ—¶å™¨1 */
+	// TIM4->CNT = 0;		 // åˆå§‹åŒ–å®šæ—¶å™¨1è®¡æ—¶å¯„æ•°å™¨
+	// TIM4->CR1 |= 1 << 0; // å¯ç”¨å®šæ—¶å™¨1è®¡æ•°å™¨
+	// TIM4->CR1 |= 1 << 1; // å¯ç”¨å®šæ—¶å™¨1æ›´æ–°ä¸­æ–­ä½¿èƒ½ä½
 
 	/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
 	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
@@ -72,12 +72,14 @@ vMBPortTimersEnable() // Ê¹ÄÜ¶¨Ê±Æ÷ÖÐ¶Ï
 	__HAL_TIM_ENABLE(&htim4);
 }
 
-// È¡Ïû¶¨Ê±Æ÷ÖÐ¶Ï
+/*
+ * ç¦ç”¨å®šæ—¶å™¨1
+ */
 inline void
-vMBPortTimersDisable() // È¡Ïû¶¨Ê±Æ÷ÖÐ¶Ï
+vMBPortTimersDisable() // ç¦ç”¨å®šæ—¶å™¨1
 {
-	/* È¡Ïû¶¨Ê±Æ÷4ÖÐ¶Ï */
-	// TIM4->CR1 &= ~(1 << 0); // È¡Ïû¶¨Ê±Æ÷4¼ÆÊýÆ÷Ê¹ÄÜÎ»
+	/* ç¦ç”¨å®šæ—¶å™¨1 */
+	// TIM4->CR1 &= ~(1 << 0); // ç¦ç”¨å®šæ—¶å™¨1è®¡æ•°å™¨
 
 	/* Disable any pending timers. */
 	__HAL_TIM_DISABLE(&htim4);
@@ -90,23 +92,26 @@ vMBPortTimersDisable() // È¡Ïû¶¨Ê±Æ÷ÖÐ¶Ï
  * must then call pxMBPortCBTimerExpired( ) to notify the protocol stack that
  * the timer has expired.
  */
-// ¶¨Ê±Æ÷ÖÐ¶Ï·þÎñº¯Êý
-// static void
-void prvvTIMERExpiredISR(void) // modbus¶¨Ê±Æ÷¶¯×÷£¬ÐèÒªÔÚÖÐ¶ÏÄÚÊ¹ÓÃ
+/*
+ * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
+ */
+void prvvTIMERExpiredISR(void) // å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
 {
 
 	(void)pxMBPortCBTimerExpired();
 }
 
-//ÔÚÖÐ¶ÏµãCÎÄ¼þÀïÊµÏÖ
+/*
+ * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
+ */
 // void TIM4_IRQHandler(void)
 // {
 // 	if (TIM4->SR & (1 << 0))
 // 	{
-// 		// µ÷ÓÃ¶¨Ê±Æ÷ÖÐ¶Ï·þÎñº¯Êý,Í¨ÖªÐ­ÒéÕ» 3.5×Ö·ûµÈ´ýÊ±¼äÒÑµ½£¬³¬Ê±
+// 		// å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
 // 		prvvTIMERExpiredISR();
 
-// 		TIM4->SR &= ~(1 << 0); // Çå³ý¸üÐÂÖÐ¶Ï±êÖ¾Î»
+// 		TIM4->SR &= ~(1 << 0); // æ¸…é™¤å®šæ—¶å™¨1ä¸­æ–­æ ‡å¿—ä½
 // 	}
 // 	// prvvTIMERExpiredISR();
 // }

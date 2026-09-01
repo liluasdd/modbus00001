@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "mbport.h": "c",
+        "main.h": "c",
+        "user_type.h": "c",
+        "tim.h": "c",
+        "usart.h": "c",
+        "gpio.h": "c"
+    }
+}

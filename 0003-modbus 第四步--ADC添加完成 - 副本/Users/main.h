@@ -3,12 +3,13 @@
 
 #include "stm32f1xx_hal.h"
 
-#include "user_type.h"
+//#include "usertype.h"
+ #include "user_type.h"
 
 
-///* °üº¬ÓÃ»§busÓ¦ÓÃÍ·ÎÄ¼ş */
+///* åŒ…å«ç”¨æˆ·busåº”ç”¨å¤´æ–‡ä»¶ */
 #include "user_mb_app.h"
-///*´òÓ¡Í·ÎÄ¼ş */
+///*æ‰“å°å¤´æ–‡ä»¶ */
 #include <stdio.h>
 
 #include "gpio.h"
@@ -25,7 +26,7 @@ extern void prvvTIMERExpiredISR(void);
 static void SystemClock_Config(void);
 void Error_Handler(void);
 
-/* ²âÊÔ¹¦ÄÜ²ÎÊı */
-#define MB_SAMPLE_TEST_SLAVE_ADDR						1			//´Ó»úÉè±¸µØÖ·
+/* æµ‹è¯•åŠŸèƒ½å‚æ•° */
+#define MB_SAMPLE_TEST_SLAVE_ADDR						1			//ä»æœºè®¾å¤‡åœ°å€
 
 #endif

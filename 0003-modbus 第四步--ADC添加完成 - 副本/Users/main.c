@@ -17,6 +17,9 @@
 #include "user_mb_app.h"
 
 /* Private user code ---------------------------------------------------------*/
+
+volatile bit_flag flag1 = {0}, flag2 = {0}, flag3 = {0}, flag4 = {0}, flag5 = {0}, flag6 = {0}, flag7 = {0};
+
 /* 离散输入缓冲区（只读） */
 extern UCHAR ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES / 8];
 /* 线圈缓冲区（读写） */
@@ -27,20 +30,28 @@ extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
 extern USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS];
 int16_t adc_value = 0;
 
+u8 led_num = 0;
 void Led_scan(void)
 {
     static uint8_t led_state_num = 0;
+
+    // led_num = !led_num; // 切换led状态位
+
     if (led_state_num == 0)
     {
         led_state_num = 1;
-        Led1_on;
-        Led2_on;
+        if (led_num)
+            Led1_on;
+        else
+            Led2_on;
     }
     else
     {
         led_state_num = 0;
-        Led1_off;
-        Led2_off;
+        if (led_num)
+            Led1_off;
+        else
+            Led2_off;
     }
 }
 
@@ -57,6 +68,9 @@ int main(void)
     MX_ADC1_Init();
     /* 定时器4初始化 */
     MX_TIM4_Init();
+    /* 定时器3初始化 - 100us定时 */
+    MX_TIM3_Init();
+    HAL_TIM_Base_Start_IT(&htim3); /* 启动TIM3定时器中断 */
 
     /* Modbus从站初始化 */
     eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE);
@@ -68,23 +82,38 @@ int main(void)
     uart_init(115200); // 初始化串口1
 
     printf("hello world 66666\r\n"); //  串口1  打印 hello world 66666
-    HAL_Delay(4000);  //  延时4秒
+    HAL_Delay(4000);                 //  延时4秒
 
     while (1)
     {
-        adc_value = Read_ADC(PT100_ADC, 1);
-        usSRegHoldBuf[2] = adc_value;
-        key_scan();
-        Led_scan();
+        if (g_b_task_jtim == 1)
+        {
+            g_b_task_jtim = 0;
 
-        // uint8_t test_byte = 0xAA;
-        // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // 串口2  打印 0xAA
-        
-        // /* 1秒轮询一次Modbus从站，处理数据交换 */
-        HAL_Delay(1000);
+            key_scan();
+            if (g_b_2s_jtim == 1)
+            {
+                g_b_2s_jtim = 0;
+                Led_scan();
+            }
 
-        /* 轮询Modbus从站 */
-        eMBPoll();
+            // uint8_t test_byte = 0xAA;
+            // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // 串口2  打印 0xAA
+
+            // // /* 1秒轮询一次Modbus从站，处理数据交换 */
+            // HAL_Delay(1000);
+
+            /* 发送超时故障处理 */
+            eMBsend_Error();
+            /* 轮询Modbus从站 */
+            eMBPoll();
+        }
+        if (g_b_100ms_jtim == 1)
+        {
+            g_b_100ms_jtim = 0;
+            adc_value = Read_ADC(PT100_ADC, 1);
+            usSRegHoldBuf[1] = adc_value;
+        }
     }
 }
 
