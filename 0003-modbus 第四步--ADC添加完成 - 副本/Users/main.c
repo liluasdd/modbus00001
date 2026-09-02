@@ -55,6 +55,21 @@ void Led_scan(void)
     }
 }
 
+/*
+//索引对应真实波特率
+const uint32_t baud_table[] = {2400,4800,9600,19200,38400,115200};
+
+// g_dev_baud_idx 就是Flash读出来的uint8_t索引
+if(g_dev_baud_idx < sizeof(baud_table)/sizeof(uint32_t))
+{
+    BAUD_num = baud_table[g_dev_baud_idx];
+}
+else
+{
+    BAUD_num = 9600; //索引非法，恢复默认
+}
+ */
+
 int main(void)
 {
     // uint8_t num = 0;
@@ -73,7 +88,12 @@ int main(void)
     HAL_TIM_Base_Start_IT(&htim3); /* 启动TIM3定时器中断 */
 
     /* Modbus从站初始化 */
-    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE);
+    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONE无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验
+
+    /*
+    MB_RTU modbus选择。  MB_SAMPLE_TEST_SLAVE_ADDR 从站地址为0x01 。MB_MASTER_USARTx 串口2 。 BAUD_num 波特率 。 MB_PAR_NONE 校验选择
+    */
+    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, BAUD_num, MB_PAR_NONE); // MB_PAR_NONE无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验
     //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
 
     /* 启用Modbus从站 */
