@@ -58,7 +58,7 @@
 ..\..\output\portserial.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\portserial.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\portserial.o: ..\..\Drivers\SYSTEM\sys\sys.h
-..\..\output\portserial.o: ..\..\Drivers\inc\usart.h
+..\..\output\portserial.o: ..\..\software\inc\usart.h
 ..\..\output\portserial.o: ..\..\Users\main.h
 ..\..\output\portserial.o: ..\..\Users\user_type.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
@@ -69,7 +69,7 @@
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\portserial.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\portserial.o: ..\..\Drivers\inc\gpio.h
+..\..\output\portserial.o: ..\..\software\inc\gpio.h
 ..\..\output\portserial.o: ..\..\Users\main.h
-..\..\output\portserial.o: ..\..\Drivers\inc\adc.h
-..\..\output\portserial.o: ..\..\Drivers\inc\key.h
+..\..\output\portserial.o: ..\..\software\inc\adc.h
+..\..\output\portserial.o: ..\..\software\inc\key.h

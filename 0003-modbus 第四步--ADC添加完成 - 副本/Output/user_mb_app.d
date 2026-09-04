@@ -68,7 +68,7 @@
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
 ..\..\output\user_mb_app.o: ..\..\Users\user_type.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\user_mb_app.o: ..\..\Drivers\inc\gpio.h
+..\..\output\user_mb_app.o: ..\..\software\inc\gpio.h
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
-..\..\output\user_mb_app.o: ..\..\Drivers\inc\adc.h
-..\..\output\user_mb_app.o: ..\..\Drivers\inc\key.h
+..\..\output\user_mb_app.o: ..\..\software\inc\adc.h
+..\..\output\user_mb_app.o: ..\..\software\inc\key.h

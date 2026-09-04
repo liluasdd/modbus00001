@@ -1,4 +1,4 @@
-..\..\output\kay.o: ..\..\Drivers\scl\kay.c
+..\..\output\kay.o: ..\..\software\scl\kay.c
 ..\..\output\kay.o: ..\..\Users\main.h
 ..\..\output\kay.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
 ..\..\output\kay.o: ..\..\Users\stm32f1xx_hal_conf.h
@@ -68,7 +68,7 @@
 ..\..\output\kay.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\kay.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\kay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\kay.o: ..\..\Drivers\inc\gpio.h
+..\..\output\kay.o: ..\..\software\inc\gpio.h
 ..\..\output\kay.o: ..\..\Users\main.h
-..\..\output\kay.o: ..\..\Drivers\inc\adc.h
-..\..\output\kay.o: ..\..\Drivers\inc\key.h
+..\..\output\kay.o: ..\..\software\inc\adc.h
+..\..\output\kay.o: ..\..\software\inc\key.h

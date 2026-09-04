@@ -1,5 +1,5 @@
-..\..\output\adc.o: ..\..\Drivers\scl\adc.c
-..\..\output\adc.o: ..\..\Drivers\inc\adc.h
+..\..\output\adc.o: ..\..\software\scl\adc.c
+..\..\output\adc.o: ..\..\software\inc\adc.h
 ..\..\output\adc.o: ..\..\Drivers\SYSTEM\sys\sys.h
 ..\..\output\adc.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h
 ..\..\output\adc.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h
@@ -69,6 +69,6 @@
 ..\..\output\adc.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\adc.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\adc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\adc.o: ..\..\Drivers\inc\gpio.h
+..\..\output\adc.o: ..\..\software\inc\gpio.h
 ..\..\output\adc.o: ..\..\Users\main.h
-..\..\output\adc.o: ..\..\Drivers\inc\key.h
+..\..\output\adc.o: ..\..\software\inc\key.h

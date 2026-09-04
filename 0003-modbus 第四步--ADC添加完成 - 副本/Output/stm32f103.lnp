@@ -81,9 +81,9 @@
 "..\..\output\mbutils.o"
 "..\..\output\adc.o"
 "..\..\output\gpio.o"
+"..\..\output\kay.o"
 "..\..\output\tim.o"
 "..\..\output\usart.o"
-"..\..\output\kay.o"
 --library_type=microlib --strict --scatter "..\..\Output\stm32f103.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

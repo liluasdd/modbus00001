@@ -70,7 +70,7 @@
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
-..\..\output\uart.o: ..\..\Drivers\inc\gpio.h
+..\..\output\uart.o: ..\..\software\inc\gpio.h
 ..\..\output\uart.o: ..\..\Users\main.h
-..\..\output\uart.o: ..\..\Drivers\inc\adc.h
-..\..\output\uart.o: ..\..\Drivers\inc\key.h
+..\..\output\uart.o: ..\..\software\inc\adc.h
+..\..\output\uart.o: ..\..\software\inc\key.h

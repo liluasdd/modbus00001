@@ -54,12 +54,14 @@ void MX_TIM4_Init(void)
     while (1)
       ;
   }
+  
 }
 
 /* TIM3 init function - 100us定时 */
 void MX_TIM3_Init(void)
 {
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
 
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 36 - 1; // 72MHz / 36 = 2MHz
@@ -72,14 +74,22 @@ void MX_TIM3_Init(void)
     while (1)
       ;
   }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;// 使能时钟
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)// 配置时钟源
+  {
+    while (1)
+      ;
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;// 使能中断
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;// 禁用主从模式
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)// 配置主从模式
   {
     while (1)
       ;
   }
 }
 
+// 初始化  时钟和中断
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
@@ -88,9 +98,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     /* TIM4 clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
 
-    // ������ռ���ȼ��������ȼ�/
+    // TIM4中断配置
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 1);
-    // �����ж���Դ
+    // TIM4中断使能
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
   else if (tim_baseHandle->Instance == TIM3)
@@ -129,10 +139,14 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 
 u8 s_tim0_10ms = 0;
 u16 s_tim0_100ms = 1;
-// // bit g_b_task_jtim = 0;
-// u8 g_b_task_jtim = 0;
 u8 s_tim0_2s = 0;
 u8 g_485_send_tim = 0;
+
+//u8 g_b_task_jtim = 0;
+//u8 g_b_485_send_tick = 0;
+//u8 g_b_485_send_Error = 0;
+//u8 g_b_100ms_jtim = 0;
+//u8 g_b_2s_jtim = 0;
 
 extern void prvvTIMERExpiredISR(void);
 
@@ -141,6 +155,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM3)
   {
+
     s_tim0_10ms++;
     s_tim0_100ms++;
     if (s_tim0_10ms >= 100)
@@ -157,7 +172,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         }
       }
     }
-    if (s_tim0_100ms >= 10000)
+    if (s_tim0_100ms >= 1000)
     {
       s_tim0_2s++;
       s_tim0_100ms = 0;
@@ -170,7 +185,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       }
     }
   }
-  else if (htim->Instance == TIM4)
+
+  if (htim->Instance == TIM4)
   {
     prvvTIMERExpiredISR(); // 调用定时器中断服务函数
   }

@@ -68,8 +68,8 @@
 ..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\stm32f1xx_it.o: ..\..\Drivers\inc\gpio.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\gpio.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\main.h
-..\..\output\stm32f1xx_it.o: ..\..\Drivers\inc\adc.h
-..\..\output\stm32f1xx_it.o: ..\..\Drivers\inc\key.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\adc.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\key.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\stm32f1xx_it.h

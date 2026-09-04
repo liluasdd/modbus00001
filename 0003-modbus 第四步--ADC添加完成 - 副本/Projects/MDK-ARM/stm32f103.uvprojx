@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\user_app;..\..\STM32MB\STM32MB\modbus\include;..\..\Drivers\inc</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\user_app;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -856,52 +856,57 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>App</GroupName>
+          <GroupName>software</GroupName>
           <Files>
             <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Drivers\scl\adc.c</FilePath>
+              <FilePath>..\..\software\scl\adc.c</FilePath>
             </File>
             <File>
               <FileName>GPIO.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Drivers\scl\GPIO.c</FilePath>
-            </File>
-            <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\scl\tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\scl\usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Drivers\inc\adc.h</FilePath>
-            </File>
-            <File>
-              <FileName>GPIO.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Drivers\inc\GPIO.h</FilePath>
-            </File>
-            <File>
-              <FileName>tim.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Drivers\inc\tim.h</FilePath>
-            </File>
-            <File>
-              <FileName>usart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Drivers\inc\usart.h</FilePath>
+              <FilePath>..\..\software\scl\GPIO.c</FilePath>
             </File>
             <File>
               <FileName>kay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Drivers\scl\kay.c</FilePath>
+              <FilePath>..\..\software\scl\kay.c</FilePath>
+            </File>
+            <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\scl\tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\scl\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\inc\adc.h</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\inc\gpio.h</FilePath>
+            </File>
+            <File>
+              <FileName>key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\inc\key.h</FilePath>
+            </File>
+            <File>
+              <FileName>tim.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\inc\tim.h</FilePath>
+            </File>
+            <File>
+              <FileName>usart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\inc\usart.h</FilePath>
             </File>
           </Files>
         </Group>

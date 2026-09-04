@@ -120,7 +120,7 @@ int main(void)
             // uint8_t test_byte = 0xAA;
             // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // 串口2  打印 0xAA
 
-            // // /* 1秒轮询一次Modbus从站，处理数据交换 */
+            /////* 1秒轮询一次Modbus从站，处理数据交换 */
             // HAL_Delay(1000);
 
             /* 发送超时故障处理 */
@@ -131,7 +131,7 @@ int main(void)
         if (g_b_100ms_jtim == 1)
         {
             g_b_100ms_jtim = 0;
-            adc_value = Read_ADC(PT100_ADC, 1);
+            adc_value = Read_ADC(PT100_ADC, 10);
             usSRegHoldBuf[1] = adc_value;
         }
     }
@@ -161,3 +161,4 @@ void assert_failed(uint8_t *file, uint32_t line)
         ;
 }
 #endif
+

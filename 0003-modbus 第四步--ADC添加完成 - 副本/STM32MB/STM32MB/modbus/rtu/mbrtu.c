@@ -84,7 +84,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
 {
     eMBErrorCode eStatus = MB_ENOERR;
     ULONG usTimerT35_50us;
-
+//    ULONG usTimerT15_50us;
     (void)ucSlaveAddress;
     ENTER_CRITICAL_SECTION(); // Modbus协议栈初始化临界区
 
@@ -100,7 +100,11 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
          */
         if (ulBaudRate > 19200)
         {
-            usTimerT35_50us = 35; /* 1800us. */
+            // /*FreeModbus 公式*/
+            // usTimerT35_50us = 35; /* 1800us. */
+            /*裸机 公式*/
+//            usTimerT15_50us = 15; // 750us
+            usTimerT35_50us = 35; // 1750us
         }
         else
         {
@@ -112,7 +116,12 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
              * The reload for t3.5 is 1.5 times this value and similary
              * for t3.5.
              */
-            usTimerT35_50us = (7UL * 220000UL) / (2UL * ulBaudRate);
+            // /*FreeModbus 公式*/
+            // usTimerT35_50us = (7UL * 220000UL) / (2UL * ulBaudRate);
+            // usTimerT15_50us = (3UL * 220000UL) / (2UL * ulBaudRate);
+            /*裸机 公式*/
+            usTimerT35_50us = (7UL * 10000000UL) / (2UL * ulBaudRate);
+//            usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);
         }
         if (xMBPortTimersInit((USHORT)usTimerT35_50us) != TRUE)
         {
@@ -148,7 +157,6 @@ void eMBRTUStop(void)
     vMBPortTimersDisable();
     EXIT_CRITICAL_SECTION();
 }
-
 
 /* Modbus RTU 接收
 
@@ -187,51 +195,51 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     }
 
     EXIT_CRITICAL_SECTION(); // Modbus协议栈接收临界区退出
-    //printf("RTU���� �ӻ���ַ�� %d �������� %d ���ȣ� %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
+    // printf("RTU���� �ӻ���ַ�� %d �������� %d ���ȣ� %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
     return eStatus;
 }
 
 extern u8 g_485_send_tim;
 /* Modbus RTU 发送
-* @param ucSlaveAddress 从站地址
-* @param pucFrame Modbus PDU的起始地址
-* @param usLength Modbus PDU的长度
-* @return eMBErrorCode 发送状态
-*/
+ * @param ucSlaveAddress 从站地址
+ * @param pucFrame Modbus PDU的起始地址
+ * @param usLength Modbus PDU的长度
+ * @return eMBErrorCode 发送状态
+ */
 eMBErrorCode
 eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
 {
     eMBErrorCode eStatus = MB_ENOERR;
     USHORT usCRC16;
 
-    ENTER_CRITICAL_SECTION();// Modbus协议栈发送临界区
+    ENTER_CRITICAL_SECTION(); // Modbus协议栈发送临界区
 
     /* Check if the receiver is still in idle state. If not we where to
      * slow with processing the received frame and the master sent another
      * frame on the network. We have to abort sending the frame.
      */
-    if (eRcvState == STATE_RX_IDLE)// 检查接收状态是否为闲状态
+    if (eRcvState == STATE_RX_IDLE) // 检查接收状态是否为闲状态
     {
         /* First byte before the Modbus-PDU is the slave address. */
         pucSndBufferCur = (UCHAR *)pucFrame - 1;
-        usSndBufferCount = 1;   // 发送缓冲区计数器初始化为1，因为第一个字节是从站地址
+        usSndBufferCount = 1; // 发送缓冲区计数器初始化为1，因为第一个字节是从站地址
 
         /* Now copy the Modbus-PDU into the Modbus-Serial-Line-PDU. */
         pucSndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress; // 复制从站地址到发送缓冲区
-        usSndBufferCount += usLength; // 发送缓冲区计数器增加，将Modbus PDU的长度添加到计数器中
+        usSndBufferCount += usLength;                          // 发送缓冲区计数器增加，将Modbus PDU的长度添加到计数器中
 
         /* Calculate CRC16 checksum for Modbus-Serial-Line-PDU. */
         usCRC16 = usMBCRC16((UCHAR *)pucSndBufferCur, usSndBufferCount); // 计算Modbus PDU的CRC16校验和
-        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 & 0xFF); // 发送缓冲区计数器增加，将低字节写入缓冲区
-        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8); // 发送缓冲区计数器增加，将高字节写入缓冲区
+        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 & 0xFF);          // 发送缓冲区计数器增加，将低字节写入缓冲区
+        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8);            // 发送缓冲区计数器增加，将高字节写入缓冲区
 
         /* Activate the transmitter. */
-        eSndState = STATE_TX_XMIT; // 发送状态机状态切换为发送状态
+        eSndState = STATE_TX_XMIT;        // 发送状态机状态切换为发送状态
         vMBPortSerialEnable(FALSE, TRUE); // 启用串口发送中断
         //////发送前使能RS485发送使能，并清空发送发送定时器
-        RS485_DE_HIGH_ON; // 使能RS485发送使能
+        RS485_DE_HIGH_ON;      // 使能RS485发送使能
         g_b_485_send_tick = 1; // 发送定时器初始化为1
-        g_485_send_tim = 0; // 发送定时器初始化为0
+        g_485_send_tim = 0;    // 发送定时器初始化为0
     }
     else
     {
@@ -265,7 +273,7 @@ BOOL xMBRTUReceiveFSM(void)
          * damaged frame are transmitted.
          */
     case STATE_RX_ERROR:
-        vMBPortTimersEnable(); // 启用定时器
+        vMBPortTimersEnable();     // 启用定时器
         g_b_485_receive_Error = 1; // 接收错误标志置1
         break;
 
@@ -319,7 +327,7 @@ BOOL xMBRTUTransmitFSM(void)
         /* enable receiver/disable transmitter. */
         vMBPortSerialEnable(TRUE, FALSE);
         break;
-        
+
     case STATE_TX_XMIT: // 发送状态机状态为发送状态
         /* check if we are finished. */
         if (usSndBufferCount != 0) // 发送缓冲区计数器不为0
@@ -336,9 +344,9 @@ BOOL xMBRTUTransmitFSM(void)
              * empty interrupt. */
             vMBPortSerialEnable(TRUE, FALSE); // 禁用发送器
             eSndState = STATE_TX_IDLE;        // 发送状态机状态切换为空闲状态
-            RS485_DE_LOW_OFF; // 使能RS485接收使能
-            g_b_485_send_Error = 0; // 发送错误标志位初始化为0
-            g_b_485_send_tick = 0; // 发送定时器初始化为0
+            RS485_DE_LOW_OFF;                 // 使能RS485接收使能
+            g_b_485_send_Error = 0;           // 发送错误标志位初始化为0
+            g_b_485_send_tick = 0;            // 发送定时器初始化为0
         }
         break;
     }
@@ -355,7 +363,7 @@ BOOL xMBRTUTimerT35Expired(void)
     {
         /* Timer t35 expired. Startup phase is finished. */
     case STATE_RX_INIT:
-        xNeedPoll = xMBPortEventPost(EV_READY);// 发送 EV_READY 事件
+        xNeedPoll = xMBPortEventPost(EV_READY); // 发送 EV_READY 事件
         break;
 
         /* A frame was received and t35 expired. Notify the listener that
@@ -374,7 +382,7 @@ BOOL xMBRTUTimerT35Expired(void)
                (eRcvState == STATE_RX_RCV) || (eRcvState == STATE_RX_ERROR));
     }
 
-    vMBPortTimersDisable(); // 禁用定时器
+    vMBPortTimersDisable();    // 禁用定时器
     eRcvState = STATE_RX_IDLE; // 接收状态机状态切换为空闲状态
 
     return xNeedPoll; // 是否需要轮询

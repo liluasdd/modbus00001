@@ -1,5 +1,5 @@
-..\..\output\usart.o: ..\..\Drivers\scl\usart.c
-..\..\output\usart.o: ..\..\Drivers\inc\usart.h
+..\..\output\usart.o: ..\..\software\scl\usart.c
+..\..\output\usart.o: ..\..\software\inc\usart.h
 ..\..\output\usart.o: ..\..\Users\main.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
 ..\..\output\usart.o: ..\..\Users\stm32f1xx_hal_conf.h
@@ -69,7 +69,7 @@
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\usart.o: ..\..\Drivers\inc\gpio.h
+..\..\output\usart.o: ..\..\software\inc\gpio.h
 ..\..\output\usart.o: ..\..\Users\main.h
-..\..\output\usart.o: ..\..\Drivers\inc\adc.h
-..\..\output\usart.o: ..\..\Drivers\inc\key.h
+..\..\output\usart.o: ..\..\software\inc\adc.h
+..\..\output\usart.o: ..\..\software\inc\key.h

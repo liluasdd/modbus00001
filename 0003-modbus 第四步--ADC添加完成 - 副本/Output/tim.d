@@ -1,5 +1,5 @@
-..\..\output\tim.o: ..\..\Drivers\scl\tim.c
-..\..\output\tim.o: ..\..\Drivers\inc\tim.h
+..\..\output\tim.o: ..\..\software\scl\tim.c
+..\..\output\tim.o: ..\..\software\inc\tim.h
 ..\..\output\tim.o: ..\..\Users\main.h
 ..\..\output\tim.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
 ..\..\output\tim.o: ..\..\Users\stm32f1xx_hal_conf.h
@@ -69,7 +69,7 @@
 ..\..\output\tim.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\tim.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\tim.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\tim.o: ..\..\Drivers\inc\gpio.h
+..\..\output\tim.o: ..\..\software\inc\gpio.h
 ..\..\output\tim.o: ..\..\Users\main.h
-..\..\output\tim.o: ..\..\Drivers\inc\adc.h
-..\..\output\tim.o: ..\..\Drivers\inc\key.h
+..\..\output\tim.o: ..\..\software\inc\adc.h
+..\..\output\tim.o: ..\..\software\inc\key.h

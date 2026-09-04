@@ -1,5 +1,5 @@
-..\..\output\gpio.o: ..\..\Drivers\scl\GPIO.c
-..\..\output\gpio.o: ..\..\Drivers\inc\gpio.h
+..\..\output\gpio.o: ..\..\software\scl\GPIO.c
+..\..\output\gpio.o: ..\..\software\inc\gpio.h
 ..\..\output\gpio.o: ..\..\Users\main.h
 ..\..\output\gpio.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
 ..\..\output\gpio.o: ..\..\Users\stm32f1xx_hal_conf.h
@@ -69,7 +69,7 @@
 ..\..\output\gpio.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\gpio.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\gpio.o: ..\..\Drivers\inc\gpio.h
-..\..\output\gpio.o: ..\..\Drivers\inc\adc.h
-..\..\output\gpio.o: ..\..\Drivers\inc\key.h
+..\..\output\gpio.o: ..\..\software\inc\gpio.h
+..\..\output\gpio.o: ..\..\software\inc\adc.h
+..\..\output\gpio.o: ..\..\software\inc\key.h
 ..\..\output\gpio.o: ..\..\Users\main.h
