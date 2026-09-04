@@ -33,7 +33,7 @@ Section Cross References
     main.o(i.main) refers to uart.o(i.uart_init) for uart_init
     main.o(i.main) refers to printf3.o(i.__0printf$3) for __2printf
     main.o(i.main) refers to delay.o(i.HAL_Delay) for HAL_Delay
-    main.o(i.main) refers to kay.o(i.key_scan) for key_scan
+    main.o(i.main) refers to key.o(i.key_scan) for key_scan
     main.o(i.main) refers to main.o(i.Led_scan) for Led_scan
     main.o(i.main) refers to mb.o(i.eMBsend_Error) for eMBsend_Error
     main.o(i.main) refers to mb.o(i.eMBPoll) for eMBPoll
@@ -1212,10 +1212,10 @@ Section Cross References
     adc.o(i.Read_ADC1_CH7) refers to stm32f1xx_hal_adc.o(i.HAL_ADC_Stop) for HAL_ADC_Stop
     adc.o(i.Read_ADC1_CH7) refers to adc.o(.bss) for hadc1
     gpio.o(i.APPGPIO_INIT) refers to stm32f1xx_hal_gpio.o(i.HAL_GPIO_Init) for HAL_GPIO_Init
-    kay.o(i.Key_val_clear) refers to kay.o(.data) for g_key_tim
-    kay.o(i.Key_val_clear) refers to main.o(.data) for led_num
-    kay.o(i.key_scan) refers to kay.o(i.Key_val_clear) for Key_val_clear
-    kay.o(i.key_scan) refers to kay.o(.data) for g_key_num
+    key.o(i.Key_val_clear) refers to key.o(.data) for g_key_tim
+    key.o(i.Key_val_clear) refers to main.o(.data) for led_num
+    key.o(i.key_scan) refers to key.o(i.Key_val_clear) for Key_val_clear
+    key.o(i.key_scan) refers to key.o(.data) for g_key_num
     tim.o(i.HAL_TIM_Base_MspDeInit) refers to stm32f1xx_hal_cortex.o(i.HAL_NVIC_DisableIRQ) for HAL_NVIC_DisableIRQ
     tim.o(i.HAL_TIM_Base_MspInit) refers to stm32f1xx_hal_cortex.o(i.HAL_NVIC_SetPriority) for HAL_NVIC_SetPriority
     tim.o(i.HAL_TIM_Base_MspInit) refers to stm32f1xx_hal_cortex.o(i.HAL_NVIC_EnableIRQ) for HAL_NVIC_EnableIRQ
@@ -2524,9 +2524,9 @@ Removing Unused input sections from the image.
     Removing gpio.o(.rev16_text), (4 bytes).
     Removing gpio.o(.revsh_text), (4 bytes).
     Removing gpio.o(.rrx_text), (6 bytes).
-    Removing kay.o(.rev16_text), (4 bytes).
-    Removing kay.o(.revsh_text), (4 bytes).
-    Removing kay.o(.rrx_text), (6 bytes).
+    Removing key.o(.rev16_text), (4 bytes).
+    Removing key.o(.revsh_text), (4 bytes).
+    Removing key.o(.rrx_text), (6 bytes).
     Removing tim.o(.rev16_text), (4 bytes).
     Removing tim.o(.revsh_text), (4 bytes).
     Removing tim.o(.rrx_text), (6 bytes).
@@ -2676,11 +2676,11 @@ Image Symbol Table
     ..\..\STM32MB\STM32MB\user_app\user_mb_app.c 0x00000000   Number         0  user_mb_app.o ABSOLUTE
     ..\..\Users\main.c                       0x00000000   Number         0  main.o ABSOLUTE
     ..\..\Users\stm32f1xx_it.c               0x00000000   Number         0  stm32f1xx_it.o ABSOLUTE
-    ..\..\software\scl\GPIO.c                0x00000000   Number         0  gpio.o ABSOLUTE
-    ..\..\software\scl\adc.c                 0x00000000   Number         0  adc.o ABSOLUTE
-    ..\..\software\scl\kay.c                 0x00000000   Number         0  kay.o ABSOLUTE
-    ..\..\software\scl\tim.c                 0x00000000   Number         0  tim.o ABSOLUTE
-    ..\..\software\scl\usart.c               0x00000000   Number         0  usart.o ABSOLUTE
+    ..\..\software\src\adc.c                 0x00000000   Number         0  adc.o ABSOLUTE
+    ..\..\software\src\gpio.c                0x00000000   Number         0  gpio.o ABSOLUTE
+    ..\..\software\src\key.c                 0x00000000   Number         0  key.o ABSOLUTE
+    ..\..\software\src\tim.c                 0x00000000   Number         0  tim.o ABSOLUTE
+    ..\..\software\src\usart.c               0x00000000   Number         0  usart.o ABSOLUTE
     ..\\..\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Source\\Templates\\system_stm32f1xx.c 0x00000000   Number         0  system_stm32f1xx.o ABSOLUTE
     ..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal.c 0x00000000   Number         0  stm32f1xx_hal.o ABSOLUTE
     ..\\..\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_adc.c 0x00000000   Number         0  stm32f1xx_hal_adc.o ABSOLUTE
@@ -2746,11 +2746,11 @@ Image Symbol Table
     ..\\..\\STM32MB\\STM32MB\\user_app\\user_mb_app.c 0x00000000   Number         0  user_mb_app.o ABSOLUTE
     ..\\..\\Users\\main.c                    0x00000000   Number         0  main.o ABSOLUTE
     ..\\..\\Users\\stm32f1xx_it.c            0x00000000   Number         0  stm32f1xx_it.o ABSOLUTE
-    ..\\..\\software\\scl\\GPIO.c            0x00000000   Number         0  gpio.o ABSOLUTE
-    ..\\..\\software\\scl\\adc.c             0x00000000   Number         0  adc.o ABSOLUTE
-    ..\\..\\software\\scl\\kay.c             0x00000000   Number         0  kay.o ABSOLUTE
-    ..\\..\\software\\scl\\tim.c             0x00000000   Number         0  tim.o ABSOLUTE
-    ..\\..\\software\\scl\\usart.c           0x00000000   Number         0  usart.o ABSOLUTE
+    ..\\..\\software\\src\\adc.c             0x00000000   Number         0  adc.o ABSOLUTE
+    ..\\..\\software\\src\\gpio.c            0x00000000   Number         0  gpio.o ABSOLUTE
+    ..\\..\\software\\src\\key.c             0x00000000   Number         0  key.o ABSOLUTE
+    ..\\..\\software\\src\\tim.c             0x00000000   Number         0  tim.o ABSOLUTE
+    ..\\..\\software\\src\\usart.c           0x00000000   Number         0  usart.o ABSOLUTE
     cdrcmple.s                               0x00000000   Number         0  cdrcmple.o ABSOLUTE
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
     handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
@@ -2822,7 +2822,7 @@ Image Symbol Table
     i.HAL_UART_Transmit                      0x0800219e   Section        0  stm32f1xx_hal_uart.o(i.HAL_UART_Transmit)
     i.HAL_UART_TxCpltCallback                0x08002250   Section        0  stm32f1xx_hal_uart.o(i.HAL_UART_TxCpltCallback)
     i.HardFault_Handler                      0x08002252   Section        0  stm32f1xx_it.o(i.HardFault_Handler)
-    i.Key_val_clear                          0x08002258   Section        0  kay.o(i.Key_val_clear)
+    i.Key_val_clear                          0x08002258   Section        0  key.o(i.Key_val_clear)
     i.Led_scan                               0x0800229c   Section        0  main.o(i.Led_scan)
     i.MX_ADC1_Init                           0x080022f4   Section        0  adc.o(i.MX_ADC1_Init)
     i.MX_TIM3_Init                           0x08002358   Section        0  tim.o(i.MX_TIM3_Init)
@@ -2903,7 +2903,7 @@ Image Symbol Table
     i.eMBRegInputCB                          0x08003a10   Section        0  user_mb_app.o(i.eMBRegInputCB)
     i.eMBsend_Error                          0x08003a94   Section        0  mb.o(i.eMBsend_Error)
     i.fputc                                  0x08003b2c   Section        0  uart.o(i.fputc)
-    i.key_scan                               0x08003b60   Section        0  kay.o(i.key_scan)
+    i.key_scan                               0x08003b60   Section        0  key.o(i.key_scan)
     i.main                                   0x08003c20   Section        0  main.o(i.main)
     i.prveMBError2Exception                  0x08003cfc   Section        0  mbutils.o(i.prveMBError2Exception)
     i.prvvTIMERExpiredISR                    0x08003d20   Section        0  porttimer.o(i.prvvTIMERExpiredISR)
@@ -2970,7 +2970,7 @@ Image Symbol Table
     .data                                    0x200002f0   Section        2  mbfuncother.o(.data)
     usMBSlaveIDLen                           0x200002f0   Data           2  mbfuncother.o(.data)
     .data                                    0x200002f2   Section        1  adc.o(.data)
-    .data                                    0x200002f3   Section        9  kay.o(.data)
+    .data                                    0x200002f3   Section        9  key.o(.data)
     .data                                    0x200002fc   Section        6  tim.o(.data)
     .data                                    0x20000304   Section        4  stdout.o(.data)
     .bss                                     0x20000308   Section      344  uart.o(.bss)
@@ -3143,7 +3143,7 @@ Image Symbol Table
     HAL_UART_Transmit                        0x0800219f   Thumb Code   178  stm32f1xx_hal_uart.o(i.HAL_UART_Transmit)
     HAL_UART_TxCpltCallback                  0x08002251   Thumb Code     2  stm32f1xx_hal_uart.o(i.HAL_UART_TxCpltCallback)
     HardFault_Handler                        0x08002253   Thumb Code     4  stm32f1xx_it.o(i.HardFault_Handler)
-    Key_val_clear                            0x08002259   Thumb Code    52  kay.o(i.Key_val_clear)
+    Key_val_clear                            0x08002259   Thumb Code    52  key.o(i.Key_val_clear)
     Led_scan                                 0x0800229d   Thumb Code    74  main.o(i.Led_scan)
     MX_ADC1_Init                             0x080022f5   Thumb Code    88  adc.o(i.MX_ADC1_Init)
     MX_TIM3_Init                             0x08002359   Thumb Code    98  tim.o(i.MX_TIM3_Init)
@@ -3196,7 +3196,7 @@ Image Symbol Table
     eMBRegInputCB                            0x08003a11   Thumb Code   110  user_mb_app.o(i.eMBRegInputCB)
     eMBsend_Error                            0x08003a95   Thumb Code   132  mb.o(i.eMBsend_Error)
     fputc                                    0x08003b2d   Thumb Code    46  uart.o(i.fputc)
-    key_scan                                 0x08003b61   Thumb Code   154  kay.o(i.key_scan)
+    key_scan                                 0x08003b61   Thumb Code   154  key.o(i.key_scan)
     main                                     0x08003c21   Thumb Code   184  main.o(i.main)
     prveMBError2Exception                    0x08003cfd   Thumb Code    34  mbutils.o(i.prveMBError2Exception)
     prvvTIMERExpiredISR                      0x08003d21   Thumb Code    10  porttimer.o(i.prvvTIMERExpiredISR)
@@ -3256,15 +3256,15 @@ Image Symbol Table
     usSRegHoldStart                          0x200001f4   Data           2  user_mb_app.o(.data)
     usSRegHoldBuf                            0x200001f6   Data         250  user_mb_app.o(.data)
     g_b_irq_adc_pause                        0x200002f2   Data           1  adc.o(.data)
-    g_b_screen_en                            0x200002f3   Data           1  kay.o(.data)
-    g_key_num                                0x200002f4   Data           1  kay.o(.data)
-    g_key_buf                                0x200002f5   Data           1  kay.o(.data)
-    g_key_tim                                0x200002f6   Data           1  kay.o(.data)
-    g_b_key_status                           0x200002f7   Data           1  kay.o(.data)
-    b_key_longpress_tim                      0x200002f8   Data           1  kay.o(.data)
-    b_key_long_press                         0x200002f9   Data           1  kay.o(.data)
-    g_dormancy_tim                           0x200002fa   Data           1  kay.o(.data)
-    R8_Set_V_Delay                           0x200002fb   Data           1  kay.o(.data)
+    g_b_screen_en                            0x200002f3   Data           1  key.o(.data)
+    g_key_num                                0x200002f4   Data           1  key.o(.data)
+    g_key_buf                                0x200002f5   Data           1  key.o(.data)
+    g_key_tim                                0x200002f6   Data           1  key.o(.data)
+    g_b_key_status                           0x200002f7   Data           1  key.o(.data)
+    b_key_longpress_tim                      0x200002f8   Data           1  key.o(.data)
+    b_key_long_press                         0x200002f9   Data           1  key.o(.data)
+    g_dormancy_tim                           0x200002fa   Data           1  key.o(.data)
+    R8_Set_V_Delay                           0x200002fb   Data           1  key.o(.data)
     s_tim0_10ms                              0x200002fc   Data           1  tim.o(.data)
     s_tim0_100ms                             0x200002fe   Data           2  tim.o(.data)
     s_tim0_2s                                0x20000300   Data           1  tim.o(.data)
@@ -3369,7 +3369,7 @@ Memory Map of the image
     0x08002250   0x08002250   0x00000002   Code   RO         1070    i.HAL_UART_TxCpltCallback  stm32f1xx_hal_uart.o
     0x08002252   0x08002252   0x00000004   Code   RO          295    i.HardFault_Handler  stm32f1xx_it.o
     0x08002256   0x08002256   0x00000002   PAD
-    0x08002258   0x08002258   0x00000044   Code   RO         7063    i.Key_val_clear     kay.o
+    0x08002258   0x08002258   0x00000044   Code   RO         7063    i.Key_val_clear     key.o
     0x0800229c   0x0800229c   0x00000058   Code   RO           14    i.Led_scan          main.o
     0x080022f4   0x080022f4   0x00000064   Code   RO         6983    i.MX_ADC1_Init      adc.o
     0x08002358   0x08002358   0x0000006c   Code   RO         7103    i.MX_TIM3_Init      tim.o
@@ -3439,7 +3439,7 @@ Memory Map of the image
     0x08003a10   0x08003a10   0x00000084   Code   RO         6741    i.eMBRegInputCB     user_mb_app.o
     0x08003a94   0x08003a94   0x00000098   Code   RO         6426    i.eMBsend_Error     mb.o
     0x08003b2c   0x08003b2c   0x00000034   Code   RO          488    i.fputc             uart.o
-    0x08003b60   0x08003b60   0x000000c0   Code   RO         7064    i.key_scan          kay.o
+    0x08003b60   0x08003b60   0x000000c0   Code   RO         7064    i.key_scan          key.o
     0x08003c20   0x08003c20   0x000000dc   Code   RO           16    i.main              main.o
     0x08003cfc   0x08003cfc   0x00000022   Code   RO         6945    i.prveMBError2Exception  mbutils.o
     0x08003d1e   0x08003d1e   0x00000002   PAD
@@ -3493,7 +3493,7 @@ Memory Map of the image
     0x200000ea   COMPRESSED   0x00000206   Data   RW         6742    .data               user_mb_app.o
     0x200002f0   COMPRESSED   0x00000002   Data   RW         6915    .data               mbfuncother.o
     0x200002f2   COMPRESSED   0x00000001   Data   RW         6988    .data               adc.o
-    0x200002f3   COMPRESSED   0x00000009   Data   RW         7065    .data               kay.o
+    0x200002f3   COMPRESSED   0x00000009   Data   RW         7065    .data               key.o
     0x200002fc   COMPRESSED   0x00000006   Data   RW         7106    .data               tim.o
     0x20000302   COMPRESSED   0x00000002   PAD
     0x20000304   COMPRESSED   0x00000004   Data   RW         7497    .data               mc_w.l(stdout.o)
@@ -3517,7 +3517,7 @@ Image component sizes
        472         38          0          1         60       3314   adc.o
        114          0          0          0          0       1774   delay.o
        388         12          0          0          0       1287   gpio.o
-       260         54          0          9          0       1791   kay.o
+       260         54          0          9          0       1791   key.o
        316         50          0         12          0     458166   main.o
        728        146          0        185          0       9085   mb.o
         44          4        512          0          0       1674   mbcrc.o

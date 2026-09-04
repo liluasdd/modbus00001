@@ -1,4 +1,4 @@
-..\..\output\adc.o: ..\..\software\scl\adc.c
+..\..\output\adc.o: ..\..\software\src\adc.c
 ..\..\output\adc.o: ..\..\software\inc\adc.h
 ..\..\output\adc.o: ..\..\Drivers\SYSTEM\sys\sys.h
 ..\..\output\adc.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h

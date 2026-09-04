@@ -1,4 +1,4 @@
-..\..\output\usart.o: ..\..\software\scl\usart.c
+..\..\output\usart.o: ..\..\software\src\usart.c
 ..\..\output\usart.o: ..\..\software\inc\usart.h
 ..\..\output\usart.o: ..\..\Users\main.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h

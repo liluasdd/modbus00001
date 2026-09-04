@@ -1,4 +1,4 @@
-..\..\output\gpio.o: ..\..\software\scl\GPIO.c
+..\..\output\gpio.o: ..\..\software\src\gpio.c
 ..\..\output\gpio.o: ..\..\software\inc\gpio.h
 ..\..\output\gpio.o: ..\..\Users\main.h
 ..\..\output\gpio.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h

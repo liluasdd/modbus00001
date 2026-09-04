@@ -81,7 +81,7 @@
 "..\..\output\mbutils.o"
 "..\..\output\adc.o"
 "..\..\output\gpio.o"
-"..\..\output\kay.o"
+"..\..\output\key.o"
 "..\..\output\tim.o"
 "..\..\output\usart.o"
 --library_type=microlib --strict --scatter "..\..\Output\stm32f103.sct"

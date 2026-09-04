@@ -861,27 +861,27 @@
             <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\software\scl\adc.c</FilePath>
+              <FilePath>..\..\software\src\adc.c</FilePath>
             </File>
             <File>
-              <FileName>GPIO.c</FileName>
+              <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\software\scl\GPIO.c</FilePath>
+              <FilePath>..\..\software\src\gpio.c</FilePath>
             </File>
             <File>
-              <FileName>kay.c</FileName>
+              <FileName>key.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\software\scl\kay.c</FilePath>
+              <FilePath>..\..\software\src\key.c</FilePath>
             </File>
             <File>
               <FileName>tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\software\scl\tim.c</FilePath>
+              <FilePath>..\..\software\src\tim.c</FilePath>
             </File>
             <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\software\scl\usart.c</FilePath>
+              <FilePath>..\..\software\src\usart.c</FilePath>
             </File>
             <File>
               <FileName>adc.h</FileName>

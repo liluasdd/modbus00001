@@ -1,4 +1,4 @@
-..\..\output\tim.o: ..\..\software\scl\tim.c
+..\..\output\tim.o: ..\..\software\src\tim.c
 ..\..\output\tim.o: ..\..\software\inc\tim.h
 ..\..\output\tim.o: ..\..\Users\main.h
 ..\..\output\tim.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
