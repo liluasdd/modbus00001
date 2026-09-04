@@ -57,7 +57,7 @@
 ..\..\output\gpio.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\gpio.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\gpio.o: ..\..\Users\user_type.h
-..\..\output\gpio.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\gpio.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\gpio.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\gpio.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h

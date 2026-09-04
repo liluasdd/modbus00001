@@ -61,7 +61,7 @@
 ..\..\output\portserial.o: ..\..\software\inc\usart.h
 ..\..\output\portserial.o: ..\..\Users\main.h
 ..\..\output\portserial.o: ..\..\Users\user_type.h
-..\..\output\portserial.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\portserial.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h

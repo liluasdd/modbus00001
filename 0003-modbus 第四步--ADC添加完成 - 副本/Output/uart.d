@@ -60,7 +60,7 @@
 ..\..\output\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\..\output\uart.o: ..\..\Users\main.h
 ..\..\output\uart.o: ..\..\Users\user_type.h
-..\..\output\uart.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\uart.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h

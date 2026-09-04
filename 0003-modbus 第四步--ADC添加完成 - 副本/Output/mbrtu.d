@@ -62,7 +62,7 @@
 ..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\sys\sys.h
 ..\..\output\mbrtu.o: ..\..\Users\main.h
 ..\..\output\mbrtu.o: ..\..\Users\user_type.h
-..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\mbrtu.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h

@@ -61,7 +61,7 @@
 ..\..\output\porttimer.o: ..\..\software\inc\tim.h
 ..\..\output\porttimer.o: ..\..\Users\main.h
 ..\..\output\porttimer.o: ..\..\Users\user_type.h
-..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\porttimer.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
