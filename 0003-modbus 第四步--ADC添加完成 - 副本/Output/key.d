@@ -1,9 +1,5 @@
 ..\..\output\key.o: ..\..\software\src\key.c
 ..\..\output\key.o: ..\..\Users\main.h
-..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
-..\..\output\key.o: ..\..\Users\stm32f1xx_hal_conf.h
-..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
-..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
 ..\..\output\key.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h
 ..\..\output\key.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h
 ..\..\output\key.o: ..\..\Drivers\CMSIS\Include\core_cm3.h
@@ -13,6 +9,10 @@
 ..\..\output\key.o: ..\..\Drivers\CMSIS\Include\cmsis_armcc.h
 ..\..\output\key.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
+..\..\output\key.o: ..\..\Users\stm32f1xx_hal_conf.h
+..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
+..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
+..\..\output\key.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
 ..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h
@@ -55,7 +55,7 @@
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\key.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
-..\..\output\key.o: ..\..\Users\user_type.h
+..\..\output\key.o: ..\..\Users\usertype.h
 ..\..\output\key.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\key.o: ..\..\STM32MB\STM32MB\port\port.h
@@ -68,7 +68,11 @@
 ..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\key.o: ..\..\Drivers\SYSTEM\delay\delay.h
+..\..\output\key.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\key.o: ..\..\software\inc\gpio.h
 ..\..\output\key.o: ..\..\Users\main.h
+..\..\output\key.o: ..\..\software\inc\usart.h
 ..\..\output\key.o: ..\..\software\inc\adc.h
 ..\..\output\key.o: ..\..\software\inc\key.h
+..\..\output\key.o: ..\..\software\inc\tim.h

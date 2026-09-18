@@ -34,13 +34,13 @@ USHORT usSCoilStart = S_COIL_START;
 #if S_COIL_NCOILS % 8
 UCHAR ucSCoilBuf[S_COIL_NCOILS / 8 + 1];
 #else
-UCHAR ucSCoilBuf[S_COIL_NCOILS / 8] = {0xAA, 0x55, 0x10, 0x09, 0x07, 0x00, 0x00, 0x00};// 线圈缓冲区（读写）
+UCHAR ucSCoilBuf[S_COIL_NCOILS / 8] = {0xAA, 0x55, 0x10, 0x09, 0x07, 0x00, 0x00, 0x00}; // 线圈缓冲区（读写）
 #endif
 // Slave mode:InputRegister variables
-USHORT usSRegInStart = S_REG_INPUT_START;// 输入寄存器起始地址
+USHORT usSRegInStart = S_REG_INPUT_START;                                                         // 输入寄存器起始地址
 USHORT usSRegInBuf[S_REG_INPUT_NREGS] = {0x0101, 0x0203, 0x0305, 0x0007, 0x0009, 0x0011, 0x0013}; // 输入寄存器缓冲区
 // Slave mode:HoldingRegister variables
-USHORT usSRegHoldStart = S_REG_HOLDING_START;// 保持寄存器起始地址
+USHORT usSRegHoldStart = S_REG_HOLDING_START;                                                        // 保持寄存器起始地址
 USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS] = {0x0001, 0x003, 0x0005, 0x0007, 0x0009, 0x0011, 0x0013}; // 保持寄存器缓冲区
 
 /**
@@ -87,8 +87,9 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
     {
         eStatus = MB_ENOREG; // 寄存器地址超出范围
     }
-
+#if DEBUG_UART_ENABLE
     printf("hello %d\r\n", pusRegInputBuf[iRegIndex - 1]); // usSRegInBuf[S_REG_INPUT_NREGS]
+#endif
     return eStatus;
 }
 
@@ -160,9 +161,11 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
         eStatus = MB_ENOREG;
     }
 
-    // printf("0x03,0x06,0x10=16.��д���ּĴ���ֵ ���һ��ֵ��%d\r\n", pusRegHoldingBuf[iRegIndex - 1]);
+#if DEBUG_UART_ENABLE
+    printf("0x03,0x06,0x10=16. %d\r\n", pusRegHoldingBuf[iRegIndex - 1]);
+#endif
 
-    return eStatus;
+     return eStatus;
 }
 
 /**

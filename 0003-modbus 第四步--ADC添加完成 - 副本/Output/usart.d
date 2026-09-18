@@ -1,10 +1,6 @@
 ..\..\output\usart.o: ..\..\software\src\usart.c
 ..\..\output\usart.o: ..\..\software\inc\usart.h
 ..\..\output\usart.o: ..\..\Users\main.h
-..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
-..\..\output\usart.o: ..\..\Users\stm32f1xx_hal_conf.h
-..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
-..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
 ..\..\output\usart.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h
 ..\..\output\usart.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h
 ..\..\output\usart.o: ..\..\Drivers\CMSIS\Include\core_cm3.h
@@ -14,6 +10,10 @@
 ..\..\output\usart.o: ..\..\Drivers\CMSIS\Include\cmsis_armcc.h
 ..\..\output\usart.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
+..\..\output\usart.o: ..\..\Users\stm32f1xx_hal_conf.h
+..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
+..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
+..\..\output\usart.o: ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
 ..\..\output\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h
@@ -56,7 +56,7 @@
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\usart.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
-..\..\output\usart.o: ..\..\Users\user_type.h
+..\..\output\usart.o: ..\..\Users\usertype.h
 ..\..\output\usart.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\port\port.h
@@ -69,7 +69,11 @@
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\usart.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\usart.o: ..\..\Drivers\SYSTEM\delay\delay.h
+..\..\output\usart.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\usart.o: ..\..\software\inc\gpio.h
 ..\..\output\usart.o: ..\..\Users\main.h
+..\..\output\usart.o: ..\..\software\inc\usart.h
 ..\..\output\usart.o: ..\..\software\inc\adc.h
 ..\..\output\usart.o: ..\..\software\inc\key.h
+..\..\output\usart.o: ..\..\software\inc\tim.h

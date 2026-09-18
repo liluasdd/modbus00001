@@ -28,7 +28,7 @@
  */
 
 /* ----------------------- System includes ----------------------------------*/
-#include "user_type.h"
+#include "usertype.h"
 #include "gpio.h"
 
 #include "stdlib.h"

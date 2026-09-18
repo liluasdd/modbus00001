@@ -66,9 +66,13 @@
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
-..\..\output\user_mb_app.o: ..\..\Users\user_type.h
+..\..\output\user_mb_app.o: ..\..\Users\usertype.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\delay\delay.h
+..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\gpio.h
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
+..\..\output\user_mb_app.o: ..\..\software\inc\usart.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\adc.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\key.h
+..\..\output\user_mb_app.o: ..\..\software\inc\tim.h

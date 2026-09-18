@@ -61,7 +61,7 @@
 ..\..\output\mbrtu.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\sys\sys.h
 ..\..\output\mbrtu.o: ..\..\Users\main.h
-..\..\output\mbrtu.o: ..\..\Users\user_type.h
+..\..\output\mbrtu.o: ..\..\Users\usertype.h
 ..\..\output\mbrtu.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
@@ -70,9 +70,13 @@
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\mbrtu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\delay\delay.h
+..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\mbrtu.o: ..\..\software\inc\gpio.h
 ..\..\output\mbrtu.o: ..\..\Users\main.h
+..\..\output\mbrtu.o: ..\..\software\inc\usart.h
 ..\..\output\mbrtu.o: ..\..\software\inc\adc.h
 ..\..\output\mbrtu.o: ..\..\software\inc\key.h
+..\..\output\mbrtu.o: ..\..\software\inc\tim.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbcrc.h

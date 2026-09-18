@@ -9,8 +9,12 @@ extern "C"
 /* USER CODE END Private defines */
 #include "main.h"
 
+#define DEBUG_UART_ENABLE 0 //1 开启调试串口打印，0关闭
+#define CONFIG_NEED_MESSAGESMG 0 //1 开启消息管理，0关闭
+#define CONFIG_NEED_PWM 0 //1 开启PWM，0关闭
+
     // 函数声明
-    void APPGPIO_INIT(void);
+    extern void APPGPIO_INIT(void);
 
     /* USER CODE BEGIN Prototypes */
     /* USER CODE END Private defines */
@@ -151,12 +155,11 @@ led1_pin = GPIO_PIN_8, PUPDR[17:16]控制引脚8
 
 #define RS485_DE_pin GPIO_PIN_4
 #define RS485_DE_port GPIOA
-#define RS485_DE_HIGH_ON RS485_DE_port->BSRR = RS485_DE_pin      // 发送模式 (DE/RE 高电平使能发送)
-#define RS485_DE_LOW_OFF RS485_DE_port->BRR = RS485_DE_pin    // 接收模式 (DE/RE 低电平使能接收)
+#define RS485_DE_HIGH_ON RS485_DE_port->BSRR = RS485_DE_pin // 发送模式 (DE/RE 高电平使能发送)
+#define RS485_DE_LOW_OFF RS485_DE_port->BRR = RS485_DE_pin  // 接收模式 (DE/RE 低电平使能接收)
 
 #define PT100_ADC_pin GPIO_PIN_5
 #define PT100_ADC_port GPIOA
-
 
 #define USART3_TX_pin GPIO_PIN_10
 #define USART3_TX_port GPIOB

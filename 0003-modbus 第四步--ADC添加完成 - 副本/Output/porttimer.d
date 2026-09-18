@@ -60,7 +60,7 @@
 ..\..\output\porttimer.o: ..\..\Drivers\SYSTEM\sys\sys.h
 ..\..\output\porttimer.o: ..\..\software\inc\tim.h
 ..\..\output\porttimer.o: ..\..\Users\main.h
-..\..\output\porttimer.o: ..\..\Users\user_type.h
+..\..\output\porttimer.o: ..\..\Users\usertype.h
 ..\..\output\porttimer.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
@@ -69,7 +69,11 @@
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\porttimer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\porttimer.o: ..\..\Drivers\SYSTEM\delay\delay.h
+..\..\output\porttimer.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\porttimer.o: ..\..\software\inc\gpio.h
 ..\..\output\porttimer.o: ..\..\Users\main.h
+..\..\output\porttimer.o: ..\..\software\inc\usart.h
 ..\..\output\porttimer.o: ..\..\software\inc\adc.h
 ..\..\output\porttimer.o: ..\..\software\inc\key.h
+..\..\output\porttimer.o: ..\..\software\inc\tim.h

@@ -3,8 +3,6 @@
 #include "string.h"
 #include "main.h"
 
-
-
 UART_HandleTypeDef uart1_handle; /* UART1句柄 */
 UART_HandleTypeDef uart2_handle; /* UART2句柄 */
 UART_HandleTypeDef uart3_handle; /* UART3句柄 */
@@ -14,7 +12,7 @@ uint16_t uart1_rx_len = 0;               /* UART1接收字符长度 */
 
 /**
  * @brief       重定义fputc函数
- * @note        printf函数最终会通过调用fputc输出字符串到 对应 串口 
+ * @note        printf函数最终会通过调用fputc输出字符串到 对应 串口
  */
 int fputc(int ch, FILE *f)
 {
@@ -85,9 +83,9 @@ void uart_init(uint32_t baudrate)
     uart1_handle.Init.Parity = UART_PARITY_NONE;       /* 无奇偶校验位 */
     uart1_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* 无硬件流控 */
     uart1_handle.Init.Mode = UART_MODE_TX_RX;          /* 收发模式 */
-    HAL_Delay(1);                                     // 1ms稳定延时，专门解决115200首字符乱码
+    HAL_Delay(1);                                      // 1ms稳定延时，专门解决115200首字符乱码
 
-    HAL_UART_Init(&uart1_handle);                      /* HAL_UART_Init()会使能UART1 */
+    HAL_UART_Init(&uart1_handle); /* HAL_UART_Init()会使能UART1 */
 
     //     /*UART2 初始化设置*/
     //     uart2_handle.Instance = USART2;                    /* USART2 */
@@ -247,7 +245,10 @@ void USART1_IRQHandler(void)
 
     if (__HAL_UART_GET_FLAG(&uart1_handle, UART_FLAG_IDLE) != RESET) /* 获取接收空闲中断标志位是否被置位 */
     {
+#if DEBUG_UART_ENABLE
         printf("recv: %s\r\n", uart1_rx_buf); /* 将接收到的数据打印出来 */
+
+#endif
         uart1_rx_clear();
         __HAL_UART_CLEAR_IDLEFLAG(&uart1_handle); /* 清除UART总线空闲中断 */
     }

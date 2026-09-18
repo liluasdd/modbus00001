@@ -84,7 +84,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
 {
     eMBErrorCode eStatus = MB_ENOERR;
     ULONG usTimerT35_50us;
-//    ULONG usTimerT15_50us;
+    //    ULONG usTimerT15_50us;
     (void)ucSlaveAddress;
     ENTER_CRITICAL_SECTION(); // Modbus协议栈初始化临界区
 
@@ -103,7 +103,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
             // /*FreeModbus 公式*/
             // usTimerT35_50us = 35; /* 1800us. */
             /*裸机 公式*/
-//            usTimerT15_50us = 15; // 750us
+            //            usTimerT15_50us = 15; // 750us
             usTimerT35_50us = 35; // 1750us
         }
         else
@@ -121,7 +121,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
             // usTimerT15_50us = (3UL * 220000UL) / (2UL * ulBaudRate);
             /*裸机 公式*/
             usTimerT35_50us = (7UL * 10000000UL) / (2UL * ulBaudRate);
-//            usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);
+            //            usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);
         }
         if (xMBPortTimersInit((USHORT)usTimerT35_50us) != TRUE)
         {
@@ -195,7 +195,9 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     }
 
     EXIT_CRITICAL_SECTION(); // Modbus协议栈接收临界区退出
-    // printf("RTU���� �ӻ���ַ�� %d �������� %d ���ȣ� %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
+#if DEBUG_UART_ENABLE
+    printf("RTU %d  %d  %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
+#endif
     return eStatus;
 }
 

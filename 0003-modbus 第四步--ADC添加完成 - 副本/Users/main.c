@@ -1,20 +1,14 @@
-#include "sys.h"
-#include "delay.h"
-
-#include "uart.h"
 
 /* Includes ------------------------------------------------------------------*/
+// #include "stm32f1xx.h"
 #include "main.h"
-#include "stm32f1xx.h"
-#include "tim.h"
-#include "usart.h"
-#include "gpio.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 
-#include "mb.h"
-#include "mbport.h"
-#include "user_mb_app.h"
+// #include "mb.h"
+// #include "mbport.h"
+// #include "user_mb_app.h"
 
 /* Private user code ---------------------------------------------------------*/
 
@@ -99,10 +93,13 @@ int main(void)
     /* 启用Modbus从站 */
     eMBEnable();
 
-    uart_init(115200); // 初始化串口1
-
+#if DEBUG_UART_ENABLE
+    uart_init(115200);               // 初始化串口1
     printf("hello world 66666\r\n"); //  串口1  打印 hello world 66666
-    HAL_Delay(4000);                 //  延时4秒
+    HAL_Delay(400);                  //  延时400ms
+#endif
+
+    HAL_Delay(400); //  延时400ms
 
     while (1)
     {
@@ -161,4 +158,3 @@ void assert_failed(uint8_t *file, uint32_t line)
         ;
 }
 #endif
-
