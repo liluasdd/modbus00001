@@ -18,6 +18,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /**
@@ -98,6 +99,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
     HAL_GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &GPIO_InitStruct);
 
+    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* 使能UART2接收中断 */
+    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_IDLE); /* 使能UART2总线空闲中断 */
+    
     /* USART2 interrupt Init */
     HAL_NVIC_SetPriority(DEBUG_USART_IRQ, 0, 0); // 抢占优先级0，子优先级0
     HAL_NVIC_EnableIRQ(DEBUG_USART_IRQ);         // 使能USART2中断通道
