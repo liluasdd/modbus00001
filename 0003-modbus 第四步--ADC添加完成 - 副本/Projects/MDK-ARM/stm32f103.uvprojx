@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\user_app;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc;..\..\software\mb_user</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -806,12 +806,12 @@
             <File>
               <FileName>user_mb_app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\STM32MB\STM32MB\user_app\user_mb_app.c</FilePath>
+              <FilePath>..\..\software\mb_user\user_mb_app.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\STM32MB\STM32MB\user_app\user_mb_app.h</FilePath>
+              <FilePath>..\..\software\mb_user\user_mb_app.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -1210,7 +1210,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\STM32MB\STM32MB\user_app\user_mb_app.c</PathWithFileName>
+      <PathWithFileName>..\..\software\mb_user\user_mb_app.c</PathWithFileName>
       <FilenameWithoutPath>user_mb_app.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1222,7 +1222,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\STM32MB\STM32MB\user_app\user_mb_app.h</PathWithFileName>
+      <PathWithFileName>..\..\software\mb_user\user_mb_app.h</PathWithFileName>
       <FilenameWithoutPath>user_mb_app.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>

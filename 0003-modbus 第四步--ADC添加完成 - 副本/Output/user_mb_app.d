@@ -1,5 +1,5 @@
-..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.c
-..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\user_mb_app.o: ..\..\software\mb_user\user_mb_app.c
+..\..\output\user_mb_app.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h

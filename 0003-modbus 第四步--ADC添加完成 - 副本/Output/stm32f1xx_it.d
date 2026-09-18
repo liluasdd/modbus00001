@@ -56,7 +56,7 @@
 ..\..\output\stm32f1xx_it.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\stm32f1xx_it.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\user_type.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\user_app\user_mb_app.h
+..\..\output\stm32f1xx_it.o: ..\..\software\mb_user\user_mb_app.h
 ..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
