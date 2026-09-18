@@ -7,6 +7,7 @@
         "usart.h": "c",
         "gpio.h": "c",
         "stm32f1xx.h": "c",
-        "user_mb_app.h": "c"
+        "user_mb_app.h": "c",
+        "adc.h": "c"
     }
 }
