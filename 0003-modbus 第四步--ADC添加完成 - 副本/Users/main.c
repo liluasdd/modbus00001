@@ -3,13 +3,13 @@
 // #include "stm32f1xx.h"
 #include "main.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 
 // #include "mb.h"
 // #include "mbport.h"
 // #include "user_mb_app.h"
 
+uint16_t adc_result[4] = {0};
 /* Private user code ---------------------------------------------------------*/
 
 volatile bit_flag flag1 = {0}, flag2 = {0}, flag3 = {0}, flag4 = {0}, flag5 = {0}, flag6 = {0}, flag7 = {0};
@@ -63,7 +63,6 @@ else
     BAUD_num = 9600; //索引非法，恢复默认
 }
  */
-
 int main(void)
 {
     // uint8_t num = 0;
@@ -74,7 +73,8 @@ int main(void)
     /* 初始化GPIO */
     APPGPIO_INIT();
     /* ADC初始化 */
-    MX_ADC1_Init();
+    // MX_ADC1_Init();
+    adc_dma_init((uint32_t *)&adc_result);
     /* 定时器4初始化 */
     MX_TIM4_Init();
     /* 定时器3初始化 - 100us定时 */

@@ -1,7 +1,7 @@
 Dependencies for Project 'stm32f103', Target 'Template': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
 F (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Source\Templates\arm\startup_stm32f101xb.s)(0x6A5A43DA)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 531" --pd "STM32F10X_MD SETA 1"--list ..\..\output\startup_stm32f101xb.lst --xref -o ..\..\output\startup_stm32f101xb.o --depend ..\..\output\startup_stm32f101xb.d)
-F (..\..\Users\main.c)(0x6A9A74E9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
+F (..\..\Users\main.c)(0x6AAD0640)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\main.o --omf_browse ..\..\output\main.crf --depend ..\..\output\main.d)
 I (..\..\Users\main.h)(0x6A9A74CF)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6437E90E)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h)(0x6437E90E)
@@ -72,7 +72,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -148,7 +148,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -396,7 +396,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbconfig.h)(0x6A58E1AC)
 I (..\..\STM32MB\STM32MB\modbus\include\mbframe.h)(0x61D7A2AA)
 I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -3012,7 +3012,7 @@ F (..\..\STM32MB\STM32MB\modbus\rtu\mbcrc.h)(0x61D7A2AA)()
 F (..\..\STM32MB\STM32MB\modbus\mb.c)(0x6A9A74CF)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\mb.o --omf_browse ..\..\output\mb.crf --depend ..\..\output\mb.d)
 I (..\..\Users\usertype.h)(0x6A9A7361)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\Users\main.h)(0x6A9A74CF)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6437E90E)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h)(0x6437E90E)
@@ -3162,7 +3162,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -3305,7 +3305,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
 I (..\..\software\inc\tim.h)(0x6A9695CD)
@@ -3381,7 +3381,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -3456,7 +3456,7 @@ I (..\..\Users\usertype.h)(0x6A9A7361)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -3857,7 +3857,7 @@ I (..\..\Drivers\SYSTEM\sys\sys.h)(0x65BC5F8A)
 I (..\..\STM32MB\STM32MB\modbus\include\mb.h)(0x6A96A179)
 I (..\..\STM32MB\STM32MB\modbus\include\mbport.h)(0x6A5F6748)
 I (..\..\STM32MB\STM32MB\modbus\include\mbproto.h)(0x61D7A2AA)
-F (..\..\software\src\adc.c)(0x6A9026F6)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\adc.o --omf_browse ..\..\output\adc.crf --depend ..\..\output\adc.d)
+F (..\..\software\src\adc.c)(0x6AAD06C5)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\adc.o --omf_browse ..\..\output\adc.crf --depend ..\..\output\adc.d)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\Drivers\SYSTEM\sys\sys.h)(0x65BC5F8A)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6437E90E)
@@ -3929,12 +3929,12 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\key.h)(0x6A941218)
 I (..\..\software\inc\tim.h)(0x6A9695CD)
 F (..\..\software\src\gpio.c)(0x6A9A6CCF)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\gpio.o --omf_browse ..\..\output\gpio.crf --depend ..\..\output\gpio.d)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\Users\main.h)(0x6A9A74CF)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6437E90E)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h)(0x6437E90E)
@@ -4080,7 +4080,7 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
@@ -4157,11 +4157,11 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
-F (..\..\software\src\usart.c)(0x6A968CA4)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\usart.o --omf_browse ..\..\output\usart.crf --depend ..\..\output\usart.d)
+F (..\..\software\src\usart.c)(0x6AACDDA5)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\usart.o --omf_browse ..\..\output\usart.crf --depend ..\..\output\usart.d)
 I (..\..\software\inc\usart.h)(0x6A5A4B2C)
 I (..\..\Users\main.h)(0x6A9A74CF)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6437E90E)
@@ -4233,12 +4233,12 @@ I (..\..\STM32MB\STM32MB\modbus\include\mbutils.h)(0x61D7A2AA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (..\..\Drivers\SYSTEM\delay\delay.h)(0x65BDB312)
 I (..\..\Drivers\SYSTEM\uart1\uart.h)(0x6A58E188)
-I (..\..\software\inc\gpio.h)(0x6A9A7580)
+I (..\..\software\inc\gpio.h)(0x6A9A78CE)
 I (..\..\software\inc\adc.h)(0x6A90234A)
 I (..\..\software\inc\key.h)(0x6A941218)
 I (..\..\software\inc\tim.h)(0x6A9695CD)
 F (..\..\software\inc\adc.h)(0x6A90234A)()
-F (..\..\software\inc\gpio.h)(0x6A9A7580)()
+F (..\..\software\inc\gpio.h)(0x6A9A78CE)()
 F (..\..\software\inc\key.h)(0x6A941218)()
 F (..\..\software\inc\tim.h)(0x6A9695CD)()
 F (..\..\software\inc\usart.h)(0x6A5A4B2C)()
