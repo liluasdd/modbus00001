@@ -9,7 +9,8 @@
 // #include "mbport.h"
 // #include "user_mb_app.h"
 
-uint16_t adc_result[4] = {0};
+
+extern void adc_dma_init(uint32_t *adc_result);
 /* Private user code ---------------------------------------------------------*/
 
 volatile bit_flag flag1 = {0}, flag2 = {0}, flag3 = {0}, flag4 = {0}, flag5 = {0}, flag6 = {0}, flag7 = {0};
@@ -24,6 +25,7 @@ extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
 extern USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS];
 int16_t adc_value = 0;
 
+	u8 adc_num = 0;
 u8 led_num = 0;
 void Led_scan(void)
 {
@@ -106,6 +108,18 @@ int main(void)
         if (g_b_task_jtim == 1)
         {
             g_b_task_jtim = 0;
+            if (ch1_value[adc_num] != 0xFFFF)
+            {
+                //处理 ch1_value[adc_dma_num]
+                adc_num++;
+                if (adc_num >= d_ADC_DMA_num_max)
+                {
+                    adc_num = 0;
+                }
+                
+                ch1_value[adc_num] = 0xFFFF;//处理完复位最大值
+            }
+
 
             key_scan();
             if (g_b_2s_jtim == 1)

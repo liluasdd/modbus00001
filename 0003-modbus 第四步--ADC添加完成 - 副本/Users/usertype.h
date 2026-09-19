@@ -28,6 +28,7 @@
 #define vu16 volatile u16
 #define vu8 volatile u8  //////* 8位 易失性变量，每次都从内存读取*/
 
+
 void APP_ErrorHandler(void);
 
 typedef union

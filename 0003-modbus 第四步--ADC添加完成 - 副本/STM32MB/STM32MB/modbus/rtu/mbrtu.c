@@ -165,7 +165,7 @@ void eMBRTUStop(void)
 eMBErrorCode
 eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
 {
-    BOOL xFrameReceived = FALSE;
+    BOOL xFrameReceived = FALSE;// 接收状态标志
     eMBErrorCode eStatus = MB_ENOERR;
 
     ENTER_CRITICAL_SECTION();

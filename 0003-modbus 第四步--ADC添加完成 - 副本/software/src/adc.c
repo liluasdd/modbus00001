@@ -340,6 +340,10 @@ void dma_config(void)
   HAL_DMA_Init(&dma_handle);                      // 初始化DMA
 
   __HAL_LINKDMA(&adc_handle, DMA_Handle, dma_handle); // 将DMA与ADC关联（ADC的DMA_Handle指向dma_handle）
+
+  // 添加：使能DMA中断
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);// 使能DMA1通道1中断，用于接收DMA传输完成中断
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);// 设置DMA1通道1中断优先级为0，中断服务函数为DMA1_Channel1_IRQHandler
 }
 
 // 配置ADC通道

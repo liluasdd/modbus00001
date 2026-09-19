@@ -27,8 +27,18 @@
 #include "mbport.h"
 #include "user_mb_app.h"
 
+/*自定义的*/
+#define	d_ADC_DMA_num_max		    10
+
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
+extern DMA_HandleTypeDef dma_handle; // 新增这一行
+
+extern uint16_t ch0_value[d_ADC_DMA_num_max];
+extern uint16_t ch1_value[d_ADC_DMA_num_max];
+extern uint16_t ch2_value[d_ADC_DMA_num_max];
+extern uint16_t ch3_value[d_ADC_DMA_num_max];
+extern uint16_t adc_result[4];
 
 extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);

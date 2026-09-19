@@ -51,12 +51,22 @@
  */
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
+
+extern DMA_HandleTypeDef dma_handle; // 新增这一行
+/* USER CODE BEGIN EV */
+
 /* USER CODE BEGIN EV */
 extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);
 extern void prvvTIMERExpiredISR(void);
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+uint8_t adc_dma_num = 0;
+uint16_t ch0_value[d_ADC_DMA_num_max] = {0}; // PA0
+uint16_t ch1_value[d_ADC_DMA_num_max] = {0}; // PA1
+uint16_t ch2_value[d_ADC_DMA_num_max] = {0}; // PA2
+uint16_t ch3_value[d_ADC_DMA_num_max] = {0}; // PA3
+uint16_t adc_result[4] = {0};
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
@@ -74,6 +84,34 @@ extern void prvvTIMERExpiredISR(void);
  */
 void NMI_Handler(void)
 {
+}
+
+void DMA1_Channel1_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(&dma_handle);
+}
+
+// DMA传输完成回调函数（4个通道全部采集并传输完毕时自动调用）
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) // 采集完成回调函数
+{
+  // 采集完成的4个通道数据在 adc_result[0]~[3] 中
+  // 在这里处理数据，例如：
+  ch0_value[adc_dma_num] = adc_result[0]; // PA0
+  ch1_value[adc_dma_num] = adc_result[1]; // PA1
+  ch2_value[adc_dma_num] = adc_result[2]; // PA2
+  ch3_value[adc_dma_num] = adc_result[3]; // PA3
+  adc_dma_num++;
+  if (adc_dma_num >= d_ADC_DMA_num_max)
+  {
+    adc_dma_num = 0;
+  }
+}
+
+// DMA半传输回调函数（传输2个数据时调用）
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) // 采集半完成回调函数
+{
+  // 前2个通道数据已传输完成
 }
 
 /**
