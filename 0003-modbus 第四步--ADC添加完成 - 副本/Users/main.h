@@ -7,9 +7,9 @@
 
 #include "usertype.h"
 
-///* åŒ…å«ç”¨æˆ·busåº”ç”¨å¤´æ–‡ä»¶ */
+///* °üº¬ÓÃ»§busÓ¦ÓÃÍ·ÎÄ¼ş */
 #include "user_mb_app.h"
-///*æ‰“å°å¤´æ–‡ä»¶ */
+///*´òÓ¡Í·ÎÄ¼ş */
 #include <stdio.h>
 
 #include "sys.h"
@@ -27,6 +27,10 @@
 #include "mbport.h"
 #include "user_mb_app.h"
 
+//////lcd
+#include "lcd.h"
+// #include "font.h"
+
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 
@@ -37,7 +41,7 @@ extern void prvvTIMERExpiredISR(void);
 static void SystemClock_Config(void);
 void Error_Handler(void);
 
-/* æµ‹è¯•åŠŸèƒ½å‚æ•° */
-#define MB_SAMPLE_TEST_SLAVE_ADDR 1 // ä»æœºè®¾å¤‡åœ°å€
+/* ²âÊÔ¹¦ÄÜ²ÎÊı */
+#define MB_SAMPLE_TEST_SLAVE_ADDR 1 // ´Ó»úÉè???µØÖ·
 
 #endif

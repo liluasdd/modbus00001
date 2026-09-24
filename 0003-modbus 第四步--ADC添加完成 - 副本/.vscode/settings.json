@@ -8,6 +8,16 @@
         "gpio.h": "c",
         "stm32f1xx.h": "c",
         "user_mb_app.h": "c",
-        "adc.h": "c"
+        "adc.h": "c",
+        "lcd.h": "c",
+        "font.h": "c",
+        "sys.h": "c",
+        "font.H": "cpp",
+        "delay.h": "c",
+        "ctiic.h": "c",
+        "ctp.h": "c",
+        "touch.h": "c",
+        "port.h": "c",
+        "w25qx.h": "c"
     }
 }

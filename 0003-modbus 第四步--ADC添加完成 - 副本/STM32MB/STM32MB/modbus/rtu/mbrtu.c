@@ -78,7 +78,7 @@ static volatile USHORT usRcvBufferPos;
 
 /* ----------------------- Start implementation -----------------------------*/
 
-// Modbus RTU ï¿½ï¿½Ê¼ï¿½ï¿½
+// Modbus RTU ?????
 eMBErrorCode
 eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity)
 {
@@ -86,7 +86,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
     ULONG usTimerT35_50us;
     //    ULONG usTimerT15_50us;
     (void)ucSlaveAddress;
-    ENTER_CRITICAL_SECTION(); // Modbusåè®®æ ˆåˆå§‹åŒ–ä¸´ç•ŒåŒº
+    ENTER_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»³õÊ¼»¯ÁÙ½çÇø
 
     /* Modbus RTU uses 8 Databits. */
     if (xMBPortSerialInit(ucPort, ulBaudRate, 8, eParity) != TRUE)
@@ -100,9 +100,9 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
          */
         if (ulBaudRate > 19200)
         {
-            // /*FreeModbus å…¬å¼*/
+            // /*FreeModbus ¹«Ê½*/
             // usTimerT35_50us = 35; /* 1800us. */
-            /*è£¸æœº å…¬å¼*/
+            /*Âã»ú ¹«Ê½*/
             //            usTimerT15_50us = 15; // 750us
             usTimerT35_50us = 35; // 1750us
         }
@@ -116,10 +116,10 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
              * The reload for t3.5 is 1.5 times this value and similary
              * for t3.5.
              */
-            // /*FreeModbus å…¬å¼*/
+            // /*FreeModbus ¹«Ê½*/
             // usTimerT35_50us = (7UL * 220000UL) / (2UL * ulBaudRate);
             // usTimerT15_50us = (3UL * 220000UL) / (2UL * ulBaudRate);
-            /*è£¸æœº å…¬å¼*/
+            /*Âã»ú ¹«Ê½*/
             usTimerT35_50us = (7UL * 10000000UL) / (2UL * ulBaudRate);
             //            usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);
         }
@@ -128,28 +128,28 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
             eStatus = MB_EPORTERR;
         }
     }
-    EXIT_CRITICAL_SECTION(); // Modbusåè®®æ ˆåˆå§‹åŒ–ä¸´ç•ŒåŒºé€€å‡º
+    EXIT_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»³õÊ¼»¯ÁÙ½çÇøÍË³ö
 
     return eStatus;
 }
 
-// Modbus RTU ï¿½ï¿½ï¿½ï¿½
+// Modbus RTU ????
 void eMBRTUStart(void)
 {
-    ENTER_CRITICAL_SECTION(); // Modbusåè®®æ ˆå¯åŠ¨ä¸´ç•ŒåŒº
+    ENTER_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»Æô¶¯ÁÙ½çÇø
     /* Initially the receiver is in the state STATE_RX_INIT. we start
      * the timer and if no character is received within t3.5 we change
      * to STATE_RX_IDLE. This makes sure that we delay startup of the
      * modbus protocol stack until the bus is free.
      */
-    eRcvState = STATE_RX_INIT;        // Modbusåè®®æ ˆå¯åŠ¨çŠ¶æ€ä¸ºåˆå§‹çŠ¶æ€
-    vMBPortSerialEnable(TRUE, FALSE); // å¯ç”¨ä¸²å£æ¥æ”¶ä¸­æ–­
-    vMBPortTimersEnable();            // å¯ç”¨å®šæ—¶å™¨
+    eRcvState = STATE_RX_INIT;        // ModbusĞ­ÒéÕ»Æô¶¯×´Ì¬Îª³õÊ¼×´Ì¬
+    vMBPortSerialEnable(TRUE, FALSE); // ÆôÓÃ´®¿Ú½ÓÊÕÖĞ¶Ï
+    vMBPortTimersEnable();            // ÆôÓÃ¶¨Ê±Æ÷
 
-    EXIT_CRITICAL_SECTION(); // Modbusåè®®æ ˆå¯åŠ¨ä¸´ç•ŒåŒºé€€å‡º
+    EXIT_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»Æô¶¯ÁÙ½çÇøÍË³ö
 }
 
-// Modbus RTU åœæ­¢
+// Modbus RTU Í£Ö¹
 void eMBRTUStop(void)
 {
     ENTER_CRITICAL_SECTION();
@@ -158,7 +158,7 @@ void eMBRTUStop(void)
     EXIT_CRITICAL_SECTION();
 }
 
-/* Modbus RTU æ¥æ”¶
+/* Modbus RTU ½ÓÊÕ
 
 
 */
@@ -169,7 +169,7 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     eMBErrorCode eStatus = MB_ENOERR;
 
     ENTER_CRITICAL_SECTION();
-    assert(usRcvBufferPos < MB_SER_PDU_SIZE_MAX); // æ£€æŸ¥æ¥æ”¶ç¼“å†²åŒºæ˜¯å¦å·²æ»¡
+    assert(usRcvBufferPos < MB_SER_PDU_SIZE_MAX); // ¼ì²é½ÓÊÕ»º³åÇøÊÇ·ñÒÑÂú
 
     /* Length and CRC check */
     if ((usRcvBufferPos >= MB_SER_PDU_SIZE_MIN) && (usMBCRC16((UCHAR *)ucRTUBuf, usRcvBufferPos) == 0))
@@ -177,16 +177,16 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
         /* Save the address field. All frames are passed to the upper layed
          * and the decision if a frame is used is done there.
          */
-        *pucRcvAddress = ucRTUBuf[MB_SER_PDU_ADDR_OFF]; // ä¿å­˜ä»ç«™åœ°å€
+        *pucRcvAddress = ucRTUBuf[MB_SER_PDU_ADDR_OFF]; // ±£´æ´ÓÕ¾µØÖ·
 
         /* Total length of Modbus-PDU is Modbus-Serial-Line-PDU minus
          * size of address field and CRC checksum.
          */
-        // æ€»é•¿åº¦ = æ¥æ”¶ç¼“å†²åŒºä½ç½® - æ•°æ®åç§»é‡ - CRCé•¿åº¦
+        // ×Ü³¤¶È = ½ÓÊÕ»º³åÇøÎ»ÖÃ - Êı¾İÆ«ÒÆÁ¿ - CRC³¤¶È
         *pusLength = (USHORT)(usRcvBufferPos - MB_SER_PDU_PDU_OFF - MB_SER_PDU_SIZE_CRC);
 
         /* Return the start of the Modbus PDU to the caller. */
-        *pucFrame = (UCHAR *)&ucRTUBuf[MB_SER_PDU_PDU_OFF]; // è¿”å›Modbus PDUçš„èµ·å§‹åœ°å€
+        *pucFrame = (UCHAR *)&ucRTUBuf[MB_SER_PDU_PDU_OFF]; // ·µ»ØModbus PDUµÄÆğÊ¼µØÖ·
         xFrameReceived = TRUE;
     }
     else
@@ -194,7 +194,7 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
         eStatus = MB_EIO;
     }
 
-    EXIT_CRITICAL_SECTION(); // Modbusåè®®æ ˆæ¥æ”¶ä¸´ç•ŒåŒºé€€å‡º
+    EXIT_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»½ÓÊÕÁÙ½çÇøÍË³ö
 #if DEBUG_UART_ENABLE
     printf("RTU %d  %d  %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
 #endif
@@ -202,11 +202,11 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
 }
 
 extern u8 g_485_send_tim;
-/* Modbus RTU å‘é€
- * @param ucSlaveAddress ä»ç«™åœ°å€
- * @param pucFrame Modbus PDUçš„èµ·å§‹åœ°å€
- * @param usLength Modbus PDUçš„é•¿åº¦
- * @return eMBErrorCode å‘é€çŠ¶æ€
+/* Modbus RTU ·¢ËÍ
+ * @param ucSlaveAddress ´ÓÕ¾µØÖ·
+ * @param pucFrame Modbus PDUµÄÆğÊ¼µØÖ·
+ * @param usLength Modbus PDUµÄ³¤¶È
+ * @return eMBErrorCode ·¢ËÍ×´Ì¬
  */
 eMBErrorCode
 eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
@@ -214,44 +214,44 @@ eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
     eMBErrorCode eStatus = MB_ENOERR;
     USHORT usCRC16;
 
-    ENTER_CRITICAL_SECTION(); // Modbusåè®®æ ˆå‘é€ä¸´ç•ŒåŒº
+    ENTER_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»·¢ËÍÁÙ½çÇø
 
     /* Check if the receiver is still in idle state. If not we where to
      * slow with processing the received frame and the master sent another
      * frame on the network. We have to abort sending the frame.
      */
-    if (eRcvState == STATE_RX_IDLE) // æ£€æŸ¥æ¥æ”¶çŠ¶æ€æ˜¯å¦ä¸ºé—²çŠ¶æ€
+    if (eRcvState == STATE_RX_IDLE) // ¼ì²é½ÓÊÕ×´Ì¬ÊÇ·ñÎªÏĞ×´Ì¬
     {
         /* First byte before the Modbus-PDU is the slave address. */
         pucSndBufferCur = (UCHAR *)pucFrame - 1;
-        usSndBufferCount = 1; // å‘é€ç¼“å†²åŒºè®¡æ•°å™¨åˆå§‹åŒ–ä¸º1ï¼Œå› ä¸ºç¬¬ä¸€ä¸ªå­—èŠ‚æ˜¯ä»ç«™åœ°å€
+        usSndBufferCount = 1; // ·¢ËÍ»º³åÇø¼ÆÊıÆ÷³õÊ¼»¯Îª1£¬ÒòÎªµÚÒ»¸ö×Ö½ÚÊÇ´ÓÕ¾µØÖ·
 
         /* Now copy the Modbus-PDU into the Modbus-Serial-Line-PDU. */
-        pucSndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress; // å¤åˆ¶ä»ç«™åœ°å€åˆ°å‘é€ç¼“å†²åŒº
-        usSndBufferCount += usLength;                          // å‘é€ç¼“å†²åŒºè®¡æ•°å™¨å¢åŠ ï¼Œå°†Modbus PDUçš„é•¿åº¦æ·»åŠ åˆ°è®¡æ•°å™¨ä¸­
+        pucSndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress; // ¸´ÖÆ´ÓÕ¾µØÖ·µ½·¢ËÍ»º³åÇø
+        usSndBufferCount += usLength;                          // ·¢ËÍ»º³åÇø¼ÆÊıÆ÷Ôö¼Ó£¬½«Modbus PDUµÄ³¤¶ÈÌí¼Óµ½¼ÆÊıÆ÷ÖĞ
 
         /* Calculate CRC16 checksum for Modbus-Serial-Line-PDU. */
-        usCRC16 = usMBCRC16((UCHAR *)pucSndBufferCur, usSndBufferCount); // è®¡ç®—Modbus PDUçš„CRC16æ ¡éªŒå’Œ
-        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 & 0xFF);          // å‘é€ç¼“å†²åŒºè®¡æ•°å™¨å¢åŠ ï¼Œå°†ä½å­—èŠ‚å†™å…¥ç¼“å†²åŒº
-        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8);            // å‘é€ç¼“å†²åŒºè®¡æ•°å™¨å¢åŠ ï¼Œå°†é«˜å­—èŠ‚å†™å…¥ç¼“å†²åŒº
+        usCRC16 = usMBCRC16((UCHAR *)pucSndBufferCur, usSndBufferCount); // ¼ÆËãModbus PDUµÄCRC16Ğ£ÑéºÍ
+        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 & 0xFF);          // ·¢ËÍ»º³åÇø¼ÆÊıÆ÷Ôö¼Ó£¬½«µÍ×Ö½ÚĞ´Èë»º³åÇø
+        ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8);            // ·¢ËÍ»º³åÇø¼ÆÊıÆ÷Ôö¼Ó£¬½«¸ß×Ö½ÚĞ´Èë»º³åÇø
 
         /* Activate the transmitter. */
-        eSndState = STATE_TX_XMIT;        // å‘é€çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºå‘é€çŠ¶æ€
-        vMBPortSerialEnable(FALSE, TRUE); // å¯ç”¨ä¸²å£å‘é€ä¸­æ–­
-        //////å‘é€å‰ä½¿èƒ½RS485å‘é€ä½¿èƒ½ï¼Œå¹¶æ¸…ç©ºå‘é€å‘é€å®šæ—¶å™¨
-        RS485_DE_HIGH_ON;      // ä½¿èƒ½RS485å‘é€ä½¿èƒ½
-        g_b_485_send_tick = 1; // å‘é€å®šæ—¶å™¨åˆå§‹åŒ–ä¸º1
-        g_485_send_tim = 0;    // å‘é€å®šæ—¶å™¨åˆå§‹åŒ–ä¸º0
+        eSndState = STATE_TX_XMIT;        // ·¢ËÍ×´Ì¬»ú×´Ì¬ÇĞ»»Îª·¢ËÍ×´Ì¬
+        vMBPortSerialEnable(FALSE, TRUE); // ÆôÓÃ´®¿Ú·¢ËÍÖĞ¶Ï
+        //////·¢ËÍÇ°Ê¹ÄÜRS485·¢ËÍÊ¹ÄÜ£¬²¢Çå¿Õ·¢ËÍ·¢ËÍ¶¨Ê±Æ÷
+        RS485_DE_HIGH_ON;      // Ê¹ÄÜRS485·¢ËÍÊ¹ÄÜ
+        g_b_485_send_tick = 1; // ·¢ËÍ¶¨Ê±Æ÷³õÊ¼»¯Îª1
+        g_485_send_tim = 0;    // ·¢ËÍ¶¨Ê±Æ÷³õÊ¼»¯Îª0
     }
     else
     {
-        eStatus = MB_EIO; // å‘é€çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºé”™è¯¯çŠ¶æ€
+        eStatus = MB_EIO; // ·¢ËÍ×´Ì¬»ú×´Ì¬ÇĞ»»Îª´íÎó×´Ì¬
     }
-    EXIT_CRITICAL_SECTION(); // Modbusåè®®æ ˆå‘é€ä¸´ç•ŒåŒºé€€å‡º
+    EXIT_CRITICAL_SECTION(); // ModbusĞ­ÒéÕ»·¢ËÍÁÙ½çÇøÍË³ö
     return eStatus;
 }
 
-// Modbus RTU æ¥æ”¶çŠ¶æ€æœº
+// Modbus RTU ½ÓÊÕ×´Ì¬»ú
 BOOL xMBRTUReceiveFSM(void)
 {
     BOOL xTaskNeedSwitch = FALSE;
@@ -262,21 +262,21 @@ BOOL xMBRTUReceiveFSM(void)
     /* Always read the character. */
     (void)xMBPortSerialGetByte((CHAR *)&ucByte);
 
-    switch (eRcvState) // Modbusåè®®æ ˆæ¥æ”¶çŠ¶æ€æœºçŠ¶æ€
+    switch (eRcvState) // ModbusĞ­ÒéÕ»½ÓÊÕ×´Ì¬»ú×´Ì¬
     {
         /* If we have received a character in the init state we have to
          * wait until the frame is finished.
          */
     case STATE_RX_INIT:
-        vMBPortTimersEnable(); // å¯ç”¨å®šæ—¶å™¨
+        vMBPortTimersEnable(); // ÆôÓÃ¶¨Ê±Æ÷
         break;
 
         /* In the error state we wait until all characters in the
          * damaged frame are transmitted.
          */
     case STATE_RX_ERROR:
-        vMBPortTimersEnable();     // å¯ç”¨å®šæ—¶å™¨
-        g_b_485_receive_Error = 1; // æ¥æ”¶é”™è¯¯æ ‡å¿—ç½®1
+        vMBPortTimersEnable();     // ÆôÓÃ¶¨Ê±Æ÷
+        g_b_485_receive_Error = 1; // ½ÓÊÕ´íÎó±êÖ¾ÖÃ1
         break;
 
         /* In the idle state we wait for a new character. If a character
@@ -285,11 +285,11 @@ BOOL xMBRTUReceiveFSM(void)
          */
     case STATE_RX_IDLE:
         usRcvBufferPos = 0;
-        ucRTUBuf[usRcvBufferPos++] = ucByte; // æ¥æ”¶ç¼“å†²åŒºä½ç½®å¢åŠ ï¼Œå°†æ–°å­—ç¬¦å†™å…¥ç¼“å†²åŒº
-        eRcvState = STATE_RX_RCV;            // æ¥æ”¶çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºæ¥æ”¶çŠ¶æ€
+        ucRTUBuf[usRcvBufferPos++] = ucByte; // ½ÓÊÕ»º³åÇøÎ»ÖÃÔö¼Ó£¬½«ĞÂ×Ö·ûĞ´Èë»º³åÇø
+        eRcvState = STATE_RX_RCV;            // ½ÓÊÕ×´Ì¬»ú×´Ì¬ÇĞ»»Îª½ÓÊÕ×´Ì¬
 
         /* Enable t3.5 timers. */
-        vMBPortTimersEnable(); // å¯ç”¨å®šæ—¶å™¨
+        vMBPortTimersEnable(); // ÆôÓÃ¶¨Ê±Æ÷
         break;
 
         /* We are currently receiving a frame. Reset the timer after
@@ -298,57 +298,57 @@ BOOL xMBRTUReceiveFSM(void)
          * ignored.
          */
     case STATE_RX_RCV:
-        if (usRcvBufferPos < MB_SER_PDU_SIZE_MAX) // æ¥æ”¶ç¼“å†²åŒºä½ç½®å°äºæœ€å¤§é•¿åº¦
+        if (usRcvBufferPos < MB_SER_PDU_SIZE_MAX) // ½ÓÊÕ»º³åÇøÎ»ÖÃĞ¡ÓÚ×î´ó³¤¶È
         {
-            ucRTUBuf[usRcvBufferPos++] = ucByte; // æ¥æ”¶ç¼“å†²åŒºä½ç½®å¢åŠ ï¼Œå°†æ–°å­—ç¬¦å†™å…¥ç¼“å†²åŒº
+            ucRTUBuf[usRcvBufferPos++] = ucByte; // ½ÓÊÕ»º³åÇøÎ»ÖÃÔö¼Ó£¬½«ĞÂ×Ö·ûĞ´Èë»º³åÇø
         }
         else
         {
-            eRcvState = STATE_RX_ERROR; // æ¥æ”¶çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºé”™è¯¯çŠ¶æ€
+            eRcvState = STATE_RX_ERROR; // ½ÓÊÕ×´Ì¬»ú×´Ì¬ÇĞ»»Îª´íÎó×´Ì¬
         }
-        vMBPortTimersEnable(); // å¯ç”¨å®šæ—¶å™¨
+        vMBPortTimersEnable(); // ÆôÓÃ¶¨Ê±Æ÷
         break;
     }
-    return xTaskNeedSwitch; // æ˜¯å¦éœ€è¦åˆ‡æ¢ä»»åŠ¡
+    return xTaskNeedSwitch; // ÊÇ·ñĞèÒªÇĞ»»ÈÎÎñ
 }
 
 /*
- *Modbus RTU å‘é€çŠ¶æ€æœº
+ *Modbus RTU ·¢ËÍ×´Ì¬»ú
  */
 BOOL xMBRTUTransmitFSM(void)
 {
-    BOOL xNeedPoll = FALSE; // æ˜¯å¦éœ€è¦è½®è¯¢
+    BOOL xNeedPoll = FALSE; // ÊÇ·ñĞèÒªÂÖÑ¯
 
-    assert(eRcvState == STATE_RX_IDLE); // æ¥æ”¶çŠ¶æ€æœºçŠ¶æ€å¿…é¡»ä¸ºç©ºé—²çŠ¶æ€
+    assert(eRcvState == STATE_RX_IDLE); // ½ÓÊÕ×´Ì¬»ú×´Ì¬±ØĞëÎª¿ÕÏĞ×´Ì¬
 
-    switch (eSndState) // å‘é€çŠ¶æ€æœºçŠ¶æ€
+    switch (eSndState) // ·¢ËÍ×´Ì¬»ú×´Ì¬
     {
         /* We should not get a transmitter event if the transmitter is in
          * idle state.  */
-    case STATE_TX_IDLE: // å‘é€çŠ¶æ€æœºçŠ¶æ€ä¸ºç©ºé—²çŠ¶æ€
+    case STATE_TX_IDLE: // ·¢ËÍ×´Ì¬»ú×´Ì¬Îª¿ÕÏĞ×´Ì¬
         /* enable receiver/disable transmitter. */
         vMBPortSerialEnable(TRUE, FALSE);
         break;
 
-    case STATE_TX_XMIT: // å‘é€çŠ¶æ€æœºçŠ¶æ€ä¸ºå‘é€çŠ¶æ€
+    case STATE_TX_XMIT: // ·¢ËÍ×´Ì¬»ú×´Ì¬Îª·¢ËÍ×´Ì¬
         /* check if we are finished. */
-        if (usSndBufferCount != 0) // å‘é€ç¼“å†²åŒºè®¡æ•°å™¨ä¸ä¸º0
+        if (usSndBufferCount != 0) // ·¢ËÍ»º³åÇø¼ÆÊıÆ÷²»Îª0
         {
-            xMBPortSerialPutByte((CHAR)*pucSndBufferCur); // å‘é€ä¸€ä¸ªå­—ç¬¦
+            xMBPortSerialPutByte((CHAR)*pucSndBufferCur); // ·¢ËÍÒ»¸ö×Ö·û
             pucSndBufferCur++;                            /* next byte in sendbuffer. */
-            ;                                             // å‘é€ä¸‹ä¸€ä¸ªå­—ç¬¦
+            ;                                             // ·¢ËÍÏÂÒ»¸ö×Ö·û
             usSndBufferCount--;
         }
         else
         {
-            xNeedPoll = xMBPortEventPost(EV_FRAME_SENT); // å‘é€å®Œæˆï¼Œå‘é€ EV_FRAME_SENT äº‹ä»¶
+            xNeedPoll = xMBPortEventPost(EV_FRAME_SENT); // ·¢ËÍÍê³É£¬·¢ËÍ EV_FRAME_SENT ÊÂ¼ş
             /* Disable transmitter. This prevents another transmit buffer
              * empty interrupt. */
-            vMBPortSerialEnable(TRUE, FALSE); // ç¦ç”¨å‘é€å™¨
-            eSndState = STATE_TX_IDLE;        // å‘é€çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºç©ºé—²çŠ¶æ€
-            RS485_DE_LOW_OFF;                 // ä½¿èƒ½RS485æ¥æ”¶ä½¿èƒ½
-            g_b_485_send_Error = 0;           // å‘é€é”™è¯¯æ ‡å¿—ä½åˆå§‹åŒ–ä¸º0
-            g_b_485_send_tick = 0;            // å‘é€å®šæ—¶å™¨åˆå§‹åŒ–ä¸º0
+            vMBPortSerialEnable(TRUE, FALSE); // ½ûÓÃ·¢ËÍÆ÷
+            eSndState = STATE_TX_IDLE;        // ·¢ËÍ×´Ì¬»ú×´Ì¬ÇĞ»»Îª¿ÕÏĞ×´Ì¬
+            RS485_DE_LOW_OFF;                 // Ê¹ÄÜRS485½ÓÊÕÊ¹ÄÜ
+            g_b_485_send_Error = 0;           // ·¢ËÍ´íÎó±êÖ¾Î»³õÊ¼»¯Îª0
+            g_b_485_send_tick = 0;            // ·¢ËÍ¶¨Ê±Æ÷³õÊ¼»¯Îª0
         }
         break;
     }
@@ -356,7 +356,7 @@ BOOL xMBRTUTransmitFSM(void)
     return xNeedPoll;
 }
 
-// Modbus RTU æ¥æ”¶çŠ¶æ€æœºå®šæ—¶å™¨ T35 äº‹ä»¶å¤„ç†
+// Modbus RTU ½ÓÊÕ×´Ì¬»ú¶¨Ê±Æ÷ T35 ÊÂ¼ş´¦Àí
 BOOL xMBRTUTimerT35Expired(void)
 {
     BOOL xNeedPoll = FALSE;
@@ -365,13 +365,13 @@ BOOL xMBRTUTimerT35Expired(void)
     {
         /* Timer t35 expired. Startup phase is finished. */
     case STATE_RX_INIT:
-        xNeedPoll = xMBPortEventPost(EV_READY); // å‘é€ EV_READY äº‹ä»¶
+        xNeedPoll = xMBPortEventPost(EV_READY); // ·¢ËÍ EV_READY ÊÂ¼ş
         break;
 
         /* A frame was received and t35 expired. Notify the listener that
          * a new frame was received. */
     case STATE_RX_RCV:
-        xNeedPoll = xMBPortEventPost(EV_FRAME_RECEIVED); // æ¥æ”¶å®Œæˆï¼Œå‘é€ EV_FRAME_RECEIVED äº‹ä»¶
+        xNeedPoll = xMBPortEventPost(EV_FRAME_RECEIVED); // ½ÓÊÕÍê³É£¬·¢ËÍ EV_FRAME_RECEIVED ÊÂ¼ş
         break;
 
         /* An error occured while receiving the frame. */
@@ -384,10 +384,10 @@ BOOL xMBRTUTimerT35Expired(void)
                (eRcvState == STATE_RX_RCV) || (eRcvState == STATE_RX_ERROR));
     }
 
-    vMBPortTimersDisable();    // ç¦ç”¨å®šæ—¶å™¨
-    eRcvState = STATE_RX_IDLE; // æ¥æ”¶çŠ¶æ€æœºçŠ¶æ€åˆ‡æ¢ä¸ºç©ºé—²çŠ¶æ€
+    vMBPortTimersDisable();    // ½ûÓÃ¶¨Ê±Æ÷
+    eRcvState = STATE_RX_IDLE; // ½ÓÊÕ×´Ì¬»ú×´Ì¬ÇĞ»»Îª¿ÕÏĞ×´Ì¬
 
-    return xNeedPoll; // æ˜¯å¦éœ€è¦è½®è¯¢
+    return xNeedPoll; // ÊÇ·ñĞèÒªÂÖÑ¯
 }
 
 void Modbus_ResetRx(void)

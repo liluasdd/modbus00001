@@ -78,5 +78,6 @@
 ..\..\output\mbrtu.o: ..\..\software\inc\adc.h
 ..\..\output\mbrtu.o: ..\..\software\inc\key.h
 ..\..\output\mbrtu.o: ..\..\software\inc\tim.h
+..\..\output\mbrtu.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbcrc.h

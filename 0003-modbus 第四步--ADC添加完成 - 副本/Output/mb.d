@@ -77,6 +77,7 @@
 ..\..\output\mb.o: ..\..\software\inc\adc.h
 ..\..\output\mb.o: ..\..\software\inc\key.h
 ..\..\output\mb.o: ..\..\software\inc\tim.h
+..\..\output\mb.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\mb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\..\output\mb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ..\..\output\mb.o: ..\..\STM32MB\STM32MB\modbus\include\mbfunc.h

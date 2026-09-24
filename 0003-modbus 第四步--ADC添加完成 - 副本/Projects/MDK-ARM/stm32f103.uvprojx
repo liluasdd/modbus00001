@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc;..\..\software\mb_user</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc;..\..\software\mb_user;..\..\software\app_tft_lcd</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -414,9 +414,9 @@
               <FilePath>..\..\Users\main.h</FilePath>
             </File>
             <File>
-              <FileName>user_type.h</FileName>
+              <FileName>usertype.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\Users\user_type.h</FilePath>
+              <FilePath>..\..\Users\usertype.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -907,6 +907,66 @@
               <FileName>usart.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\software\inc\usart.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app_lcd</GroupName>
+          <Files>
+            <File>
+              <FileName>ctiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_tft_lcd\ctiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>ctiic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\ctiic.h</FilePath>
+            </File>
+            <File>
+              <FileName>ctp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_tft_lcd\ctp.c</FilePath>
+            </File>
+            <File>
+              <FileName>ctp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\ctp.h</FilePath>
+            </File>
+            <File>
+              <FileName>font.H</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\font.H</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_tft_lcd\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\lcd.h</FilePath>
+            </File>
+            <File>
+              <FileName>test code.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_tft_lcd\test code.c</FilePath>
+            </File>
+            <File>
+              <FileName>test code.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\test code.h</FilePath>
+            </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_tft_lcd\touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>touch.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\software\app_tft_lcd\touch.h</FilePath>
             </File>
           </Files>
         </Group>

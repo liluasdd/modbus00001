@@ -77,3 +77,4 @@
 ..\..\output\gpio.o: ..\..\software\inc\adc.h
 ..\..\output\gpio.o: ..\..\software\inc\key.h
 ..\..\output\gpio.o: ..\..\software\inc\tim.h
+..\..\output\gpio.o: ..\..\software\app_tft_lcd\lcd.h

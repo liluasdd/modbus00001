@@ -3,80 +3,83 @@
 
 void APPGPIO_INIT(void)
 {
-    // åˆå§‹åŒ–GPIOç»“æ„ä½“
+    // ³õÊ¼»¯GPIO½á¹¹Ìå
     GPIO_InitTypeDef gpio_initstruct;
 
-    // æ‰“å¼€æ—¶é’Ÿ
+    // ´ò¿ªÊ±ÖÓ
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
     /////*===== PA6: IIC_SCL  PA7: IIC_SDA  =====*/
     gpio_initstruct.Pin = IIC_scl_pin;
-    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_OD; // æ”¹ä¸ºå¼€æ¼è¾“å‡º
-    gpio_initstruct.Pull = GPIO_PULLUP;         // éœ€è¦å¤–éƒ¨ä¸Šæ‹‰
+    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_OD; // ¸ÄÎª¿ªÂ©Êä³ö
+    gpio_initstruct.Pull = GPIO_PULLUP;         // ĞèÒªÍâ²¿ÉÏÀ­
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(IIC_scl_port, &gpio_initstruct);
 
     gpio_initstruct.Pin = IIC_sda_pin;
-    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_OD; // æ”¹ä¸ºå¼€æ¼è¾“å‡º
+    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_OD; // ¸ÄÎª¿ªÂ©Êä³ö
     gpio_initstruct.Pull = GPIO_PULLUP;
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(IIC_sda_port, &gpio_initstruct);
 
-    /////*=====è¾“å‡º=====*/
-    // è°ƒç”¨GPIOåˆå§‹åŒ–å‡½æ•°
-    // gpio_initstruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;  // ä¸¤ä¸ªLEDå¯¹åº”çš„å¼•è„š
+    /////*=====Êä³ö=====*/
+    // µ÷ÓÃGPIO³õÊ¼»¯º¯Êı
+    // gpio_initstruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;  // Á½¸öLED¶ÔÓ¦µÄÒı½Å
     gpio_initstruct.Pin = Led1_pin | Led2_pin;    // GPIO_PIN_8 // GPIO_PIN_9
-    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;   // æ¨æŒ½è¾“å‡º
-    gpio_initstruct.Pull = GPIO_PULLUP;           // ä¸Šæ‹‰
-    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH; // é«˜é€Ÿ
+    gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;   // ÍÆÍìÊä³ö
+    gpio_initstruct.Pull = GPIO_PULLUP;           // ÉÏÀ­
+    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH; // ¸ßËÙ
     HAL_GPIO_Init(Led1_port, &gpio_initstruct);   // GPIOB
-    // å…³é—­LED
+
+    // GPIO_InitStruct.Pin = Led2_pin; 
+    // LL_GPIO_Init(Led2_port, &GPIO_InitStruct);
+    // ¹Ø±ÕLED
     Led1_off;
     Led2_off;
 
-    /////*=====å¤ç”¨æ¨æŒ½è¾“å‡º=====*/
+    /////*=====¸´ÓÃÍÆÍìÊä³ö=====*/
     /* PA9: USART1_TX */
     gpio_initstruct.Pin = USART1_TX_pin;
-    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? å¤ç”¨æ¨æŒ½
+    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? ¸´ÓÃÍÆÍì
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(USART1_TX_port, &gpio_initstruct);
 
     /* PA2: USART2_TX */
     gpio_initstruct.Pin = USART2_TX_pin;    // GPIO_PIN_2
-    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? å¤ç”¨æ¨æŒ½è¾“å‡º
+    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? ¸´ÓÃÍÆÍìÊä³ö
     gpio_initstruct.Pull = GPIO_NOPULL;
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    //    gpio_initstruct.Alternate = GPIO_AF7_USART2; // å¤ç”¨æ¨æŒ½è¾“å‡º
+    //    gpio_initstruct.Alternate = GPIO_AF7_USART2; // ¸´ÓÃÍÆÍìÊä³ö
     HAL_GPIO_Init(USART2_TX_port, &gpio_initstruct); // GPIOA
 
     /* PB10: USART3_TX */
     gpio_initstruct.Pin = USART3_TX_pin;    // GPIO_PIN_2
-    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? å¤ç”¨æ¨æŒ½è¾“å‡º
+    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? ¸´ÓÃÍÆÍìÊä³ö
     gpio_initstruct.Pull = GPIO_NOPULL;
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(USART3_TX_port, &gpio_initstruct); // GPIOA
 
-    /* PA4: RS485 DE/RE æ§åˆ¶ï¼ˆæ™®é€šæ¨æŒ½è¾“å‡ºï¼‰ */
+    /* PA4: RS485 DE/RE ¿ØÖÆ£¨ÆÕÍ¨ÍÆÍìÊä³ö£© */
     gpio_initstruct.Pin = RS485_DE_pin; // GPIO_PIN_4
     gpio_initstruct.Mode = GPIO_MODE_OUTPUT_PP;
     gpio_initstruct.Pull = GPIO_NOPULL;
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(RS485_DE_port, &gpio_initstruct); // GPIOB
 
-    ///////*=====è¾“å…¥=====*/
+    ///////*=====ÊäÈë=====*/
     /*  PA10: USART1_RX */
     gpio_initstruct.Pin = USART1_RX_pin;
-    gpio_initstruct.Mode = GPIO_MODE_INPUT;          // ? è¾“å…¥
-    gpio_initstruct.Pull = GPIO_PULLUP;              // ? ä¸Šæ‹‰ï¼ˆæ¨èï¼‰
+    gpio_initstruct.Mode = GPIO_MODE_INPUT;          // ? ÊäÈë
+    gpio_initstruct.Pull = GPIO_PULLUP;              // ? ÉÏÀ­£¨ÍÆ¼ö£©
     HAL_GPIO_Init(USART1_RX_port, &gpio_initstruct); // GPIOA
 
     /* PA3: USART2_RX */
     gpio_initstruct.Pin = USART2_RX_pin; // GPIO_PIN_3
     gpio_initstruct.Mode = GPIO_MODE_INPUT;
     gpio_initstruct.Pull = GPIO_PULLUP;
-    // gpio_initstruct.Alternate = GPIO_AF7_USART2;//å¤ç”¨è¾“å…¥
+    // gpio_initstruct.Alternate = GPIO_AF7_USART2;//¸´ÓÃÊäÈë
     HAL_GPIO_Init(USART2_RX_port, &gpio_initstruct); // GPIOA
 
     /* PB11: USART3_RX */
@@ -85,18 +88,18 @@ void APPGPIO_INIT(void)
     gpio_initstruct.Pull = GPIO_PULLUP;
     HAL_GPIO_Init(USART3_RX_port, &gpio_initstruct); // GPIOB
 
-    // è°ƒç”¨GPIOåˆå§‹åŒ–å‡½æ•°  GPIO_PIN_0 GPIO_PIN_1
-    gpio_initstruct.Pin = key1_pin | key2_pin;    // ä¸¤ä¸ªæŒ‰é”®å¯¹åº”çš„å¼•è„š
-    gpio_initstruct.Mode = GPIO_MODE_INPUT;       // è¾“å…¥
-    gpio_initstruct.Pull = GPIO_NOPULL;           // æ— æ‹‰
-    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH; // é«˜é€Ÿ
+    // µ÷ÓÃGPIO³õÊ¼»¯º¯Êı  GPIO_PIN_0 GPIO_PIN_1
+    gpio_initstruct.Pin = key1_pin | key2_pin;    // Á½¸ö°´¼ü¶ÔÓ¦µÄÒı½Å
+    gpio_initstruct.Mode = GPIO_MODE_INPUT;       // ÊäÈë
+    gpio_initstruct.Pull = GPIO_NOPULL;           // ÎŞÀ­
+    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH; // ¸ßËÙ
     HAL_GPIO_Init(key1_port, &gpio_initstruct);
 
-    /* ADC æ¨¡æ‹Ÿè¾“å…¥ */
+    /* ADC Ä£ÄâÊäÈë */
     gpio_initstruct.Pin = PT100_ADC_pin;             // GPIO_PIN_5
-    gpio_initstruct.Mode = GPIO_MODE_ANALOG;         // æ¨¡æ‹Ÿè¾“å…¥
-    gpio_initstruct.Pull = GPIO_NOPULL;              // æ— æ‹‰
-    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;    // é«˜é€Ÿ
+    gpio_initstruct.Mode = GPIO_MODE_ANALOG;         // Ä£ÄâÊäÈë
+    gpio_initstruct.Pull = GPIO_NOPULL;              // ÎŞÀ­
+    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;    // ¸ßËÙ
     HAL_GPIO_Init(PT100_ADC_port, &gpio_initstruct); // GPIOA
 }
 

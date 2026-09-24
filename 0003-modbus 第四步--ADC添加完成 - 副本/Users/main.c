@@ -2,7 +2,7 @@
 /* Includes ------------------------------------------------------------------*/
 // #include "stm32f1xx.h"
 #include "main.h"
-
+#include "touch.h"
 /* Private includes ----------------------------------------------------------*/
 
 // #include "mb.h"
@@ -14,13 +14,13 @@ uint16_t adc_result[4] = {0};
 
 volatile bit_flag flag1 = {0}, flag2 = {0}, flag3 = {0}, flag4 = {0}, flag5 = {0}, flag6 = {0}, flag7 = {0};
 
-/* ç¦»æ•£è¾“å…¥ç¼“å†²åŒºï¼ˆåªè¯»ï¼‰ */
+/* ÀëÉ¢ÊäÈë»º³åÇø£¨Ö»¶Á£© */
 extern UCHAR ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES / 8];
-/* çº¿åœˆç¼“å†²åŒºï¼ˆè¯»å†™ï¼‰ */
+/* ÏßÈ¦»º³åÇø£¨¶ÁĞ´£© */
 extern UCHAR ucSCoilBuf[S_COIL_NCOILS / 8];
-/* è¾“å…¥å¯„å­˜å™¨ç¼“å†²åŒºï¼ˆåªè¯»ï¼‰ */
+/* ÊäÈë¼Ä´æÆ÷»º³åÇø£¨Ö»¶Á£© */
 extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
-/* ä¿æŒå¯„å­˜å™¨ç¼“å†²åŒºï¼ˆè¯»å†™ï¼‰ */
+/* ±£³Ö¼Ä´æÆ÷»º³åÇø£¨¶ÁĞ´£© */
 extern USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS];
 int16_t adc_value = 0;
 
@@ -29,7 +29,7 @@ void Led_scan(void)
 {
     static uint8_t led_state_num = 0;
 
-    // led_num = !led_num; // åˆ‡æ¢ledçŠ¶æ€ä½
+    // led_num = !led_num; // ÇĞ»»led×´Ì¬Î»
 
     if (led_state_num == 0)
     {
@@ -50,56 +50,82 @@ void Led_scan(void)
 }
 
 /*
-//ç´¢å¼•å¯¹åº”çœŸå®æ³¢ç‰¹ç‡
+//Ë÷Òı¶ÔÓ¦ÕæÊµ²¨ÌØÂÊ
 const uint32_t baud_table[] = {2400,4800,9600,19200,38400,115200};
 
-// g_dev_baud_idx å°±æ˜¯Flashè¯»å‡ºæ¥çš„uint8_tç´¢å¼•
+// g_dev_baud_idx ¾ÍÊÇFlash¶Á³öÀ´µÄuint8_tË÷Òı
 if(g_dev_baud_idx < sizeof(baud_table)/sizeof(uint32_t))
 {
     BAUD_num = baud_table[g_dev_baud_idx];
 }
 else
 {
-    BAUD_num = 9600; //ç´¢å¼•éæ³•ï¼Œæ¢å¤é»˜è®¤
+    BAUD_num = 9600; //Ë÷Òı·Ç·¨£¬»Ö¸´Ä¬ÈÏ
 }
  */
 int main(void)
 {
     // uint8_t num = 0;
 
-    HAL_Init();                     /* åˆå§‹åŒ–HAL */
-    stm32_clock_init(RCC_PLL_MUL9); /* åˆå§‹åŒ–æ—¶é’Ÿä¸º72Mhz */
+    HAL_Init();                     /* ³õÊ¼»¯HAL */
+    stm32_clock_init(RCC_PLL_MUL9); /* ³õÊ¼»¯Ê±ÖÓÎª72Mhz */
 
-    /* åˆå§‹åŒ–GPIO */
+    /* ³õÊ¼»¯GPIO */
     APPGPIO_INIT();
-    /* ADCåˆå§‹åŒ– */
-    // MX_ADC1_Init();
-    adc_dma_init((uint32_t *)&adc_result);
-    /* å®šæ—¶å™¨4åˆå§‹åŒ– */
-    MX_TIM4_Init();
-    /* å®šæ—¶å™¨3åˆå§‹åŒ– - 100uså®šæ—¶ */
-    MX_TIM3_Init();
-    HAL_TIM_Base_Start_IT(&htim3); /* å¯åŠ¨TIM3å®šæ—¶å™¨ä¸­æ–­ */
+//    /* ADC³õÊ¼»¯ */
+//    // MX_ADC1_Init();
+//    adc_dma_init((uint32_t *)&adc_result); // ³õÊ¼»¯ADC DMAÄ£Ê½
+//    /* ¶¨Ê±Æ÷4³õÊ¼»¯ */
+//    MX_TIM4_Init();
+//    /* ¶¨Ê±Æ÷3³õÊ¼»¯ - 100us¶¨Ê± */
+//    MX_TIM3_Init();
+//    HAL_TIM_Base_Start_IT(&htim3); /* Æô¶¯TIM3¶¨Ê±Æ÷ÖĞ¶Ï */
 
-    /* Modbusä»ç«™åˆå§‹åŒ– */
-    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONEæ— æ ¡éªŒ MB_PAR_ODDå¥‡æ ¡éªŒ MB_PAR_EVENå¶æ ¡éªŒ
+    LCD_Init(); // ³õÊ¼»¯LCD
+
+    // /* Modbus´ÓÕ¾³õÊ¼»¯ */
+    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONEÎŞĞ£Ñé MB_PAR_ODDÆæĞ£Ñé MB_PAR_EVENÅ¼Ğ£Ñé
+
+	tp_dev.touchtype |= USE_TP_TYPE; // µçÈİ´¥Ãş&µç×è´¥Ãş
+	// LCD_Display_Dir(USE_LCM_DIR);	 // ÆÁÄ»·½Ïò
+	LCD_Display_Dir(1); // ÆÁÄ»·½Ïò
+	LCD_Clear(WHITE);	// ÇåÆÁ
+
+	main_test("IC:ST7789"); // ²âÊÔÖ÷Ò³
+	// Color_Test();			// ´¿É«²âÊÔ
+	// Read_Test();			// ¶ÁÑÕÉ«²âÊÔ
+	// FillRec_Test(); // Í¼ĞÎ²âÊÔ
+	// English_Font_test();	// Ó¢ÎÄ²âÊÔ
+	Chinese_Font_test();	// ÖĞÎÄ²âÊÔ
+	// Pic_test(); // Í¼Æ¬²âÊÔ
+	// Switch_test();			// ÏÔÊ¾¿ª¹Ø²âÊÔ
+	//	Rotate_Test();			// Ğı×ª²âÊÔ
+
+	// ²»ĞèÒª´¥ÃşÇë×¢ÊÍµôÒÔÏÂ´úÂë
+	LCD_Display_Dir(0); // ÆÁÄ»ÇĞ»»ÎªÊúÆÁ×´Ì¬
+	tp_dev.init(); // ´¥ÃşÆÁ³õÊ¼»¯
+	POINT_COLOR = RED; // ÉèÖÃ×ÖÌåÎªºìÉ«
+
+	// Load_Drow_Dialog();
+	// if (tp_dev.touchtype & 0X80)
+	ctp_test(); // µçÈİÆÁ²âÊÔ
 
     /*
-    MB_RTU modbusé€‰æ‹©ã€‚  MB_SAMPLE_TEST_SLAVE_ADDR ä»ç«™åœ°å€ä¸º0x01 ã€‚MB_MASTER_USARTx ä¸²å£2 ã€‚ BAUD_num æ³¢ç‰¹ç‡ ã€‚ MB_PAR_NONE æ ¡éªŒé€‰æ‹©
+    MB_RTU modbusÑ¡Ôñ¡£  MB_SAMPLE_TEST_SLAVE_ADDR ´ÓÕ¾µØÖ·Îª0x01 ¡£MB_MASTER_USARTx ´®¿Ú2 ¡£ BAUD_num ²¨ÌØÂÊ ¡£ MB_PAR_NONE Ğ£ÑéÑ¡Ôñ
     */
-    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, BAUD_num, MB_PAR_NONE); // MB_PAR_NONEæ— æ ¡éªŒ MB_PAR_ODDå¥‡æ ¡éªŒ MB_PAR_EVENå¶æ ¡éªŒ
+    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, BAUD_num, MB_PAR_NONE); // MB_PAR_NONEÎŞĞ£Ñé MB_PAR_ODDÆæĞ£Ñé MB_PAR_EVENÅ¼Ğ£Ñé
     //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
 
-    /* å¯ç”¨Modbusä»ç«™ */
-    eMBEnable();
+    // /* ÆôÓÃModbus´ÓÕ¾ */
+    // eMBEnable();
 
 #if DEBUG_UART_ENABLE
-    uart_init(115200);               // åˆå§‹åŒ–ä¸²å£1
-    printf("hello world 66666\r\n"); //  ä¸²å£1  æ‰“å° hello world 66666
-    HAL_Delay(400);                  //  å»¶æ—¶400ms
+    uart_init(115200);               // ³õÊ¼»¯´®¿Ú1
+    printf("hello world 66666\r\n"); //  ´®¿Ú1  ´òÓ¡ hello world 66666
+    HAL_Delay(400);                  //  ÑÓÊ±400ms
 #endif
 
-    HAL_Delay(400); //  å»¶æ—¶400ms
+    HAL_Delay(400); //  ÑÓÊ±400ms
 
     while (1)
     {
@@ -115,14 +141,14 @@ int main(void)
             }
 
             // uint8_t test_byte = 0xAA;
-            // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // ä¸²å£2  æ‰“å° 0xAA
+            // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // ´®¿Ú2  ´òÓ¡ 0xAA
 
-            /////* 1ç§’è½®è¯¢ä¸€æ¬¡Modbusä»ç«™ï¼Œå¤„ç†æ•°æ®äº¤æ¢ */
+            /////* 1ÃëÂÖÑ¯Ò»´ÎModbus´ÓÕ¾£¬´¦ÀíÊı¾İ½»»» */
             // HAL_Delay(1000);
 
-            /* å‘é€è¶…æ—¶æ•…éšœå¤„ç† */
+            /* ·¢ËÍ³¬Ê±¹ÊÕÏ´¦Àí */
             eMBsend_Error();
-            /* è½®è¯¢Modbusä»ç«™ */
+            /* ÂÖÑ¯Modbus´ÓÕ¾ */
             eMBPoll();
         }
         if (g_b_100ms_jtim == 1)
@@ -134,20 +160,20 @@ int main(void)
     }
 }
 
-//  __aeabi_assert å‡½æ•°ï¼Œç”¨äºæ–­è¨€æ£€æŸ¥
+//  __aeabi_assert º¯Êı£¬ÓÃÓÚ¶ÏÑÔ¼ì²é
 void __aeabi_assert(const char *expr, const char *file, int line)
 {
-    // æ–­è¨€æ£€æŸ¥å¤±è´¥æ—¶å¾ªç¯ç­‰å¾…
+    // ¶ÏÑÔ¼ì²éÊ§°ÜÊ±Ñ­»·µÈ´ı
     while (1)
         ;
 }
 
 void Error_Handler(void)
 {
-    /* åˆå§‹åŒ–HALå¤±è´¥ */
+    /* ³õÊ¼»¯HALÊ§°Ü */
     while (1)
     {
-        // é—ªçƒLEDé—ªçƒé”™è¯¯ä¿¡æ¯
+        // ÉÁË¸LEDÉÁË¸´íÎóĞÅÏ¢
     }
 }
 

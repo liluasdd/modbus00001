@@ -77,3 +77,4 @@
 ..\..\output\porttimer.o: ..\..\software\inc\adc.h
 ..\..\output\porttimer.o: ..\..\software\inc\key.h
 ..\..\output\porttimer.o: ..\..\software\inc\tim.h
+..\..\output\porttimer.o: ..\..\software\app_tft_lcd\lcd.h

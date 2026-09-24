@@ -33,21 +33,21 @@
     {
 #define PR_END_EXTERN_C }
 
-// ä¸´ç•ŒåŒº
-#define ENTER_CRITICAL_SECTION() __set_PRIMASK(1) // è¿›å…¥ä¸´ç•ŒåŒº
-#define EXIT_CRITICAL_SECTION() __set_PRIMASK(0)  // é€€å‡ºä¸´ç•ŒåŒº
+// ÁÙ½çÇø
+#define ENTER_CRITICAL_SECTION() __set_PRIMASK(1) // ½øÈëÁÙ½çÇø
+#define EXIT_CRITICAL_SECTION() __set_PRIMASK(0)  // ÍË³öÁÙ½çÇø
 
-// freertosä¸´ç•ŒåŒº
-// #define ENTER_CRITICAL_SECTION( )   taskENTER_CRITICAL() 	 //è¿›å…¥ä¸´ç•ŒåŒº
-// #define EXIT_CRITICAL_SECTION( )    taskEXIT_CRITICAL()   //é€€å‡ºä¸´ç•ŒåŒº
+// freertosÁÙ½çÇø
+// #define ENTER_CRITICAL_SECTION( )   taskENTER_CRITICAL() 	 //½øÈëÁÙ½çÇø
+// #define EXIT_CRITICAL_SECTION( )    taskEXIT_CRITICAL()   //ÍË³öÁÙ½çÇø
 
-// ä¸­æ–­
-// #define ENTER_CRITICAL_SECTION( )   interruptDisable() 	 //ç¦ç”¨ä¸­æ–­
-// #define EXIT_CRITICAL_SECTION( )    interruptEnable()   //å¯ç”¨ä¸­æ–­
+// ÖĞ¶Ï
+// #define ENTER_CRITICAL_SECTION( )   interruptDisable() 	 //½ûÓÃÖĞ¶Ï
+// #define EXIT_CRITICAL_SECTION( )    interruptEnable()   //ÆôÓÃÖĞ¶Ï
 
 typedef uint8_t BOOL;
 
-typedef unsigned char UCHAR;  //ï¿½Ş·ï¿½ï¿½ï¿½ï¿½Ö·ï¿½
+typedef unsigned char UCHAR;  //????????
 typedef char CHAR;
 
 typedef uint16_t USHORT;

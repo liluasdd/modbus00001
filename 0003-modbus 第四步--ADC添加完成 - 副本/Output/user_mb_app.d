@@ -76,3 +76,4 @@
 ..\..\output\user_mb_app.o: ..\..\software\inc\adc.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\key.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\tim.h
+..\..\output\user_mb_app.o: ..\..\software\app_tft_lcd\lcd.h

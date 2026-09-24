@@ -65,7 +65,7 @@ static UCHAR ucMBAddress;
 static eMBMode eMBCurrentMode;
 
 /*
- * Modbus ×´Ì¬
+ * Modbus ??
  */
 static enum {
     STATE_ENABLED,
@@ -131,44 +131,44 @@ static xMBFunctionHandler xFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
 
 /* ----------------------- Start implementation -----------------------------*/
 /*
- * @brief  åˆå§‹åŒ–Modbusåè®®æ ˆ
- * @param  eMode  Modbusæ¨¡å¼
- * @param  ucSlaveAddress ä»ç«™åœ°å€
- * @param  ucPort ç«¯å£å·
- * @param  ulBaudRate æ³¢ç‰¹ç‡
- * @param  eParity æ ¡éªŒä½
- * @retval eMBErrorCode åˆå§‹åŒ–çŠ¶æ€
+ * @brief  ³õÊ¼»¯ModbusĞ­ÒéÕ»
+ * @param  eMode  ModbusÄ£Ê½
+ * @param  ucSlaveAddress ´ÓÕ¾µØÖ·
+ * @param  ucPort ¶Ë¿ÚºÅ
+ * @param  ulBaudRate ²¨ÌØÂÊ
+ * @param  eParity Ğ£ÑéÎ»
+ * @retval eMBErrorCode ³õÊ¼»¯×´Ì¬
  */
 eMBErrorCode
 eMBInit(eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity)
 {
-    eMBErrorCode eStatus = MB_ENOERR; // åˆå§‹åŒ–çŠ¶æ€
+    eMBErrorCode eStatus = MB_ENOERR; // ³õÊ¼»¯×´Ì¬
 
     /* check preconditions */
-    /* æ£€æŸ¥ä»ç«™åœ°å€æ˜¯å¦æœ‰æ•ˆ */
+    /* ¼ì²é´ÓÕ¾µØÖ·ÊÇ·ñÓĞĞ§ */
     if ((ucSlaveAddress == MB_ADDRESS_BROADCAST) ||
         (ucSlaveAddress < MB_ADDRESS_MIN) || (ucSlaveAddress > MB_ADDRESS_MAX))
     {
         eStatus = MB_EINVAL;
     }
-    else // ä»ç«™åœ°å€æœ‰æ•ˆæ—¶
+    else // ´ÓÕ¾µØÖ·ÓĞĞ§Ê±
     {
-        ucMBAddress = ucSlaveAddress; // è®¾ç½®ä»ç«™åœ°å€
+        ucMBAddress = ucSlaveAddress; // ÉèÖÃ´ÓÕ¾µØÖ·
 
-        switch (eMode) // é€‰æ‹©Modbusæ¨¡å¼
+        switch (eMode) // Ñ¡ÔñModbusÄ£Ê½
         {
 #if MB_RTU_ENABLED > 0
         case MB_RTU:
-            pvMBFrameStartCur = eMBRTUStart;                             // å¯ç”¨Modbusåè®®æ ˆ
-            pvMBFrameStopCur = eMBRTUStop;                               // åœç”¨Modbusåè®®æ ˆ
-            peMBFrameSendCur = eMBRTUSend;                               // å‘é€Modbusæ•°æ®
-            peMBFrameReceiveCur = eMBRTUReceive;                         // æ¥æ”¶Modbusæ•°æ®
-            pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBPortClose : NULL; // å…³é—­Modbusç«¯å£
-            pxMBFrameCBByteReceived = xMBRTUReceiveFSM;                  // æ¥æ”¶Modbusæ•°æ®çŠ¶æ€æœº
-            pxMBFrameCBTransmitterEmpty = xMBRTUTransmitFSM;             // å‘é€Modbusæ•°æ®ä¸ºç©ºçŠ¶æ€æœº
-            pxMBPortCBTimerExpired = xMBRTUTimerT35Expired;              // å®šæ—¶å™¨è¶…æ—¶å›è°ƒå‡½æ•°
+            pvMBFrameStartCur = eMBRTUStart;                             // ÆôÓÃModbusĞ­ÒéÕ»
+            pvMBFrameStopCur = eMBRTUStop;                               // Í£ÓÃModbusĞ­ÒéÕ»
+            peMBFrameSendCur = eMBRTUSend;                               // ·¢ËÍModbusÊı¾İ
+            peMBFrameReceiveCur = eMBRTUReceive;                         // ½ÓÊÕModbusÊı¾İ
+            pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBPortClose : NULL; // ¹Ø±ÕModbus¶Ë¿Ú
+            pxMBFrameCBByteReceived = xMBRTUReceiveFSM;                  // ½ÓÊÕModbusÊı¾İ×´Ì¬»ú
+            pxMBFrameCBTransmitterEmpty = xMBRTUTransmitFSM;             // ·¢ËÍModbusÊı¾İÎª¿Õ×´Ì¬»ú
+            pxMBPortCBTimerExpired = xMBRTUTimerT35Expired;              // ¶¨Ê±Æ÷³¬Ê±»Øµ÷º¯Êı
 
-            eStatus = eMBRTUInit(ucMBAddress, ucPort, ulBaudRate, eParity); // åˆå§‹åŒ–Modbusåè®®æ ˆ
+            eStatus = eMBRTUInit(ucMBAddress, ucPort, ulBaudRate, eParity); // ³õÊ¼»¯ModbusĞ­ÒéÕ»
             break;
 #endif
 #if MB_ASCII_ENABLED > 0
@@ -194,12 +194,12 @@ eMBInit(eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMB
             if (!xMBPortEventInit())
             {
                 /* port dependent event module initalization failed. */
-                eStatus = MB_EPORTERR; // åˆå§‹åŒ–Modbusç«¯å£äº‹ä»¶æ¨¡å—å¤±è´¥
+                eStatus = MB_EPORTERR; // ³õÊ¼»¯Modbus¶Ë¿ÚÊÂ¼şÄ£¿éÊ§°Ü
             }
             else
             {
                 eMBCurrentMode = eMode;
-                eMBState = STATE_DISABLED; // Modbusåè®®æ ˆå·²åˆå§‹åŒ–
+                eMBState = STATE_DISABLED; // ModbusĞ­ÒéÕ»ÒÑ³õÊ¼»¯
             }
         }
     }
@@ -301,7 +301,7 @@ eMBClose(void)
     return eStatus;
 }
 
-// å¯ç”¨Modbusåè®®æ ˆ
+// ÆôÓÃModbusĞ­ÒéÕ»
 eMBErrorCode
 eMBEnable(void)
 {
@@ -310,12 +310,12 @@ eMBEnable(void)
     if (eMBState == STATE_DISABLED)
     {
         /* Activate the protocol stack. */
-        pvMBFrameStartCur();      // å¯ç”¨Modbusåè®®æ ˆ
-        eMBState = STATE_ENABLED; // å¯ç”¨Modbusåè®®æ ˆ
+        pvMBFrameStartCur();      // ÆôÓÃModbusĞ­ÒéÕ»
+        eMBState = STATE_ENABLED; // ÆôÓÃModbusĞ­ÒéÕ»
     }
     else
     {
-        eStatus = MB_EILLSTATE; // Modbusåè®®æ ˆå·²å¯ç”¨
+        eStatus = MB_EILLSTATE; // ModbusĞ­ÒéÕ»ÒÑÆôÓÃ
     }
     return eStatus;
 }
@@ -346,18 +346,18 @@ eMBDisable(void)
 eMBErrorCode
 eMBPoll(void)
 {
-    static UCHAR *ucMBFrame;        /* Modbusæ•°æ®å¸§æŒ‡é’ˆå˜é‡ */
-    static UCHAR ucRcvAddress;      /* Modbusæ¥æ”¶åœ°å€å˜é‡ */
-    static UCHAR ucFunctionCode;    /* ModbusåŠŸèƒ½ç å˜é‡ */
-    static USHORT usLength;         /* Modbusæ•°æ®å¸§é•¿åº¦å˜é‡ */
-    static eMBException eException; /* Modbuså¼‚å¸¸å˜é‡ */
+    static UCHAR *ucMBFrame;        /* ModbusÊı¾İÖ¡Ö¸Õë±äÁ¿ */
+    static UCHAR ucRcvAddress;      /* Modbus½ÓÊÕµØÖ·±äÁ¿ */
+    static UCHAR ucFunctionCode;    /* Modbus¹¦ÄÜÂë±äÁ¿ */
+    static USHORT usLength;         /* ModbusÊı¾İÖ¡³¤¶È±äÁ¿ */
+    static eMBException eException; /* ModbusÒì³£±äÁ¿ */
 
     int i;
     eMBErrorCode eStatus = MB_ENOERR;
     eMBEventType eEvent;
 
     /* Check if the protocol stack is ready. */
-    if (eMBState != STATE_ENABLED) // Modbusåè®®æ ˆæ˜¯å¦å·²å¯ç”¨
+    if (eMBState != STATE_ENABLED) // ModbusĞ­ÒéÕ»ÊÇ·ñÒÑÆôÓÃ
     {
         return MB_EILLSTATE;
     }
@@ -371,7 +371,7 @@ eMBPoll(void)
         case EV_READY:
             break;
 
-        case EV_FRAME_RECEIVED: // Modbusæ•°æ®å¸§æ¥æ”¶äº‹ä»¶
+        case EV_FRAME_RECEIVED: // ModbusÊı¾İÖ¡½ÓÊÕÊÂ¼ş
             eStatus = peMBFrameReceiveCur(&ucRcvAddress, &ucMBFrame, &usLength);
             if (eStatus == MB_ENOERR)
             {
@@ -383,7 +383,7 @@ eMBPoll(void)
             }
             break;
 
-        case EV_EXECUTE: // Modbusæ‰§è¡Œäº‹ä»¶
+        case EV_EXECUTE: // ModbusÖ´ĞĞÊÂ¼ş
             ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
@@ -427,40 +427,40 @@ eMBPoll(void)
 }
 
 extern UART_HandleTypeDef huart2;
-u8 g_485_send_Error_num = 0; // 4485å‘é€è¶…æ—¶æ•…éšœæ¬¡æ•°
-u8 g_485_receive_Error_num = 0; // 485æ¥æ”¶è¶…é™æ•…éšœæ¬¡æ•°
+u8 g_485_send_Error_num = 0; // 4485·¢ËÍ³¬Ê±¹ÊÕÏ´ÎÊı
+u8 g_485_receive_Error_num = 0; // 485½ÓÊÕ³¬ÏŞ¹ÊÕÏ´ÎÊı
 
 void eMBsend_Error(void)
 {
-    //============485å‘é€è¶…æ—¶æ•…éšœå¤„ç†============
+    //============485·¢ËÍ³¬Ê±¹ÊÕÏ´¦Àí============
     if (g_b_485_send_Error == 1)
     {
-        // 1.å¼ºåˆ¶é‡Šæ”¾485æ€»çº¿
+        // 1.Ç¿ÖÆÊÍ·Å485×ÜÏß
         RS485_DE_LOW_OFF;
-        // g_485_tx_busy = 0;// 485æ€»çº¿é‡Šæ”¾
+        // g_485_tx_busy = 0;// 485×ÜÏßÊÍ·Å
         __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
 
-        // 2.Modbusåè®®çŠ¶æ€å¤ä½ï¼Œä¸¢å¼ƒåŠå¸§
+        // 2.ModbusĞ­Òé×´Ì¬¸´Î»£¬¶ªÆú°ëÖ¡
         Modbus_ResetRx();
-        // å‘é€æ ‡å¿—ä½æ¸…é›¶
+        // ·¢ËÍ±êÖ¾Î»ÇåÁã
         g_b_485_send_tick = 0;
-        // 3.âš ï¸å¿…é¡»æŠŠé”™è¯¯æ ‡è®°æ¸…é›¶ï¼Œå¦åˆ™ä¼šä¸€ç›´é‡å¤è¿›è¿™ä¸ªåˆ†æ”¯
+        // 3.??±ØĞë°Ñ´íÎó±ê¼ÇÇåÁã£¬·ñÔò»áÒ»Ö±ÖØ¸´½øÕâ¸ö·ÖÖ§
         g_b_485_send_Error = 0;
         if (g_485_send_Error_num < 255)
-            g_485_send_Error_num++; // å‘é€è¶…æ—¶æ•…éšœæ¬¡æ•°åŠ 1,æœ€å¤§255æ¬¡
+            g_485_send_Error_num++; // ·¢ËÍ³¬Ê±¹ÊÕÏ´ÎÊı¼Ó1,×î´ó255´Î
     }
-    else if (g_b_485_receive_Error == 1) //============485æ¥æ”¶é”™è¯¯å¤„ç†============
+    else if (g_b_485_receive_Error == 1) //============485½ÓÊÕ´íÎó´¦Àí============
     {
-        // 1.å¼ºåˆ¶é‡Šæ”¾485æ€»çº¿
+        // 1.Ç¿ÖÆÊÍ·Å485×ÜÏß
         RS485_DE_LOW_OFF;
 
-        // 2.Modbusåè®®çŠ¶æ€å¤ä½ï¼Œä¸¢å¼ƒåŠå¸§
+        // 2.ModbusĞ­Òé×´Ì¬¸´Î»£¬¶ªÆú°ëÖ¡
         Modbus_ResetRx();
 
         if (g_485_receive_Error_num < 255)
-            g_485_receive_Error_num++; // å‘é€æ¥æ”¶è¶…é™æ•…éšœæ¬¡æ•°åŠ 1,æœ€å¤§255æ¬¡
+            g_485_receive_Error_num++; // ·¢ËÍ½ÓÊÕ³¬ÏŞ¹ÊÕÏ´ÎÊı¼Ó1,×î´ó255´Î
 
-        // 3.âš ï¸å¿…é¡»æŠŠé”™è¯¯æ ‡è®°æ¸…é›¶ï¼Œå¦åˆ™ä¼šä¸€ç›´é‡å¤è¿›è¿™ä¸ªåˆ†æ”¯
+        // 3.??±ØĞë°Ñ´íÎó±ê¼ÇÇåÁã£¬·ñÔò»áÒ»Ö±ÖØ¸´½øÕâ¸ö·ÖÖ§
         g_b_485_receive_Error = 0;
     }
 }

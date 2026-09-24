@@ -84,6 +84,11 @@
 "..\..\output\key.o"
 "..\..\output\tim.o"
 "..\..\output\usart.o"
+"..\..\output\ctiic.o"
+"..\..\output\ctp.o"
+"..\..\output\lcd.o"
+"..\..\output\test code.o"
+"..\..\output\touch.o"
 --library_type=microlib --strict --scatter "..\..\Output\stm32f103.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

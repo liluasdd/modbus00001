@@ -77,3 +77,4 @@
 ..\..\output\portserial.o: ..\..\software\inc\adc.h
 ..\..\output\portserial.o: ..\..\software\inc\key.h
 ..\..\output\portserial.o: ..\..\software\inc\tim.h
+..\..\output\portserial.o: ..\..\software\app_tft_lcd\lcd.h

@@ -76,3 +76,4 @@
 ..\..\output\key.o: ..\..\software\inc\adc.h
 ..\..\output\key.o: ..\..\software\inc\key.h
 ..\..\output\key.o: ..\..\software\inc\tim.h
+..\..\output\key.o: ..\..\software\app_tft_lcd\lcd.h

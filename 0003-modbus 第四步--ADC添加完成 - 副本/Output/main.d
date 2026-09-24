@@ -76,3 +76,6 @@
 ..\..\output\main.o: ..\..\software\inc\adc.h
 ..\..\output\main.o: ..\..\software\inc\key.h
 ..\..\output\main.o: ..\..\software\inc\tim.h
+..\..\output\main.o: ..\..\software\app_tft_lcd\lcd.h
+..\..\output\main.o: ..\..\software\app_tft_lcd\touch.h
+..\..\output\main.o: ..\..\software\app_tft_lcd\CTP.h
