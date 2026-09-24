@@ -9,8 +9,9 @@ void CT_Delay(void)
 // 电容触摸芯片IIC接口初始化
 void CT_IIC_Init(void)
 {
-	    // 初始化GPIO结构体
-    GPIO_InitTypeDef gpio_initstruct;
+	// 初始化GPIO结构体
+	GPIO_InitTypeDef gpio_initstruct = {0};
+	
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
@@ -21,8 +22,8 @@ void CT_IIC_Init(void)
 	gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
 	gpio_initstruct.Pin = T_CS_pin; // B1
-	HAL_GPIO_Init(SPI_led_port, &gpio_initstruct);
-	SPI_led_HIGH_ON;
+	HAL_GPIO_Init(T_CS_port, &gpio_initstruct);
+	T_CS_HIGH_ON;
 
 	gpio_initstruct.Pin = T_CLK_pin; // B10
 	HAL_GPIO_Init(T_CLK_port, &gpio_initstruct);
@@ -74,7 +75,7 @@ u8 CT_IIC_Wait_Ack(void)
 	T_SDI_HIGH_ON;
 	T_CLK_HIGH_ON;
 	CT_Delay();
-	while (T_SDI_state)//T_SDI_state
+	while (T_SDI_state) // T_SDI_state
 	{
 		ucErrTime++;
 		if (ucErrTime > 250)
@@ -152,7 +153,7 @@ u8 CT_IIC_Read_Byte(unsigned char ack)
 		CT_Delay();
 		T_CLK_HIGH_ON;
 		receive <<= 1;
-		if (T_SDI_state)//T_SDI_state
+		if (T_SDI_state) // T_SDI_state
 			receive++;
 	}
 	if (!ack)

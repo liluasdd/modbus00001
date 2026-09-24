@@ -231,7 +231,7 @@ void LCD_Init(void)
 {
 
 	// 初始化GPIO结构体
-	GPIO_InitTypeDef gpio_initstruct;
+	GPIO_InitTypeDef gpio_initstruct = {0};
 
 	// 打开时钟
 	__HAL_RCC_GPIOA_CLK_ENABLE();

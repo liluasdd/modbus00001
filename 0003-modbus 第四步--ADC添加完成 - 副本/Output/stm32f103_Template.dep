@@ -78,7 +78,7 @@ I (..\..\software\inc\adc.h)(0x6AAD08B9)
 I (..\..\software\inc\key.h)(0x6AAD08B9)
 I (..\..\software\inc\tim.h)(0x6AAD08B9)
 I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
-I (..\..\software\app_tft_lcd\touch.h)(0x6AB4B8D4)
+I (..\..\software\app_tft_lcd\touch.h)(0x6AB4E5E3)
 I (..\..\software\app_tft_lcd\CTP.h)(0x6AB482C3)
 F (..\..\Users\stm32f1xx_it.c)(0x6AAD08B9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\stm32f1xx_it.o --omf_browse ..\..\output\stm32f1xx_it.crf --depend ..\..\output\stm32f1xx_it.d)
 I (..\..\Users\main.h)(0x6AB4B5DB)
@@ -3944,7 +3944,7 @@ I (..\..\software\inc\usart.h)(0x6AAD08B9)
 I (..\..\software\inc\key.h)(0x6AAD08B9)
 I (..\..\software\inc\tim.h)(0x6AAD08B9)
 I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
-F (..\..\software\src\gpio.c)(0x6AB47E0E)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\gpio.o --omf_browse ..\..\output\gpio.crf --depend ..\..\output\gpio.d)
+F (..\..\software\src\gpio.c)(0x6AB4EF5E)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\gpio.o --omf_browse ..\..\output\gpio.crf --depend ..\..\output\gpio.d)
 I (..\..\software\inc\gpio.h)(0x6AB4C714)
 I (..\..\Users\main.h)(0x6AB4B5DB)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6AAD08B8)
@@ -4257,7 +4257,7 @@ F (..\..\software\inc\gpio.h)(0x6AB4C714)()
 F (..\..\software\inc\key.h)(0x6AAD08B9)()
 F (..\..\software\inc\tim.h)(0x6AAD08B9)()
 F (..\..\software\inc\usart.h)(0x6AAD08B9)()
-F (..\..\software\app_tft_lcd\ctiic.c)(0x6AB4C739)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\ctiic.o --omf_browse ..\..\output\ctiic.crf --depend ..\..\output\ctiic.d)
+F (..\..\software\app_tft_lcd\ctiic.c)(0x6AB4E9A9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\ctiic.o --omf_browse ..\..\output\ctiic.crf --depend ..\..\output\ctiic.d)
 I (..\..\software\app_tft_lcd\ctiic.h)(0x6AB4B992)
 I (..\..\Drivers\SYSTEM\sys\sys.h)(0x6AB48DA3)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6AAD08B8)
@@ -4414,12 +4414,12 @@ I (..\..\software\inc\adc.h)(0x6AAD08B9)
 I (..\..\software\inc\key.h)(0x6AAD08B9)
 I (..\..\software\inc\tim.h)(0x6AAD08B9)
 I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
-I (..\..\software\app_tft_lcd\touch.h)(0x6AB4B8D4)
+I (..\..\software\app_tft_lcd\touch.h)(0x6AB4E5E3)
 I (..\..\software\app_tft_lcd\ctiic.h)(0x6AB4B992)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
 F (..\..\software\app_tft_lcd\ctp.h)(0x6AB482C3)()
 F (..\..\software\app_tft_lcd\font.H)(0x6AB47451)()
-F (..\..\software\app_tft_lcd\lcd.c)(0x6AB4C419)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\lcd.o --omf_browse ..\..\output\lcd.crf --depend ..\..\output\lcd.d)
+F (..\..\software\app_tft_lcd\lcd.c)(0x6AB4EF63)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\lcd.o --omf_browse ..\..\output\lcd.crf --depend ..\..\output\lcd.d)
 I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
 I (..\..\Drivers\SYSTEM\sys\sys.h)(0x6AB48DA3)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6AAD08B8)
@@ -4575,12 +4575,12 @@ I (..\..\software\inc\adc.h)(0x6AAD08B9)
 I (..\..\software\inc\key.h)(0x6AAD08B9)
 I (..\..\software\inc\tim.h)(0x6AAD08B9)
 I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
-I (..\..\software\app_tft_lcd\touch.h)(0x6AB4B8D4)
+I (..\..\software\app_tft_lcd\touch.h)(0x6AB4E5E3)
 I (..\..\software\app_tft_lcd\CTP.h)(0x6AB482C3)
 I (..\..\software\app_tft_lcd\test code.h)(0x64A7C618)
 F (..\..\software\app_tft_lcd\test code.h)(0x64A7C618)()
 F (..\..\software\app_tft_lcd\touch.c)(0x6AB4BE47)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include -I ..\..\Drivers\STM32F1xx_HAL_Driver\Inc -I ..\..\Drivers\CMSIS\Include -I ..\..\Drivers -I ..\..\Users -I ..\..\Drivers\SYSTEM\delay -I ..\..\Drivers\SYSTEM\sys -I ..\..\Drivers\SYSTEM\uart1 -I ..\..\Drivers\BSP\led -I ..\..\STM32MB\STM32MB\modbus\rtu -I ..\..\STM32MB\STM32MB\port -I ..\..\STM32MB\STM32MB\modbus\include -I ..\..\software\inc -I ..\..\software\mb_user -I ..\..\software\app_tft_lcd-IC:\Users\admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ..\..\output\touch.o --omf_browse ..\..\output\touch.crf --depend ..\..\output\touch.d)
-I (..\..\software\app_tft_lcd\touch.h)(0x6AB4B8D4)
+I (..\..\software\app_tft_lcd\touch.h)(0x6AB4E5E3)
 I (..\..\Drivers\SYSTEM\sys\sys.h)(0x6AB48DA3)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h)(0x6AAD08B8)
 I (..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h)(0x6AAD08B8)
@@ -4661,4 +4661,4 @@ I (..\..\software\app_tft_lcd\lcd.h)(0x6AB4B8D4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5EC775FC)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
 I (..\..\software\app_tft_lcd\w25qx.h)(0x6AB49541)
-F (..\..\software\app_tft_lcd\touch.h)(0x6AB4B8D4)()
+F (..\..\software\app_tft_lcd\touch.h)(0x6AB4E5E3)()

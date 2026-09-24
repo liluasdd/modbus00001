@@ -4,7 +4,7 @@
 void APPGPIO_INIT(void)
 {
     // 初始化GPIO结构体
-    GPIO_InitTypeDef gpio_initstruct;
+    GPIO_InitTypeDef gpio_initstruct = {0};
 
     // 打开时钟
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -33,7 +33,7 @@ void APPGPIO_INIT(void)
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH; // 高速
     HAL_GPIO_Init(Led1_port, &gpio_initstruct);   // GPIOB
 
-    // GPIO_InitStruct.Pin = Led2_pin; 
+    // GPIO_InitStruct.Pin = Led2_pin;
     // LL_GPIO_Init(Led2_port, &GPIO_InitStruct);
     // 关闭LED
     Led1_off;
