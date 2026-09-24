@@ -1,0 +1,65 @@
+T7970 000:006.141   SEGGER J-Link V6.70a Log File
+T7970 000:006.259   DLL Compiled: Mar 30 2020 17:41:39
+T7970 000:006.266   Logging started @ 2026-09-22 12:07
+T7970 000:006.276 JLINK_SetWarnOutHandler(...)
+T7970 000:006.285 - 0.012ms
+T7970 000:006.296 JLINK_OpenEx(...)
+T7970 000:007.686   Firmware: J-Link V9 compiled May  7 2021 16:26:12
+T7970 000:007.852   Decompressing FW timestamp took 123 us
+T7970 000:013.637   Hardware: V9.20
+T7970 000:013.671   S/N: 59800879
+T7970 000:013.683   OEM: SEGGER
+T7970 000:013.693   Feature(s): RDI, GDB, FlashDL, FlashBP, JFlash
+T7970 000:014.620   TELNET listener socket opened on port 19021
+T7970 000:014.802   WEBSRV Starting webserver
+T7970 000:014.984   WEBSRV Webserver running on local port 19080
+T7970 000:014.998 - 8.705ms returns "O.K."
+T7970 000:015.021 JLINK_GetEmuCaps()
+T7970 000:015.029 - 0.012ms returns 0xB9FF7BBF
+T7970 000:015.040 JLINK_TIF_GetAvailable(...)
+T7970 000:015.165 - 0.132ms
+T7970 000:015.182 JLINK_SetErrorOutHandler(...)
+T7970 000:015.190 - 0.011ms
+T7970 000:015.214 JLINK_ExecCommand("ProjectFile = "C:\Users\admin\Desktop\3759\李路\新建文件夹\屏幕\CL28CK1083-18A_CTP_230801\测试程序\STM32F1_ST7789_4SPI_CTP Demo_V1\USER\JLinkSettings.ini"", ...). 
+T7970 000:022.991   Ref file found at: C:\Keil_v5\ARM\Segger\JLinkDevices.ref
+T7970 000:023.187   REF file references invalid XML file: C:\Users\admin\Desktop\3759\曾俊杰\郑铁华\JLink - 3993_1.2\JLink - 3993_1.2\JLinkDevices.xml
+T7970 000:023.552 - 8.357ms returns 0x00
+T7970 000:029.458 JLINK_ExecCommand("Device = STM32F103C8", ...). 
+T7970 000:032.405   Device "STM32F103C8" selected.
+T7970 000:032.954 - 3.481ms returns 0x00
+T7970 000:032.971 JLINK_ExecCommand("DisableConnectionTimeout", ...). 
+T7970 000:032.983 - 0.006ms returns 0x01
+T7970 000:032.992 JLINK_GetHardwareVersion()
+T7970 000:033.000 - 0.011ms returns 0x16760
+T7970 000:033.008 JLINK_GetDLLVersion()  returns 67001
+T7970 000:033.022 JLINK_GetFirmwareString(...)
+T7970 000:033.030 - 0.012ms
+T7970 000:041.940 JLINK_GetDLLVersion()  returns 67001
+T7970 000:041.959 JLINK_GetCompileDateTime()
+T7970 000:041.966 - 0.010ms
+T7970 000:044.307 JLINK_GetFirmwareString(...)
+T7970 000:044.323 - 0.019ms
+T7970 000:046.177 JLINK_GetHardwareVersion()
+T7970 000:046.191 - 0.017ms returns 0x16760
+T7970 000:053.515 JLINK_TIF_Select(JLINKARM_TIF_JTAG)
+T7970 000:054.266 - 0.766ms returns 0x00
+T7970 000:054.314 JLINK_SetSpeed(5000)
+T7970 000:054.383 - 0.077ms
+T7970 000:054.397 JLINK_GetIdData(pIdData)
+T7970 000:057.446   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T7970 000:059.586   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T7970 000:113.100   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T7970 000:113.411   
+  ***** Error: 
+T7970 000:113.437   STM32: Connecting to CPU via connect under reset failed.
+T7970 000:232.323   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T7970 000:234.574   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T7970 000:291.713   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T7970 000:291.987   
+  ***** Error: 
+T7970 000:292.001   STM32: Connecting to CPU via connect under reset failed.
+T7970 000:342.210 - 287.830ms
+T7970 001:559.270 JLINK_Close()
+T7970 001:562.873 - 3.622ms
+T7970 001:562.902   
+T7970 001:562.910   Closed
