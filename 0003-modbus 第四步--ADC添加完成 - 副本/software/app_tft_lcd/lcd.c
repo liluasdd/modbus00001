@@ -729,7 +729,7 @@ void GUI_DrawFont16(u16 x, u16 y, u8 *s, u8 mode)
 
 	for (k = 0; k < HZnum; k++)
 	{
-		if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1)))
+		if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1)))// 查找对应的点阵字库
 		{
 			LCD_Set_Window(x, y, 16, 16);
 			LCD_WriteRAM_Prepare();
@@ -868,7 +868,7 @@ void Show_Str(u16 x, u16 y, u8 *str, u8 size, u8 mode)
 	u8 bHz = 0;		  // 字符或者中文
 	while (*str != 0) // 数据未结束
 	{
-		if (!bHz)
+		if (!bHz)// 字符
 		{
 			if (x > (lcddev.width - size / 2) || y > (lcddev.height - size))
 				return;

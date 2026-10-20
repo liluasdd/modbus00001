@@ -31,7 +31,7 @@
 // static void prvvUARTRxISR( void );
 
 /* ----------------------- Start implementation -----------------------------*/
-// ‰∏≤Âè£ÂàùÂßãÂåñ
+// ¥Æø⁄≥ı ºªØ
 BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity)
 {
 	/**
@@ -39,7 +39,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBPari
 	 * @note MODBUS_MASTER_RT_CONTROL_PIN_INDEX need be defined by user
 	 */
 
-	/* MODBUS_MASTER_USE_CONTROL_PINÂÆö‰πâÊó∂ÂàùÂßãÂåñ485ÊéßÂà∂ÂºïËÑö */
+	/* MODBUS_MASTER_USE_CONTROL_PIN∂®“Â ±≥ı ºªØ485øÿ÷∆“˝Ω≈ */
 #if defined(MODBUS_MASTER_USE_CONTROL_PIN)
 	modbus_master_control_init();
 #endif
@@ -49,123 +49,159 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBPari
 }
 
 /*
- * ‰∏≤Âè£‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠ÂíåÂèëÈÄÅ‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
- * @param xRxEnable ÊòØÂê¶‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠
- * @param xTxEnable ÊòØÂê¶‰ΩøËÉΩÂèëÈÄÅ‰∏≠Êñ≠
+ * ¥Æø⁄ πƒ‹Ω” ’÷–∂œ∫Õ∑¢ÀÕ÷–∂œ∑˛ŒÒ∫Ø ˝
+ * @param xRxEnable  «∑Ò πƒ‹Ω” ’÷–∂œ
+ * @param xTxEnable  «∑Ò πƒ‹∑¢ÀÕ÷–∂œ
  */
 void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
+	// ∑Ω∞∏∂˛£¨∏¸º—
+	/* 1. ÷ªπ‹Ω” ’÷–∂œµƒø™πÿ */
+	if (xRxEnable)
+	{
+		__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // /*  πƒ‹Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝ */
+	}
+	else
+	{
+		__HAL_UART_DISABLE_IT(&huart2, UART_IT_RXNE); // /* Ω˚”√Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝ */
+	}
+	/* 2. ÷ªπ‹∑¢ÀÕ÷–∂œµƒø™πÿ∫Õ 485 ∑¢ÀÕ∑ΩœÚµƒø™∆Ù */
+	if (xTxEnable)
+	{
+		/* ◊º±∏∑¢ÀÕ£∫¥Úø™ TXE ÷–∂œ */
+		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
+
+		/* 485 «–µΩ∑¢ÀÕÃ¨ */
+		RS485_DE_HIGH_ON;
+		g_b_485_send_tick = 1;
+		g_485_send_tim = 0;
+
+		/* µ»¥˝ ’∑¢∆˜«–ªªŒ»∂®£®∑≈‘⁄¿≠∏ﬂ÷Æ∫Û£© */
+		delay_us(6);
+	}
+	else
+	{
+		/* ∑¢ÀÕΩ· ¯£∫πÿ TXE ÷–∂œ */
+		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE);
+
+		/* °æº´∆‰÷ÿ“™°øæ¯∂‘≤ª“™‘⁄’‚¿Ô¿≠µÕ DE£¨“≤≤ª“™«Â±Í÷æ£° */
+		/* ¥Úø™ TC ÷–∂œ£¨»√”≤º˛∏ÊÀﬂƒ„ ≤√¥ ±∫Ú∑¢ÕÍ¡À */
+		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
+	}
+
+#if 0 // ∑Ω∞∏“ª ‘› ±±£¡Ù
 	/* If xRXEnable enable serial receive interrupts. If xTxENable enable
 	 * transmitter empty interrupts.
 	 */
-	if (xRxEnable) // ‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠
+	if (xRxEnable) //  πƒ‹Ω” ’÷–∂œ
 	{
-		// // /* ‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞ */
+		// // /*  πƒ‹Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝ */
 		// while ((usart2->SR & 0x40) == 0)
 		// 	;
 		// usart2->CR1 |= (1 << 5);
-		// GPIOB->BRR = GPIO_PIN_8; // Ê∏ÖÈô§Êé•Êî∂‰∏≠Êñ≠Ê†áÂøó‰Ωç
+		// GPIOB->BRR = GPIO_PIN_8; // «Â≥˝Ω” ’÷–∂œ±Í÷æŒª
 		// GPIOA->BRR = GPIO_PIN_4;
-		// GPIOA->ODR &= ~(1 << 4); // 485”≤ÔøΩÔøΩÔøΩ’∑ÔøΩÔøΩÔøΩ//RS485_DE_off
-		/* ‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠ */
-		__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // ‰ΩøËÉΩÊé•Êî∂‰∏≠Êñ≠
+		// GPIOA->ODR &= ~(1 << 4); // 485????????//RS485_DE_off
+		/*  πƒ‹Ω” ’÷–∂œ1 */
+		__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); //  πƒ‹Ω” ’÷–∂œ
 #if defined(MODBUS_MASTER_USE_CONTROL_PIN)
-		/* 485ÔøΩÕµÔøΩ∆ΩÔøΩÔøΩÔøΩÔøΩ */
+		/* 485???????? */
 		HAL_GPIO_WritePin(MODBUS_MASTER_GPIO_PORT, MODBUS_MASTER_GPIO_PIN, MODBUS_MASTER_GPIO_PIN_LOW);
 #endif
 	}
-	else // Á¶ÅÁî®Êé•Êî∂‰∏≠Êñ≠
+	else // Ω˚”√Ω” ’÷–∂œ
 	{
 		// usart2->CR1 &= ~(1 << 5);
-		// GPIOB->BSRR = GPIO_PIN_8; // Ê∏ÖÈô§Êé•Êî∂‰∏≠Êñ≠Ê†áÂøó‰Ωç
+		// GPIOB->BSRR = GPIO_PIN_8; // «Â≥˝Ω” ’÷–∂œ±Í÷æŒª
 		// GPIOA->BSRR = GPIO_PIN_4;
 		// GPIOA->ODR |= 1 << 4; //  //RS485_DE_on
 
-		/* Á¶ÅÁî®Êé•Êî∂‰∏≠Êñ≠ */
+		/* Ω˚”√Ω” ’÷–∂œ */
 		__HAL_UART_DISABLE_IT(&huart2, UART_IT_RXNE);
 #if defined(MODBUS_MASTER_USE_CONTROL_PIN)
-		/* 485ÔøΩﬂµÔøΩ∆ΩÔøΩÔøΩÔøΩÔøΩ */
+		/* 485???????? */
 		HAL_GPIO_WritePin(MODBUS_MASTER_GPIO_PORT, MODBUS_MASTER_GPIO_PIN, MODBUS_MASTER_GPIO_PIN_HIGH);
 #endif
 	}
-	if (xTxEnable) // ‰ΩøËÉΩÂèëÈÄÅ‰∏≠Êñ≠
+	if (xTxEnable) //  πƒ‹∑¢ÀÕ÷–∂œ
 	{
 		// usart2->CR1 |= (1 << 7);
-		/* ‰ΩøËÉΩÂèëÈÄÅ‰∏≠Êñ≠ */
+		/*  πƒ‹∑¢ÀÕ÷–∂œ */
 		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
 #if defined(MODBUS_MASTER_USE_CONTROL_PIN)
-		/* 485ÔøΩﬂµÔøΩ∆ΩÔøΩÔøΩÔøΩÔøΩ*/
+		/* 485????????*/
 		HAL_GPIO_WritePin(MODBUS_MASTER_GPIO_PORT, MODBUS_MASTER_GPIO_PIN, MODBUS_MASTER_GPIO_PIN_HIGH);
 #endif
 	}
-	else // Á¶ÅÁî®ÂèëÈÄÅ‰∏≠Êñ≠
+	else // Ω˚”√∑¢ÀÕ÷–∂œ
 	{
 		// usart2->CR1 &= ~(1 << 7);
-		/* Á¶ÅÁî®ÂèëÈÄÅ‰∏≠Êñ≠ */
+		/* Ω˚”√∑¢ÀÕ÷–∂œ */
 		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE);
 #if defined(MODBUS_MASTER_USE_CONTROL_PIN)
-		/* 485ÔøΩÕµÔøΩ∆ΩÔøΩÔøΩÔøΩÔøΩ*/
+		/* 485????????*/
 		HAL_GPIO_WritePin(MODBUS_MASTER_GPIO_PORT, MODBUS_MASTER_GPIO_PIN, MODBUS_MASTER_GPIO_PIN_LOW);
 #endif
 	}
+#endif
 }
-// ÂèëÈÄÅ‰∏Ä‰∏™Â≠óËäÇÂà∞‰∏≤Âè£2
+// ∑¢ÀÕ“ª∏ˆ◊÷Ω⁄µΩ¥Æø⁄2
 BOOL xMBPortSerialPutByte(CHAR ucByte)
 {
 	/* Put a byte in the UARTs transmit buffer. This function is called
 	 * by the protocol stack if pxMBFrameCBTransmitterEmpty( ) has been
 	 * called. */
-	// huart2->DR = ucByte; // ÂèëÈÄÅ‰∏Ä‰∏™Â≠óËäÇÂà∞‰∏≤Âè£2
-	if (HAL_UART_Transmit(&huart2, (uint8_t *)&ucByte, 1, 0x01) != HAL_OK) // ÂèëÈÄÅ‰∏Ä‰∏™Â≠óËäÇÂà∞‰∏≤Âè£2Â§±Ë¥•
+	// huart2->DR = ucByte; // ∑¢ÀÕ“ª∏ˆ◊÷Ω⁄µΩ¥Æø⁄2
+	if (HAL_UART_Transmit(&huart2, (uint8_t *)&ucByte, 1, 0x01) != HAL_OK) // ∑¢ÀÕ“ª∏ˆ◊÷Ω⁄µΩ¥Æø⁄2 ß∞‹
 		return FALSE;
 	else
 		return TRUE;
 }
-// ‰ªé‰∏≤Âè£2Êé•Êî∂‰∏Ä‰∏™Â≠óËäÇ
+// ¥”¥Æø⁄2Ω” ’“ª∏ˆ◊÷Ω⁄
 BOOL xMBPortSerialGetByte(CHAR *pucByte)
 {
 	/* Return the byte in the UARTs receive buffer. This function is called
 	 * by the protocol stack after pxMBFrameCBByteReceived( ) has been called.
 	 */
-	// *pucByte = huart2->DR; // ‰ªé‰∏≤Âè£2Êé•Êî∂‰∏Ä‰∏™Â≠óËäÇ
-	if (HAL_UART_Receive(&huart2, (uint8_t *)pucByte, 1, 0x01) != HAL_OK) // ‰ªé‰∏≤Âè£2Êé•Êî∂‰∏Ä‰∏™Â≠óËäÇÂ§±Ë¥•
+	// *pucByte = huart2->DR; // ¥”¥Æø⁄2Ω” ’“ª∏ˆ◊÷Ω⁄
+	if (HAL_UART_Receive(&huart2, (uint8_t *)pucByte, 1, 0x01) != HAL_OK)
 		return FALSE;
 	else
 		return TRUE;
 }
 /*
- * ÂèëÈÄÅ‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
- * @param ucByte ÂèëÈÄÅÁöÑÂ≠óËäÇ
+ * ∑¢ÀÕ÷–∂œ∑˛ŒÒ∫Ø ˝
+ * @param ucByte ∑¢ÀÕµƒ◊÷Ω⁄
  */
-void prvvUARTTxReadyISR(void) // ÂèëÈÄÅ‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
+void prvvUARTTxReadyISR(void) // ∑¢ÀÕ÷–∂œ∑˛ŒÒ∫Ø ˝
 {
-	pxMBFrameCBTransmitterEmpty(); // ÂèëÈÄÅ‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞ÂõûË∞É
+	pxMBFrameCBTransmitterEmpty(); // ∑¢ÀÕ÷–∂œ∑˛ŒÒ∫Ø ˝ªÿµ˜
 }
 /*
- * Êé•Êî∂‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
- * @param ucByte Êé•Êî∂ÁöÑÂ≠óËäÇ
+ * Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝
+ * @param ucByte Ω” ’µƒ◊÷Ω⁄
  */
-void prvvUARTRxISR(void) // Êé•Êî∂‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
+void prvvUARTRxISR(void) // Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝
 {
-	pxMBFrameCBByteReceived(); // Êé•Êî∂‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞ÂõûË∞É
+	pxMBFrameCBByteReceived(); // Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝ªÿµ˜
 }
 
 /*
- * ‰∏≤Âè£2‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
- * @param ucByte Êé•Êî∂ÁöÑÂ≠óËäÇ
-*/
-// void USART2_IRQHandler(void) // ‰∏≤Âè£2‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
+ * ¥Æø⁄2÷–∂œ∑˛ŒÒ∫Ø ˝
+ * @param ucByte Ω” ’µƒ◊÷Ω⁄
+ */
+// void USART2_IRQHandler(void) // ¥Æø⁄2÷–∂œ∑˛ŒÒ∫Ø ˝
 // {
-// 	if (usart2->SR & (1 << 5)) // Êé•Êî∂‰∏≠Êñ≠
+// 	if (usart2->SR & (1 << 5)) // Ω” ’÷–∂œ
 // 	{
-// 		prvvUARTRxISR(); // Êé•Êî∂‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
+// 		prvvUARTRxISR(); // Ω” ’÷–∂œ∑˛ŒÒ∫Ø ˝
 // 	}
-// 	else if (usart2->SR & (1 << 7)) // ÂèëÈÄÅ‰∏≠Êñ≠
+// 	else if (usart2->SR & (1 << 7)) // ∑¢ÀÕ÷–∂œ
 // 	{
-// 		prvvUARTTxReadyISR(); // ÂèëÈÄÅ‰∏≠Êñ≠ÊúçÂä°ÂáΩÊï∞
+// 		prvvUARTTxReadyISR(); // ∑¢ÀÕ÷–∂œ∑˛ŒÒ∫Ø ˝
 // 	}
-// 	else if (usart2->SR & (1 << 3)) // ORRE‰∏≠Êñ≠
+// 	else if (usart2->SR & (1 << 3)) // ORRE÷–∂œ
 // 	{
-// 		u8 ore = usart2->DR; // Ëé∑ÂèñOREÂÄº
+// 		u8 ore = usart2->DR; // ªÒ»°ORE÷µ
 // 	}
 // }

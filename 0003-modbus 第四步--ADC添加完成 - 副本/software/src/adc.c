@@ -1,6 +1,11 @@
 #include "adc.h"
 #include "main.h"
 
+u8 adc_DMA_num = 0;
+uint16_t adc_ch0[adc_DMA_max];
+uint16_t adc_ch1[adc_DMA_max];
+uint16_t adc_ch2[adc_DMA_max];
+uint16_t adc_ch3[adc_DMA_max];
 ADC_HandleTypeDef hadc1;
 
 /* ADC1 init function */
@@ -8,15 +13,15 @@ ADC_ChannelConfTypeDef sConfig = {0};
 void MX_ADC1_Init(void)
 {
   hadc1.Instance = ADC1;
-  // hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE; // ï¿½ï¿½DISABLEï¿½Ä³ï¿½ENABLEï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¨ï¿½ï¿½Ä£Ê½
-  hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START; //
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  // hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;// µ¥Í¨µÀ×ª»»Ä£Ê½
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;        // É¨Ãè×ª»»Ä£Ê½
+  hadc1.Init.ContinuousConvMode = DISABLE;          // Á¬Ğø×ª»»Ä£Ê½¹Ø±Õ
+  hadc1.Init.DiscontinuousConvMode = DISABLE;       // ¶ÏĞø×ª»»Ä£Ê½¹Ø±Õ
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START; // Èí»»´¥·¢Ô´
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;       // Êı¾İ¶ÔÆë·½Ê½
   // hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.NbrOfConversion = 1;
-  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  hadc1.Init.NbrOfConversion = 1;     // ×ª»»´ÎÊı
+  if (HAL_ADC_Init(&hadc1) != HAL_OK) // ³õÊ¼»¯ADC1
   {
     Error_Handler();
   }
@@ -67,12 +72,12 @@ uint8_t g_b_irq_adc_pause = 0; //
 
 int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
 {
-  // ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Ê±ï¿½Ö¸ï¿½
+  // ????????????????????????????
   ADC_ChannelConfTypeDef orig_sConfig = {0};
   // uint32_t orig_rank;
-  // taskENTER_CRITICAL(); // // ???ï¿½ï¿½???????????????????????ï¿½ï¿½?FreeRTOS?????
+  // taskENTER_CRITICAL(); // // ???????????????????????????????FreeRTOS?????
   g_b_irq_adc_pause = 1;
-  // taskEXIT_CRITICAL();// // ???ï¿½ï¿½??????????????????????ï¿½ï¿½?FreeRTOS?????
+  // taskEXIT_CRITICAL();// // ??????????????????????????????FreeRTOS?????
   // ?????????ADC1?????????????ADC
   ADC_HandleTypeDef *hadc = &hadc1;
 
@@ -96,9 +101,9 @@ int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
   uint16_t max = 0;
   uint16_t min = 0xffff;
   // uint16_t Dat = 0;
-  uint8_t valid_cnt = 0; // ??ï¿½ï¿½????????
+  uint8_t valid_cnt = 0; // ????????????
 
-  // ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½Ë³ï¿½Ê±ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½Ô­ï¿½Ğ¶ï¿½Í¨ï¿½ï¿½É¨ï¿½ï¿½
+  // ???????????????????????????????§Ø???????
   // HAL_ADC_GetConfigChannel(hadc, ADC_REGULAR_RANK_1, &orig_sConfig);
   // orig_rank = orig_sConfig.Rank;
 
@@ -108,9 +113,9 @@ int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
   sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
   if (HAL_ADC_ConfigChannel(hadc, &sConfig) != HAL_OK) // ???????
   {
-    // taskENTER_CRITICAL(); // ???????????ï¿½ï¿½?FreeRTOS?????
+    // taskENTER_CRITICAL(); // ??????????????FreeRTOS?????
     g_b_irq_adc_pause = 0;
-    // taskEXIT_CRITICAL();// ???????????ï¿½ï¿½?FreeRTOS?????
+    // taskEXIT_CRITICAL();// ??????????????FreeRTOS?????
     return -1;
   }
   if (num < 1)
@@ -124,7 +129,7 @@ int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
     num = 20;
   }
 
-  // // Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ADCï¿½ï¿½ï¿½ï¿½ï¿½Ğ§ï¿½ï¿½
+  // // ????????ADC?????§¹??
   // if (HAL_ADC_Start(hadc) != HAL_OK)
   // {
   //   g_b_irq_adc_pause = 0;
@@ -152,7 +157,7 @@ int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
     HAL_ADC_Stop(hadc);
   }
   // HAL_ADC_Stop(hadc);
-  // ï¿½Ö¸ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  // ???????????????
   HAL_ADC_ConfigChannel(hadc, &orig_sConfig);
   if (valid_cnt == 0)
 
@@ -179,22 +184,22 @@ int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num)
   return (int16_t)(sum);
 }
 
-//  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¶¨ï¿½ï¿½æ´¢ADCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// ?uint16_t adc_results[4]; // ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ADCÖµ
-// ?ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+//  // ????????›¥ADC?????????
+// ?uint16_t adc_results[4]; // ????4???????ADC?
+// ????¨²?????????????
 // Read_ADC1_AllChannel(adc_results);
 
-// // ï¿½ï¿½È¡Ö®ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½Öµï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ê¾ï¿½ï¿½OLED
+// // ???????????????????????????????????OLED
 // OLED_Clear();
-// OLED_ShowNum(0, 2, adc_results[0], 4, 16); // ï¿½ï¿½Ê¾Í¨ï¿½ï¿½7ï¿½ï¿½Öµ
+// OLED_ShowNum(0, 2, adc_results[0], 4, 16); // ??????7???
 
-void Read_ADC1_AllChannel(uint16_t *adcValues) // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ADCÖµ
+void Read_ADC1_AllChannel(uint16_t *adcValues) // ????????????ADC?
 {
   HAL_ADC_Start(&hadc1);
-  if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK) // ï¿½È´ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½
+  if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK) // ?????????
 
   {
-    adcValues[0] = HAL_ADC_GetValue(&hadc1); // ï¿½ï¿½È¡Í¨ï¿½ï¿½0ï¿½ï¿½ADCÖµ
+    adcValues[0] = HAL_ADC_GetValue(&hadc1); // ??????0??ADC?
   }
   if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK)
 
@@ -266,112 +271,138 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *adcHandle)
   }
 }
 
-//////======å¤š/å•é€šé“ADCâ€”â€”DMAé…ç½®======
+//////======¶à/µ¥Í¨µÀADC¡ª¡ªDMAÅäÖÃ======
 #include "adc.h"
 
-ADC_HandleTypeDef adc_handle = {0}; // ADCå¥æŸ„
-DMA_HandleTypeDef dma_handle = {0}; // DMAå¥æŸ„
-//// é…ç½®ADCï¼ˆADC1ï¼‰
-void adc_config(void)
-{
-  adc_handle.Instance = ADC1;                      // é€‰æ‹©ADC1å¤–è®¾
-  adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT; // æ•°æ®å¯¹é½æ–¹å¼ï¼šå³å¯¹é½ï¼ˆ12ä½ADCæ•°æ®ä½12ä½æœ‰æ•ˆï¼Œé«˜4ä½è¡¥0ï¼‰
-  /*å¤šé€šé“*/
-  adc_handle.Init.ScanConvMode = ADC_SCAN_ENABLE; // æ‰«æè½¬æ¢æ¨¡å¼ï¼šå¯ç”¨ï¼ˆæ‰«æå¤šä¸ªé€šé“ï¼‰
-  /*å•é€šé“*/
-  // adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;       // æ‰«æè½¬æ¢æ¨¡å¼ï¼šç¦ç”¨ï¼ˆå•é€šé“è½¬æ¢ï¼‰
-  adc_handle.Init.ContinuousConvMode = ENABLE; // è¿ç»­è½¬æ¢æ¨¡å¼ï¼šå¯ç”¨ï¼ˆä¸€æ¬¡è§¦å‘åè¿ç»­è‡ªåŠ¨é‡‡é›†ï¼‰
-  /*å¤šé€šé“*/
-  adc_handle.Init.NbrOfConversion = 4; // è§„åˆ™é€šé“æ€»æ•°ï¼š4ï¼ˆåé¢é…ç½®äº†4ä¸ªé€šé“CH0-CH3ï¼‰
+ADC_HandleTypeDef adc_handle = {0}; // ADC¾ä±ú
+DMA_HandleTypeDef dma_handle = {0}; // DMA¾ä±ú
 
-  ///*å•é€šé“*/
-  // adc_handle.Init.NbrOfConversion = 1;                   // è§„åˆ™é€šé“æ€»æ•°ï¼š1
-  adc_handle.Init.DiscontinuousConvMode = DISABLE;       // é—´æ–­æ¨¡å¼ï¼šç¦ç”¨ï¼ˆä¸å…è®¸é—´æ–­é‡‡é›†ï¼‰
-  adc_handle.Init.NbrOfDiscConversion = 0;               // é—´æ–­æ¨¡å¼é€šé“æ•°ï¼š0ï¼ˆç¦ç”¨æ—¶æ— æ„ä¹‰ï¼‰
-  adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START; // å¤–éƒ¨è§¦å‘æºï¼šè½¯ä»¶è§¦å‘ï¼ˆè°ƒç”¨HAL_ADC_Startå¯åŠ¨è½¬æ¢
-  HAL_ADC_Init(&adc_handle);                             // åˆå§‹åŒ–ADC1
-
-  HAL_ADCEx_Calibration_Start(&adc_handle); // å¯åŠ¨ADCè‡ªæ ¡å‡†ï¼ˆæ¶ˆé™¤ADCå†…éƒ¨åç½®è¯¯å·®ï¼Œæé«˜è½¬æ¢ç²¾åº¦ï¼‰
-}
-// é…ç½®ADCé€šé“
-void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
-{
-
-  if (hadc->Instance == ADC1) // åˆ¤æ–­æ˜¯å¦ä¸ºADC1
-  {
-    RCC_PeriphCLKInitTypeDef adc_clk_init = {0}; //// ADCæ—¶é’Ÿé…ç½®ç»“æ„ä½“
-    GPIO_InitTypeDef gpio_init_struct = {0};     //// GPIOé…ç½®ç»“æ„ä½“
-
-    __HAL_RCC_ADC1_CLK_ENABLE();  // ä½¿èƒ½ADC1æ—¶é’Ÿ
-    __HAL_RCC_GPIOA_CLK_ENABLE(); // ä½¿èƒ½GPIOAæ—¶é’Ÿï¼ˆADCé€šé“å¼•è„šæ‰€åœ¨ç«¯å£ï¼‰
-
-    // é…ç½®GPIOå¼•è„šä¸ºæ¨¡æ‹Ÿè¾“å…¥æ¨¡å¼ï¼ˆADCé€šé“0-3ï¼‰
-    /*å¤šé€šé“*/
-    gpio_init_struct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3;
-    // /*å•é€šé“*/
-    // gpio_init_struct.Pin = GPIO_PIN_1;
-    gpio_init_struct.Mode = GPIO_MODE_ANALOG; // æ¨¡æ‹Ÿè¾“å…¥æ¨¡å¼
-    HAL_GPIO_Init(GPIOA, &gpio_init_struct);  // åˆå§‹åŒ–GPIOA
-
-    // é…ç½®ADCæ—¶é’Ÿæº
-    adc_clk_init.PeriphClockSelection = RCC_PERIPHCLK_ADC; // é€‰æ‹©ADCå¤–è®¾æ—¶é’Ÿ
-    adc_clk_init.AdcClockSelection = RCC_ADCPCLK2_DIV6;    // ADCæ—¶é’Ÿ = PCLK2 / 6 = 72MHz / 6 = 12MHz
-    HAL_RCCEx_PeriphCLKConfig(&adc_clk_init);              // é…ç½®ADCæ—¶é’Ÿ
-  }
-}
-
-//// é…ç½®DMAï¼ˆç”¨äºADCæ•°æ®ä¼ è¾“ï¼‰
-void dma_config(void)
-{
-  __HAL_RCC_DMA1_CLK_ENABLE();                      // ä½¿èƒ½DMA1æ—¶é’Ÿ
-  dma_handle.Instance = DMA1_Channel1;              // é€‰æ‹©DMA1é€šé“1ï¼ˆADC1ä½¿ç”¨DMA1é€šé“1ï¼‰
-  dma_handle.Init.Direction = DMA_PERIPH_TO_MEMORY; // æ•°æ®ä¼ è¾“æ–¹å‘ï¼šå¤–è®¾åˆ°å†…å­˜ï¼ˆADC -> RAMï¼‰
-
-  //  // å†…å­˜æ•°æ®å¯¹é½ï¼šåŠå­—ï¼ˆ16ä½ï¼‰ï¼Œä¸ADC 12ä½æ•°æ®åŒ¹é…
-  dma_handle.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-  dma_handle.Init.MemInc = DMA_MINC_ENABLE; // å†…å­˜åœ°å€å¢é‡ï¼šå¯ç”¨ï¼ˆæ¯æ¬¡ä¼ è¾“åå†…å­˜åœ°å€+2ï¼ŒæŒ‡å‘ä¸‹ä¸€ä¸ªæ•°æ®ï¼‰
-
-  //// å¤–è®¾æ•°æ®å¯¹é½ï¼šåŠå­—ï¼ˆ16ä½ï¼‰
-  dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-  dma_handle.Init.PeriphInc = DMA_PINC_DISABLE; // å¤–è®¾åœ°å€å¢é‡ï¼šç¦ç”¨ï¼ˆADCæ•°æ®å¯„å­˜å™¨åœ°å€å›ºå®šï¼‰
-
-  dma_handle.Init.Priority = DMA_PRIORITY_MEDIUM; // DMAä¼˜å…ˆçº§ï¼šä¸­ç­‰
-  dma_handle.Init.Mode = DMA_CIRCULAR;            // DMAæ¨¡å¼ï¼šå¾ªç¯æ¨¡å¼ï¼ˆæ•°æ®è¦†ç›–ä¼ è¾“ï¼Œè¿ç»­ä¸æ–­é‡‡é›†ï¼‰
-  HAL_DMA_Init(&dma_handle);                      // åˆå§‹åŒ–DMA
-
-  __HAL_LINKDMA(&adc_handle, DMA_Handle, dma_handle); // å°†DMAä¸ADCå…³è”ï¼ˆADCçš„DMA_HandleæŒ‡å‘dma_handleï¼‰
-}
-
-// é…ç½®ADCé€šé“
+// ÅäÖÃADCÍ¨µÀ
 void adc_channel_config(ADC_HandleTypeDef *hadc, uint32_t ch, uint32_t rank, uint32_t stime)
 {
-  ADC_ChannelConfTypeDef adc_ch_config = {0}; // ADCé€šé“é…ç½®ç»“æ„ä½“
+  ADC_ChannelConfTypeDef adc_ch_config = {0}; // ADCÍ¨µÀÅäÖÃ½á¹¹Ìå
 
-  adc_ch_config.Channel = ch;                  // é€šé“å·ï¼ˆå¦‚ADC_CHANNEL_0ï¼‰
-  adc_ch_config.Rank = rank;                   // é€šé“é¡ºåºï¼ˆADC_REGULAR_RANK_1~4ï¼‰
-  adc_ch_config.SamplingTime = stime;          // é‡‡æ ·æ—¶é—´ï¼ˆå¦‚ADC_SAMPLETIME_239CYCLES_5ï¼‰
-  HAL_ADC_ConfigChannel(hadc, &adc_ch_config); // é…ç½®ADCé€šé“
+  adc_ch_config.Channel = ch;                  // Í¨µÀºÅ£¨ÈçADC_CHANNEL_0£©
+  adc_ch_config.Rank = rank;                   // Í¨µÀË³Ğò£¨ADC_REGULAR_RANK_1~4£©
+  adc_ch_config.SamplingTime = stime;          // ²ÉÑùÊ±¼ä£¨ÈçADC_SAMPLETIME_239CYCLES_5£©
+  HAL_ADC_ConfigChannel(hadc, &adc_ch_config); // ÅäÖÃADCÍ¨µÀ
 }
 
-// é…ç½®4ä¸ªADCé€šé“ï¼ˆPA0-PA3ï¼‰
-void adc_dma_init(uint32_t *mar)
+//// ÅäÖÃADC£¨ADC1£©
+void adc_config(void)
 {
-  adc_config(); // 1. é…ç½®ADCåŸºæœ¬å‚æ•°ï¼ˆæ—¶é’Ÿã€GPIOã€æ¨¡å¼ç­‰ï¼‰
-
-  // 2. é…ç½®4ä¸ªADCé€šé“ï¼ˆPA0-PA3ï¼‰
-  /*å¤šé€šé“*/
+  // ÅäÖÃADC1·½°¸Ò»
+  adc_handle.Instance = ADC1;
+  adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  adc_handle.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  adc_handle.Init.ContinuousConvMode = ENABLE; // Á¬Ğø×ª»»
+  adc_handle.Init.DiscontinuousConvMode = DISABLE;
+  adc_handle.Init.NbrOfConversion = 4;                   // 4¸öÍ¨µÀ
+  adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START; // Èí¼ş´¥·¢
+  HAL_ADC_Init(&adc_handle);
+  // ÅäÖÃ4¸öÍ¨µÀ
   adc_channel_config(&adc_handle, ADC_CHANNEL_0, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_239CYCLES_5);
   adc_channel_config(&adc_handle, ADC_CHANNEL_1, ADC_REGULAR_RANK_2, ADC_SAMPLETIME_239CYCLES_5);
   adc_channel_config(&adc_handle, ADC_CHANNEL_2, ADC_REGULAR_RANK_3, ADC_SAMPLETIME_239CYCLES_5);
   adc_channel_config(&adc_handle, ADC_CHANNEL_3, ADC_REGULAR_RANK_4, ADC_SAMPLETIME_239CYCLES_5);
-  ///*å•é€šé“*/
+
+  HAL_ADCEx_Calibration_Start(&adc_handle);
+
+  // ÅäÖÃADC1·½°¸¶ş
+  // adc_handle.Instance = ADC1;                      // Ñ¡ÔñADC1ÍâÉè
+  // adc_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT; // Êı¾İ¶ÔÆë·½Ê½£ºÓÒ¶ÔÆë£¨12Î»ADCÊı¾İµÍ12Î»ÓĞĞ§£¬¸ß4Î»²¹0£©
+  // /*¶àÍ¨µÀ*/
+  // adc_handle.Init.ScanConvMode = ADC_SCAN_ENABLE; // É¨Ãè×ª»»Ä£Ê½£ºÆôÓÃ£¨É¨Ãè¶à¸öÍ¨µÀ£©
+  // /*µ¥Í¨µÀ*/
+  // // adc_handle.Init.ScanConvMode = ADC_SCAN_DISABLE;       // É¨Ãè×ª»»Ä£Ê½£º½ûÓÃ£¨µ¥Í¨µÀ×ª»»£©
+  // adc_handle.Init.ContinuousConvMode = ENABLE; // Á¬Ğø×ª»»Ä£Ê½£ºÆôÓÃ£¨Ò»´Î´¥·¢ºóÁ¬Ğø×Ô¶¯²É¼¯£©
+  // /*¶àÍ¨µÀ*/
+  // adc_handle.Init.NbrOfConversion = 4; // ¹æÔòÍ¨µÀ×ÜÊı£º4£¨ºóÃæÅäÖÃÁË4¸öÍ¨µÀCH0-CH3£©
+  // ///*µ¥Í¨µÀ*/
+  // // adc_handle.Init.NbrOfConversion = 1;                   // ¹æÔòÍ¨µÀ×ÜÊı£º1
+  // adc_handle.Init.DiscontinuousConvMode = DISABLE;       // ¼ä¶ÏÄ£Ê½£º½ûÓÃ£¨²»ÔÊĞí¼ä¶Ï²É¼¯£©
+  // adc_handle.Init.NbrOfDiscConversion = 0;               // ¼ä¶ÏÄ£Ê½Í¨µÀÊı£º0£¨½ûÓÃÊ±ÎŞÒâÒå£©
+  // adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START; // Íâ²¿´¥·¢Ô´£ºÈí¼ş´¥·¢£¨µ÷ÓÃHAL_ADC_StartÆô¶¯×ª»»
+  // HAL_ADC_Init(&adc_handle);                             // ³õÊ¼»¯ADC1
+
+  // HAL_ADCEx_Calibration_Start(&adc_handle); // Æô¶¯ADC×ÔĞ£×¼£¨Ïû³ıADCÄÚ²¿Æ«ÖÃÎó²î£¬Ìá¸ß×ª»»¾«¶È£©
+}
+// ÅäÖÃADCÍ¨µÀ
+void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
+{
+
+  if (hadc->Instance == ADC1) // ÅĞ¶ÏÊÇ·ñÎªADC1
+  {
+    RCC_PeriphCLKInitTypeDef adc_clk_init = {0}; //// ADCÊ±ÖÓÅäÖÃ½á¹¹Ìå
+    GPIO_InitTypeDef gpio_init_struct = {0};     //// GPIOÅäÖÃ½á¹¹Ìå
+
+    __HAL_RCC_ADC1_CLK_ENABLE();  // Ê¹ÄÜADC1Ê±ÖÓ
+    __HAL_RCC_GPIOA_CLK_ENABLE(); // Ê¹ÄÜGPIOAÊ±ÖÓ£¨ADCÍ¨µÀÒı½ÅËùÔÚ¶Ë¿Ú£©
+
+    // ÅäÖÃGPIOÒı½ÅÎªÄ£ÄâÊäÈëÄ£Ê½£¨ADCÍ¨µÀ0-3£©
+    /*¶àÍ¨µÀ*/
+    gpio_init_struct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3;
+    // /*µ¥Í¨µÀ*/
+    // gpio_init_struct.Pin = GPIO_PIN_1;
+    gpio_init_struct.Mode = GPIO_MODE_ANALOG; // Ä£ÄâÊäÈëÄ£Ê½
+    HAL_GPIO_Init(GPIOA, &gpio_init_struct);  // ³õÊ¼»¯GPIOA
+
+    // ÅäÖÃADCÊ±ÖÓÔ´
+    adc_clk_init.PeriphClockSelection = RCC_PERIPHCLK_ADC; // Ñ¡ÔñADCÍâÉèÊ±ÖÓ
+    adc_clk_init.AdcClockSelection = RCC_ADCPCLK2_DIV6;    // ADCÊ±ÖÓ = PCLK2 / 6 = 72MHz / 6 = 12MHz
+    HAL_RCCEx_PeriphCLKConfig(&adc_clk_init);              // ÅäÖÃADCÊ±ÖÓ
+  }
+}
+
+//// ÅäÖÃDMA£¨ÓÃÓÚADCÊı¾İ´«Êä£©
+void dma_config(void)
+{
+  __HAL_RCC_DMA1_CLK_ENABLE();                      // Ê¹ÄÜDMA1Ê±ÖÓ
+  dma_handle.Instance = DMA1_Channel1;              // Ñ¡ÔñDMA1Í¨µÀ1£¨ADC1Ê¹ÓÃDMA1Í¨µÀ1£©
+  dma_handle.Init.Direction = DMA_PERIPH_TO_MEMORY; // Êı¾İ´«Êä·½Ïò£ºÍâÉèµ½ÄÚ´æ£¨ADC -> RAM£©
+
+  //  // ÄÚ´æÊı¾İ¶ÔÆë£º°ë×Ö£¨16Î»£©£¬ÓëADC 12Î»Êı¾İÆ¥Åä¡£¡£¡£DMA_MDATAALIGN_HALFWORDÊÇ16Î»µÄ£¬DMA_MDATAALIGN_WORDÊÇ32Î»µÄ¡£
+  dma_handle.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+  dma_handle.Init.MemInc = DMA_MINC_ENABLE; // ÄÚ´æµØÖ·ÔöÁ¿£ºÆôÓÃ£¨Ã¿´Î´«ÊäºóÄÚ´æµØÖ·+2£¬Ö¸ÏòÏÂÒ»¸öÊı¾İ£©
+
+  //// ÍâÉèÊı¾İ¶ÔÆë£º°ë×Ö£¨16Î»£©
+  dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+  dma_handle.Init.PeriphInc = DMA_PINC_DISABLE; // ÍâÉèµØÖ·ÔöÁ¿£º½ûÓÃ£¨ADCÊı¾İ¼Ä´æÆ÷µØÖ·¹Ì¶¨£©
+
+  dma_handle.Init.Priority = DMA_PRIORITY_MEDIUM; // DMAÓÅÏÈ¼¶£ºÖĞµÈ
+  dma_handle.Init.Mode = DMA_CIRCULAR;            // DMAÄ£Ê½£ºÑ­»·Ä£Ê½£¨Êı¾İ¸²¸Ç´«Êä£¬Á¬Ğø²»¶Ï²É¼¯£©
+  HAL_DMA_Init(&dma_handle);                      // ³õÊ¼»¯DMA
+
+  __HAL_LINKDMA(&adc_handle, DMA_Handle, dma_handle); // ½«DMAÓëADC¹ØÁª£¨ADCµÄDMA_HandleÖ¸Ïòdma_handle£©
+}
+
+// ÅäÖÃ4¸öADCÍ¨µÀ£¨PA0-PA3£©
+// void adc_dma_init(uint32_t *mar)
+void adc_dma_init(uint16_t *mar)
+{
+  adc_config(); // 1. ÅäÖÃADC»ù±¾²ÎÊı£¨Ê±ÖÓ¡¢GPIO¡¢Ä£Ê½µÈ£©
+
+  // 2. ÅäÖÃ4¸öADCÍ¨µÀ£¨PA0-PA3£© ·½°¸¶şÊ±ÆôÓÃ
+  /*¶àÍ¨µÀ*/
+  adc_channel_config(&adc_handle, ADC_CHANNEL_0, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_239CYCLES_5);
+  adc_channel_config(&adc_handle, ADC_CHANNEL_1, ADC_REGULAR_RANK_2, ADC_SAMPLETIME_239CYCLES_5);
+  adc_channel_config(&adc_handle, ADC_CHANNEL_2, ADC_REGULAR_RANK_3, ADC_SAMPLETIME_239CYCLES_5);
+  adc_channel_config(&adc_handle, ADC_CHANNEL_3, ADC_REGULAR_RANK_4, ADC_SAMPLETIME_239CYCLES_5);
+  ///*µ¥Í¨µÀ*/
   // adc_channel_config(&adc_handle, ADC_CHANNEL_1, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_239CYCLES_5);
 
-  dma_config(); // 3. é…ç½®DMAï¼ˆæ•°æ®ä¼ è¾“é€šé“ã€å¾ªç¯æ¨¡å¼ç­‰ï¼‰
-  // 4. å¯åŠ¨ADC DMAä¼ è¾“ï¼ˆmar: å†…å­˜åœ°å€ï¼Œ4: 4ä¸ªé€šé“ï¼‰
-  // æ­¤å‡½æ•°è°ƒç”¨åADCå¼€å§‹è¿ç»­è½¬æ¢ï¼Œæ•°æ®è‡ªåŠ¨å­˜å…¥æŒ‡å®šå†…å­˜
-  /*å¤šé€šé“*/
-  HAL_ADC_Start_DMA(&adc_handle, mar, 4);
-  ///*å•é€šé“*/
+  dma_config(); // 3. ÅäÖÃDMA£¨Êı¾İ´«ÊäÍ¨µÀ¡¢Ñ­»·Ä£Ê½µÈ£©
+  // 4. Æô¶¯ADC DMA´«Êä£¨mar: ÄÚ´æµØÖ·£¬4: 4¸öÍ¨µÀ£©
+  // ´Ëº¯Êıµ÷ÓÃºóADC¿ªÊ¼Á¬Ğø×ª»»£¬Êı¾İ×Ô¶¯´æÈëÖ¸¶¨ÄÚ´æ
+  /*¶àÍ¨µÀ*/
+  HAL_ADC_Start_DMA(&adc_handle, (uint32_t *)& mar, 4); // Æô¶¯ADC DMA´«Êä£¬4¸öÍ¨µÀ£¨¹²ËÄ¸öÊı¾İ£©£¬Êı¾İ×Ô¶¯´æÈëÖ¸¶¨ÄÚ´æ
+  ///*µ¥Í¨µÀ*/
   // HAL_ADC_Start_DMA(&adc_handle, mar, 1);
+  //  HAL_ADC_Stop_DMA(&adc_handle);// Í£Ö¹ADC DMA´«Êä£¬ÊÍ·ÅDMA×ÊÔ´
+}
+
+void start_adc(void)
+{
+  adc_DMA_num = 0;
+  HAL_ADC_Start_DMA(&adc_handle, (uint32_t *)&adc_result, 4); // Æô¶¯ADC DMA´«Êä£¬4¸öÍ¨µÀ£¨¹²ËÄ¸öÊı¾İ£©£¬Êı¾İ×Ô¶¯´æÈëÖ¸¶¨ÄÚ´æ
 }

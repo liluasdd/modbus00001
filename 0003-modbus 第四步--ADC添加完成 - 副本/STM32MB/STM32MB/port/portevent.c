@@ -28,37 +28,36 @@ static eMBEventType eQueuedEvent;
 static BOOL xEventInQueue;
 
 /* ----------------------- Start implementation -----------------------------*/
-// äº‹ä»¶é˜Ÿåˆ—åˆå§‹åŒ–
+// ÊÂ¼ş¶ÓÁĞ³õÊ¼»¯
 BOOL xMBPortEventInit(void)
 {
     xEventInQueue = FALSE;
     return TRUE;
 }
 
-// äº‹ä»¶é˜Ÿåˆ—å‘é€äº‹ä»¶
+// ÊÂ¼ş¶ÓÁĞ·¢ËÍÊÂ¼ş
 BOOL xMBPortEventPost(eMBEventType eEvent)
 {
     xEventInQueue = TRUE;
     eQueuedEvent = eEvent;
 
-    // äº‹ä»¶é˜Ÿåˆ—å‘é€äº‹ä»¶
-    if (eEvent == EV_EXECUTE) // æ‰§è¡Œäº‹ä»¶
+    // ÊÂ¼ş¶ÓÁĞ·¢ËÍÊÂ¼ş
+    if (eEvent == EV_EXECUTE) // Ö´ĞĞÊÂ¼ş
     {
-        // é€šçŸ¥ä»»åŠ¡æ‰§è¡Œäº‹ä»¶
+        // Í¨ÖªÈÎÎñÖ´ĞĞÊÂ¼ş
         // xTaskNotify(xMBTaskHandle, (uint32_t)eEvent, eSetValueWithOverwrite);
     }
-    else if (eEvent == EV_FRAME_RECEIVED) // å¸§æ¥æ”¶äº‹ä»¶
+    else if (eEvent == EV_FRAME_RECEIVED) // Ö¡½ÓÊÕÊÂ¼ş
     {
         // BaseType_t xHigherPriorityTaskWoken;
         // BaseType_t sendStatus;
         // sendStatus = xTaskNotifyFromISR(xMBTaskHandle, (uint32_t)eEvent, &xHigherPriorityTaskWoken);
-
         // portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 
     return TRUE;
 }
-// äº‹ä»¶é˜Ÿåˆ—è·å–äº‹ä»¶
+// ÊÂ¼ş¶ÓÁĞ»ñÈ¡ÊÂ¼ş
 BOOL xMBPortEventGet(eMBEventType *eEvent)
 {
     BOOL xEventHappened = FALSE;

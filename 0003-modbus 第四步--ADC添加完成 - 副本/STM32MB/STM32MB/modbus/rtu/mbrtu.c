@@ -43,12 +43,13 @@
 #include "mbcrc.h"
 #include "mbport.h"
 
+extern u8 g_485_receive_Error_num;
 /* ----------------------- Defines ------------------------------------------*/
-#define MB_SER_PDU_SIZE_MIN 4   /*!< Minimum size of a Modbus RTU frame. */
-#define MB_SER_PDU_SIZE_MAX 256 /*!< Maximum size of a Modbus RTU frame. */
-#define MB_SER_PDU_SIZE_CRC 2   /*!< Size of CRC field in PDU. */
-#define MB_SER_PDU_ADDR_OFF 0   /*!< Offset of slave address in Ser-PDU. */
-#define MB_SER_PDU_PDU_OFF 1    /*!< Offset of Modbus-PDU in Ser-PDU. */
+#define MB_SER_PDU_SIZE_MIN 4                                             /*!< Minimum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_MAX 256                                           /*!< Maximum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_CRC 2                                             /*!< Size of CRC field in PDU. */
+#define MB_SER_PDU_ADDR_OFF 0 /*!< Offset of slave address in Ser-PDU. */ /* 从站地址偏移量（0）  */
+#define MB_SER_PDU_PDU_OFF 1 /*!< Offset of Modbus-PDU in Ser-PDU. */     /* Modbus数据偏移量 */
 
 /* ----------------------- Type definitions ---------------------------------*/
 typedef enum
@@ -71,10 +72,11 @@ static volatile eMBRcvState eRcvState;
 
 volatile UCHAR ucRTUBuf[MB_SER_PDU_SIZE_MAX];
 
-static volatile UCHAR *pucSndBufferCur;
+static volatile UCHAR *pucSndBufferCur; // 发送缓冲区当前指针
 static volatile USHORT usSndBufferCount;
 
-static volatile USHORT usRcvBufferPos;
+// static volatile USHORT usRcvBufferPos;
+volatile USHORT usRcvBufferPos;
 
 /* ----------------------- Start implementation -----------------------------*/
 
@@ -159,9 +161,11 @@ void eMBRTUStop(void)
 }
 
 /* Modbus RTU 接收
-
-
-*/
+ * @param pucRcvAddress 从站地址
+ * @param pucFrame Modbus PDU的起始地址
+ * @param pusLength Modbus PDU的长度
+ * @return eMBErrorCode 接收状态
+ */
 eMBErrorCode
 eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
 {
@@ -171,7 +175,7 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     ENTER_CRITICAL_SECTION();
     assert(usRcvBufferPos < MB_SER_PDU_SIZE_MAX); // 检查接收缓冲区是否已满
 
-    /* Length and CRC check */
+    /* Length and CRC check */ // 检查接收缓冲区位置是否大于最小长度且CRC校验是否通过
     if ((usRcvBufferPos >= MB_SER_PDU_SIZE_MIN) && (usMBCRC16((UCHAR *)ucRTUBuf, usRcvBufferPos) == 0))
     {
         /* Save the address field. All frames are passed to the upper layed
@@ -236,12 +240,13 @@ eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
         ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8);            // 发送缓冲区计数器增加，将高字节写入缓冲区
 
         /* Activate the transmitter. */
-        eSndState = STATE_TX_XMIT;        // 发送状态机状态切换为发送状态
+        eSndState = STATE_TX_XMIT; // 发送状态机状态切换为发送状态
+        // //////发送前使能RS485发送使能，并清空发送发送定时器
+        // RS485_DE_HIGH_ON;                 // 使能RS485发送使能
+        // delay_us(6);                      // 等待收发器稳定
+        // g_b_485_send_tick = 1;            // 发送定时器初始化为1
+        // g_485_send_tim = 0;               // 发送定时器初始化为0
         vMBPortSerialEnable(FALSE, TRUE); // 启用串口发送中断
-        //////发送前使能RS485发送使能，并清空发送发送定时器
-        RS485_DE_HIGH_ON;      // 使能RS485发送使能
-        g_b_485_send_tick = 1; // 发送定时器初始化为1
-        g_485_send_tim = 0;    // 发送定时器初始化为0
     }
     else
     {
@@ -259,22 +264,23 @@ BOOL xMBRTUReceiveFSM(void)
 
     assert(eSndState == STATE_TX_IDLE);
 
-    /* Always read the character. */
-    (void)xMBPortSerialGetByte((CHAR *)&ucByte);
+    // /* Always read the character. */ // 从串口接收一个字节
+    // (void)xMBPortSerialGetByte((CHAR *)&ucByte);
+    ucByte = (uint8_t)(huart2.Instance->DR); // 从串口接收一个字节（直接读寄存器速度快）
 
     switch (eRcvState) // Modbus协议栈接收状态机状态
     {
         /* If we have received a character in the init state we have to
          * wait until the frame is finished.
          */
-    case STATE_RX_INIT:
+    case STATE_RX_INIT:        // 接收状态机状态为初始化状态
         vMBPortTimersEnable(); // 启用定时器
         break;
 
         /* In the error state we wait until all characters in the
          * damaged frame are transmitted.
          */
-    case STATE_RX_ERROR:
+    case STATE_RX_ERROR:           // 接收状态机状态为错误状态
         vMBPortTimersEnable();     // 启用定时器
         g_b_485_receive_Error = 1; // 接收错误标志置1
         break;
@@ -283,7 +289,7 @@ BOOL xMBRTUReceiveFSM(void)
          * is received the t1.5 and t3.5 timers are started and the
          * receiver is in the state STATE_RX_RECEIVCE.
          */
-    case STATE_RX_IDLE:
+    case STATE_RX_IDLE: // 接收状态机状态为空闲状态
         usRcvBufferPos = 0;
         ucRTUBuf[usRcvBufferPos++] = ucByte; // 接收缓冲区位置增加，将新字符写入缓冲区
         eRcvState = STATE_RX_RCV;            // 接收状态机状态切换为接收状态
@@ -297,7 +303,7 @@ BOOL xMBRTUReceiveFSM(void)
          * number of bytes in a modbus frame is received the frame is
          * ignored.
          */
-    case STATE_RX_RCV:
+    case STATE_RX_RCV:                            // 接收状态机状态为接收状态
         if (usRcvBufferPos < MB_SER_PDU_SIZE_MAX) // 接收缓冲区位置小于最大长度
         {
             ucRTUBuf[usRcvBufferPos++] = ucByte; // 接收缓冲区位置增加，将新字符写入缓冲区
@@ -342,13 +348,16 @@ BOOL xMBRTUTransmitFSM(void)
         else
         {
             xNeedPoll = xMBPortEventPost(EV_FRAME_SENT); // 发送完成，发送 EV_FRAME_SENT 事件
-            /* Disable transmitter. This prevents another transmit buffer
-             * empty interrupt. */
+
+            /* Disable transmitter. This prevents another transmit buffer * empty interrupt. */
+            /* 等最后一个字节真正发完，再切回接收 */
+            // while (!(USART2->SR & USART_SR_TC));
+            // RS485_DE_LOW_OFF;                 // 使能RS485接收使能
+            // delay_us(3);                      // 等待收发器稳定
+            // g_b_485_send_Error = 0;           // 发送错误标志位初始化为0
+            // g_b_485_send_tick = 0;            // 发送定时器初始化为0
             vMBPortSerialEnable(TRUE, FALSE); // 禁用发送器
             eSndState = STATE_TX_IDLE;        // 发送状态机状态切换为空闲状态
-            RS485_DE_LOW_OFF;                 // 使能RS485接收使能
-            g_b_485_send_Error = 0;           // 发送错误标志位初始化为0
-            g_b_485_send_tick = 0;            // 发送定时器初始化为0
         }
         break;
     }
@@ -364,8 +373,8 @@ BOOL xMBRTUTimerT35Expired(void)
     switch (eRcvState)
     {
         /* Timer t35 expired. Startup phase is finished. */
-    case STATE_RX_INIT:
-        xNeedPoll = xMBPortEventPost(EV_READY); // 发送 EV_READY 事件
+    case STATE_RX_INIT:                         // 接收状态机状态为初始化状态
+        xNeedPoll = xMBPortEventPost(EV_READY); //
         break;
 
         /* A frame was received and t35 expired. Notify the listener that
@@ -376,6 +385,9 @@ BOOL xMBRTUTimerT35Expired(void)
 
         /* An error occured while receiving the frame. */
     case STATE_RX_ERROR:
+        g_b_485_receive_Error = 0; // 超时结束此针，立即清除，不让标志残留到下一帧
+        if (g_485_receive_Error_num < 253)
+            g_485_receive_Error_num++; 
         break;
 
         /* Function called in an illegal state. */
@@ -390,15 +402,16 @@ BOOL xMBRTUTimerT35Expired(void)
     return xNeedPoll; // 是否需要轮询
 }
 
-void Modbus_ResetRx(void)
+void Modbus_ResetRx(void) // 重置接收状态机
 {
-    RS485_DE_LOW_OFF;
-    ENTER_CRITICAL_SECTION();
-    eRcvState = STATE_RX_IDLE;
-    usRcvBufferPos = 0;
-    vMBPortTimersDisable();
-    eSndState = STATE_TX_IDLE;
-    usSndBufferCount = 0;
-    vMBPortSerialEnable(TRUE, FALSE);
-    EXIT_CRITICAL_SECTION();
+    ENTER_CRITICAL_SECTION();                   // 进入临界区
+    RS485_DE_LOW_OFF;                           // 二次强制拉低DE，避免一直占用主线
+    eRcvState = STATE_RX_IDLE;                  // ① 接收状态机复位
+    usRcvBufferPos = 0;                         // ② 接收缓冲区清零
+    vMBPortTimersDisable();                     // ③ 关定时器
+    eSndState = STATE_TX_IDLE;                  // ④ 发送状态机复位
+    usSndBufferCount = 0;                       // ⑤ 发送缓冲区清零
+    vMBPortSerialEnable(TRUE, FALSE);           // ⑥ 开RXNE + 关TXE + 开TC
+    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC); // ← 再关一次，保险
+    EXIT_CRITICAL_SECTION();                    // 退出临界区
 }

@@ -33,37 +33,37 @@
 /* ----------------------- Start implementation -----------------------------*/
 
 /*
- * åˆå§‹åŒ–å®šæ—¶å™¨
- * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
+ * ³õÊ¼»¯¶¨Ê±Æ÷
+ * @param usTim1Timerout50us ¶¨Ê±Æ÷1µÄ³¬Ê±Ê±¼ä£¬µ¥Î»50us
  */
-BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // åˆå§‹åŒ–å®šæ—¶å™¨1
+BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // ³õÊ¼»¯¶¨Ê±Æ÷1
 {
-	// __HAL_RCC_TIM4_CLK_ENABLE();  // åˆå§‹åŒ–å®šæ—¶å™¨4æ—¶é’Ÿä½¿èƒ½
-	// RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // åˆå§‹åŒ–å®šæ—¶å™¨4ä½¿èƒ½ä½
-	RCC->APB1ENR |= (1 << 2);			// åˆå§‹åŒ–å®šæ—¶å™¨4ä½¿èƒ½ä½  //RCC->APB1ENR |= 0x04;
-	TIM4->ARR = usTim1Timerout50us - 1; // åˆå§‹åŒ–å®šæ—¶å™¨4è‡ªåŠ¨é‡è£…è½½å¯„å­˜å™¨
+	// __HAL_RCC_TIM4_CLK_ENABLE();  // ³õÊ¼»¯¶¨Ê±Æ÷4Ê±ÖÓÊ¹ÄÜ
+	// RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // ³õÊ¼»¯¶¨Ê±Æ÷4Ê¹ÄÜÎ»
+	RCC->APB1ENR |= (1 << 2);			// ³õÊ¼»¯¶¨Ê±Æ÷4Ê¹ÄÜÎ»  //RCC->APB1ENR |= 0x04;
+	TIM4->ARR = usTim1Timerout50us - 1; // ³õÊ¼»¯¶¨Ê±Æ÷4×Ô¶¯ÖØ×°ÔØ¼Ä´æÆ÷
 	TIM4->PSC = 3599;					// 72MHz/3600 = 20k = 50us
-	TIM4->DIER |= 1 << 0;				// TIM4->DIER |= TIM_DIER_UIE; // åˆå§‹åŒ–å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­ä½¿èƒ½ä½
+	TIM4->DIER |= 1 << 0;				// TIM4->DIER |= TIM_DIER_UIE; // ³õÊ¼»¯¶¨Ê±Æ÷4¸üÐÂÖÐ¶ÏÊ¹ÄÜÎ»
 
-	// HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­ä¼˜å…ˆçº§ä¸º0
+	// HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // ³õÊ¼»¯¶¨Ê±Æ÷4ÖÐ¶ÏÓÅÏÈ¼¶Îª0
 
-	// NVICInit(1,0,TIM4_IRQn,4);// åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­ä¼˜å…ˆçº§ä¸º0
-	// HAL_NVIC_EnableIRQ(TIM4_IRQn);		   // åˆå§‹åŒ–å®šæ—¶å™¨4ä¸­æ–­
+	// NVICInit(1,0,TIM4_IRQn,4);// ³õÊ¼»¯¶¨Ê±Æ÷4ÖÐ¶ÏÓÅÏÈ¼¶Îª0
+	// HAL_NVIC_EnableIRQ(TIM4_IRQn);		   // ³õÊ¼»¯¶¨Ê±Æ÷4ÖÐ¶Ï
 
 	return TRUE;
 }
 
 /*
- * å¯ç”¨å®šæ—¶å™¨
- * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
+ * ÆôÓÃ¶¨Ê±Æ÷
+ * @param usTim1Timerout50us ¶¨Ê±Æ÷1µÄ³¬Ê±Ê±¼ä£¬µ¥Î»50us
  */
 inline void
-vMBPortTimersEnable() // å¯ç”¨å®šæ—¶å™¨1
+vMBPortTimersEnable() // ÆôÓÃ¶¨Ê±Æ÷1
 {
-	/* å¯ç”¨å®šæ—¶å™¨1 */
-	// TIM4->CNT = 0;		 // åˆå§‹åŒ–å®šæ—¶å™¨1è®¡æ—¶å¯„æ•°å™¨
-	// TIM4->CR1 |= 1 << 0; // å¯ç”¨å®šæ—¶å™¨1è®¡æ•°å™¨
-	// TIM4->CR1 |= 1 << 1; // å¯ç”¨å®šæ—¶å™¨1æ›´æ–°ä¸­æ–­ä½¿èƒ½ä½
+	/* ÆôÓÃ¶¨Ê±Æ÷1 */
+	// TIM4->CNT = 0;		 // ³õÊ¼»¯¶¨Ê±Æ÷1¼ÆÊ±¼ÄÊýÆ÷
+	// TIM4->CR1 |= 1 << 0; // ÆôÓÃ¶¨Ê±Æ÷1¼ÆÊýÆ÷
+	// TIM4->CR1 |= 1 << 1; // ÆôÓÃ¶¨Ê±Æ÷1¸üÐÂÖÐ¶ÏÊ¹ÄÜÎ»
 
 	/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
 	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
@@ -73,13 +73,13 @@ vMBPortTimersEnable() // å¯ç”¨å®šæ—¶å™¨1
 }
 
 /*
- * ç¦ç”¨å®šæ—¶å™¨1
+ * ½ûÓÃ¶¨Ê±Æ÷1
  */
 inline void
-vMBPortTimersDisable() // ç¦ç”¨å®šæ—¶å™¨1
+vMBPortTimersDisable() // ½ûÓÃ¶¨Ê±Æ÷1
 {
-	/* ç¦ç”¨å®šæ—¶å™¨1 */
-	// TIM4->CR1 &= ~(1 << 0); // ç¦ç”¨å®šæ—¶å™¨1è®¡æ•°å™¨
+	/* ½ûÓÃ¶¨Ê±Æ÷1 */
+	// TIM4->CR1 &= ~(1 << 0); // ½ûÓÃ¶¨Ê±Æ÷1¼ÆÊýÆ÷
 
 	/* Disable any pending timers. */
 	__HAL_TIM_DISABLE(&htim4);
@@ -93,25 +93,25 @@ vMBPortTimersDisable() // ç¦ç”¨å®šæ—¶å™¨1
  * the timer has expired.
  */
 /*
- * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
+ * ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯Êý
  */
-void prvvTIMERExpiredISR(void) // å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
+void prvvTIMERExpiredISR(void) // ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯Êý
 {
 
 	(void)pxMBPortCBTimerExpired();
 }
 
 /*
- * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
+ * ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯ÊýÊµÏÖ
  */
 // void TIM4_IRQHandler(void)
 // {
 // 	if (TIM4->SR & (1 << 0))
 // 	{
-// 		// å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
+// 		// ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯ÊýÊµÏÖ
 // 		prvvTIMERExpiredISR();
 
-// 		TIM4->SR &= ~(1 << 0); // æ¸…é™¤å®šæ—¶å™¨1ä¸­æ–­æ ‡å¿—ä½
+// 		TIM4->SR &= ~(1 << 0); // Çå³ý¶¨Ê±Æ÷1ÖÐ¶Ï±êÖ¾Î»
 // 	}
 // 	// prvvTIMERExpiredISR();
 // }

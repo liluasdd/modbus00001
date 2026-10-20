@@ -72,43 +72,43 @@ int main(void)
 
     /* 初始化GPIO */
     APPGPIO_INIT();
-//    /* ADC初始化 */
-//    // MX_ADC1_Init();
-//    adc_dma_init((uint32_t *)&adc_result); // 初始化ADC DMA模式
-//    /* 定时器4初始化 */
-//    MX_TIM4_Init();
-//    /* 定时器3初始化 - 100us定时 */
-//    MX_TIM3_Init();
-//    HAL_TIM_Base_Start_IT(&htim3); /* 启动TIM3定时器中断 */
+   /* ADC初始化 */
+//    MX_ADC1_Init();
+//   adc_dma_init((uint32_t *)&adc_result); // 初始化ADC DMA模式
+   adc_dma_init(adc_result);
+   /* 定时器4初始化 */
+   MX_TIM4_Init();
+   /* 定时器3初始化 - 100us定时 */
+   MX_TIM3_Init();
+   HAL_TIM_Base_Start_IT(&htim3); /* 启动TIM3定时器中断 */
+	    // /* Modbus从站初始化 */
+     eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONE无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验
 
-    LCD_Init(); // 初始化LCD
+//    LCD_Init(); // 初始化LCD
 
-    // /* Modbus从站初始化 */
-    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONE无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验
+//	tp_dev.touchtype |= USE_TP_TYPE; // 电容触摸&电阻触摸
+//	// LCD_Display_Dir(USE_LCM_DIR);	 // 屏幕方向
+//	LCD_Display_Dir(1); // 屏幕方向
+//	LCD_Clear(WHITE);	// 清屏
 
-	tp_dev.touchtype |= USE_TP_TYPE; // 电容触摸&电阻触摸
-	// LCD_Display_Dir(USE_LCM_DIR);	 // 屏幕方向
-	LCD_Display_Dir(1); // 屏幕方向
-	LCD_Clear(WHITE);	// 清屏
+//	main_test("IC:ST7789"); // 测试主页
+//	// Color_Test();			// 纯色测试
+//	// Read_Test();			// 读颜色测试
+//	// FillRec_Test(); // 图形测试
+//	// English_Font_test();	// 英文测试
+//	Chinese_Font_test();	// 中文测试
+//	// Pic_test(); // 图片测试
+//	// Switch_test();			// 显示开关测试
+//	//	Rotate_Test();			// 旋转测试
 
-	main_test("IC:ST7789"); // 测试主页
-	// Color_Test();			// 纯色测试
-	// Read_Test();			// 读颜色测试
-	// FillRec_Test(); // 图形测试
-	// English_Font_test();	// 英文测试
-	Chinese_Font_test();	// 中文测试
-	// Pic_test(); // 图片测试
-	// Switch_test();			// 显示开关测试
-	//	Rotate_Test();			// 旋转测试
+//	// 不需要触摸请注释掉以下代码
+//	LCD_Display_Dir(0); // 屏幕切换为竖屏状态
+//	tp_dev.init(); // 触摸屏初始化
+//	POINT_COLOR = RED; // 设置字体为红色
 
-	// 不需要触摸请注释掉以下代码
-	LCD_Display_Dir(0); // 屏幕切换为竖屏状态
-	tp_dev.init(); // 触摸屏初始化
-	POINT_COLOR = RED; // 设置字体为红色
-
-	// Load_Drow_Dialog();
-	// if (tp_dev.touchtype & 0X80)
-	ctp_test(); // 电容屏测试
+//	// Load_Drow_Dialog();
+//	// if (tp_dev.touchtype & 0X80)
+//	ctp_test(); // 电容屏测试
 
     /*
     MB_RTU modbus选择。  MB_SAMPLE_TEST_SLAVE_ADDR 从站地址为0x01 。MB_MASTER_USARTx 串口2 。 BAUD_num 波特率 。 MB_PAR_NONE 校验选择
@@ -117,7 +117,7 @@ int main(void)
     //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
 
     // /* 启用Modbus从站 */
-    // eMBEnable();
+    eMBEnable();
 
 #if DEBUG_UART_ENABLE
     uart_init(115200);               // 初始化串口1
@@ -151,12 +151,12 @@ int main(void)
             /* 轮询Modbus从站 */
             eMBPoll();
         }
-        if (g_b_100ms_jtim == 1)
-        {
-            g_b_100ms_jtim = 0;
-            adc_value = Read_ADC(PT100_ADC, 10);
-            usSRegHoldBuf[1] = adc_value;
-        }
+        // if (g_b_100ms_jtim == 1)
+        // {
+        //     g_b_100ms_jtim = 0;
+        //     adc_value = Read_ADC(PT100_ADC, 10);
+        //     usSRegHoldBuf[1] = adc_value;
+        // }
     }
 }
 

@@ -72,8 +72,8 @@ typedef         eMBException( *pxMBFunctionHandler ) ( UCHAR * pucFrame, USHORT 
 
 typedef struct
 {
-    UCHAR           ucFunctionCode;
-    pxMBFunctionHandler pxHandler;
+    UCHAR           ucFunctionCode;// Modbus功能码
+    pxMBFunctionHandler pxHandler;// Modbus功能码处理函数指针类型
 } xMBFunctionHandler;
 
 #ifdef __cplusplus

@@ -4,11 +4,11 @@
  * @author  STMicroelectronics
  * @version V1.0
  * @date    2020-xx-xx
- * @brief   锟斤拷锟斤拷锟斤拷时锟斤拷锟斤拷时锟斤拷锟斤拷
+ * @brief   锟斤拷锟斤拷锟斤拷时锟斤拷锟斤拷时锟斤拷锟斤�?
  ******************************************************************************
  * @attention
  *
- * 实锟斤拷平台:野锟斤拷  STM32 F429 锟斤拷锟斤拷锟斤拷
+ * 实锟斤拷平台:野锟斤拷  STM32 F429 锟斤拷锟斤拷锟斤�?
  * 锟斤拷坛    :http://www.firebbs.cn
  * 锟皆憋拷    :http://fire-stm32.taobao.com
  *
@@ -29,7 +29,7 @@ void MX_TIM4_Init(void)
   // 锟斤拷时锟斤拷时锟斤拷源TIMxCLK = 2 * PCLK1
   //				PCLK1 = HCLK / 4
   //				=> TIMxCLK=HCLK/2=SystemCoreClock/2=90MHz
-  //  锟借定锟斤拷时锟斤拷频锟斤拷为=TIMxCLK/(TIM_Prescaler+1)=20000Hz
+  //  锟借定锟斤拷时锟斤拷�?�锟斤拷�?=TIMxCLK/(TIM_Prescaler+1)=20000Hz
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 1800 - 1; // 20KHZ
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -75,12 +75,12 @@ void MX_TIM3_Init(void)
       ;
   }
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;// 使能时钟
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)// 配置时钟源
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)// 配置时钟�?
   {
     while (1)
       ;
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;// 使能中断
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;// 使能�?�?
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;// 禁用主从模式
   if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)// 配置主从模式
   {
@@ -89,7 +89,7 @@ void MX_TIM3_Init(void)
   }
 }
 
-// 初始化  时钟和中断
+// 初�?�化  时钟和中�?
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
@@ -98,9 +98,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     /* TIM4 clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
 
-    // TIM4中断配置
+    // TIM4�?�?配置
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 1);
-    // TIM4中断使能
+    // TIM4�?�?使能
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
   else if (tim_baseHandle->Instance == TIM3)
@@ -108,7 +108,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     /* TIM3 clock enable */
     __HAL_RCC_TIM3_CLK_ENABLE();
 
-    /* TIM3中断配置 */
+    /* TIM3�?�?配置 */
     HAL_NVIC_SetPriority(TIM3_IRQn, 0, 2);
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   }
@@ -117,13 +117,13 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
-  if (tim_baseHandle->Instance == TIM4) // 使能TIM4定时器
+  if (tim_baseHandle->Instance == TIM4) // 使能TIM4定时�?
   {
     /* Peripheral clock disable */
     __HAL_RCC_TIM4_CLK_DISABLE(); // 禁用TIM4时钟
 
     /* TIM4 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(TIM4_IRQn); // 禁用TIM4中断
+    HAL_NVIC_DisableIRQ(TIM4_IRQn); // 禁用TIM4�?�?
   }
   else if (tim_baseHandle->Instance == TIM3)
   {
@@ -150,7 +150,7 @@ u8 g_485_send_tim = 0;
 
 extern void prvvTIMERExpiredISR(void);
 
-/* TIM3中断回调函数 - 100us定时中断 */
+/* TIM3�?�?回调函数 - 100us定时�?�? */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM3)
@@ -162,7 +162,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     {
       g_b_task_jtim = 1;
       s_tim0_10ms = 0;
-      if (g_b_485_send_tick)
+      if (g_b_485_send_tick)// ����״̬��״̬�л�Ϊ����̬
       {
         g_485_send_tim++;
         if (g_485_send_tim >= 50)
@@ -170,6 +170,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           g_485_send_tim = 0;
           g_b_485_send_Error = 1;
         }
+      }
+      else// ����״̬��״̬�л�Ϊ����״̬
+      {
+        g_485_send_tim = 0;
       }
     }
     if (s_tim0_100ms >= 1000)
@@ -188,7 +192,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim->Instance == TIM4)
   {
-    prvvTIMERExpiredISR(); // 调用定时器中断服务函数
+    prvvTIMERExpiredISR(); // 调用定时器中�?服务函数
   }
 }
 

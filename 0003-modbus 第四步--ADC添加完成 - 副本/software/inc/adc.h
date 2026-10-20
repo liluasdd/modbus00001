@@ -6,6 +6,8 @@
 // void adc_init(void);
 void MX_ADC1_Init(void);
 int16_t Read_ADC(/*uint8_t adc_id, */ uint32_t ch, uint8_t num);
+// void adc_dma_init(uint32_t *mar);
+ void adc_dma_init(uint16_t *mar);
 // int16_t Read_ADC(uint32_t ch, uint32_t times);
 // uint32_t adc_get_result(uint32_t ch);
 

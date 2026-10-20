@@ -3,30 +3,30 @@
 
 #include "stdint.h"
 
-#define s64 int64_t  //////* 64ä½æœ‰ç¬¦å·æ•´æ•°*/
+#define s64 int64_t  //////* 64Î»ÓĞ·ûºÅÕûÊı*/
 #define s32 int32_t
 #define s16 int16_t
 #define s8 int8_t
 
-#define sc64 const int64_t /*!< Read Only */  //////* 64ä½ åªè¯»æœ‰ç¬¦å·æ•´æ•°*/
+#define sc64 const int64_t /*!< Read Only */  //////* 64?? ??¶ÁÓĞ·ûºÅÕûÊı*/
 #define sc32 const int32_t /*!< Read Only */
 #define sc16 const int16_t /*!< Read Only */
 #define sc8 const int8_t   /*!< Read Only */
 
-#define u64 uint64_t  //////* 64ä½æ— ç¬¦å·æ•´æ•°*/
+#define u64 uint64_t  //////* 64Î»ÎŞ·ûºÅÕûÊı*/
 #define u32 uint32_t
 #define u16 uint16_t
-#define u8 uint8_t  //æ™®é€šå­—èŠ‚æ•°æ®ã€è®¡æ•°å™¨ï¼Œ 8ä½æ— ç¬¦å·æ•´æ•°
+#define u8 uint8_t  //??Í¨×Ö½ÚÊı??¡¢???Êı???? 8Î»ÎŞ·ûºÅÕûÊı
 
-#define uc64 const uint64_t /*!< Read Only */  //////*64ä½æ— ç¬¦å·æ•´æ•°*/
+#define uc64 const uint64_t /*!< Read Only */  //////*64Î»ÎŞ·ûºÅÕûÊı*/
 #define uc32 const uint32_t /*!< Read Only */
 #define uc16 const uint16_t /*!< Read Only */
-#define uc8 const uint8_t   /*!< Read Only */  //////* 8ä½åªè¯» ä¿æŠ¤é‡è¦æ•°æ®ä¸è¢«æ„å¤–ä¿®æ”¹ï¼Œå¦‚é…ç½®å‚æ•°ã€æŸ¥æ‰¾è¡¨ã€‚*/
+#define uc8 const uint8_t   /*!< Read Only */  //////* 8Î»Ö»?? ±£»¤ÖØ???Êı??²»???Òâ???ĞŞ¸Ä£¬ÈçÅä??²ÎÊı¡¢²éÕÒ±í??*/
 
-#define vu64 volatile u64  //////* 64ä½ æ— ä¼˜åŒ– æ— ç¬¦å·æ•´æ•°*/
+#define vu64 volatile u64  //////* 64?? ÎŞÓÅ?? ÎŞ???ºÅÕûÊı*/
 #define vu32 volatile u32
 #define vu16 volatile u16
-#define vu8 volatile u8  //////* 8ä½ æ˜“å¤±æ€§å˜é‡ï¼Œæ¯æ¬¡éƒ½ä»å†…å­˜è¯»å–*/
+#define vu8 volatile u8  //////* 8?? Ò×Ê§ĞÔ±äÁ¿£¬Ã¿???¶¼´ÓÄÚ´æ???È¡*/
 
 void APP_ErrorHandler(void);
 
@@ -45,7 +45,7 @@ typedef union
         u8 bit7 : 1;
     } bits;
 } bit_flag;
-extern volatile bit_flag flag1, flag2, flag3, flag4, flag5, flag6, flag7;
+extern volatile bit_flag flag1, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9;
 
 #define g_b_task_jtim flag1.bits.bit0
 #define g_b_100ms_jtim flag1.bits.bit1

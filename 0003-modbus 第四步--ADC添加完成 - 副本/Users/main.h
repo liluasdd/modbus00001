@@ -41,6 +41,14 @@ extern void prvvTIMERExpiredISR(void);
 static void SystemClock_Config(void);
 void Error_Handler(void);
 
+// ADC 数据缓存
+extern u8 adc_DMA_num;
+extern uint16_t adc_result[4];
+extern uint16_t adc_ch0[12];
+extern uint16_t adc_ch1[12];
+extern uint16_t adc_ch2[12];
+extern uint16_t adc_ch3[12];
+
 /* 测试功能参数 */
 #define MB_SAMPLE_TEST_SLAVE_ADDR 1 // 从机设???地址
 

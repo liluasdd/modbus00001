@@ -12,6 +12,7 @@ extern "C"
 #define DEBUG_UART_ENABLE 0      // 1 开启调试串口打印，0关闭
 #define CONFIG_NEED_MESSAGESMG 0 // 1 开启消息管理，0关闭
 #define CONFIG_NEED_PWM 0        // 1 开启PWM，0关闭
+#define adc_DMA_max 12
 
     // 函数声明
     extern void APPGPIO_INIT(void);

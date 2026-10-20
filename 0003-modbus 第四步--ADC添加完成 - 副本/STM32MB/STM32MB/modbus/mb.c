@@ -376,6 +376,7 @@ eMBPoll(void)
             if (eStatus == MB_ENOERR)
             {
                 /* Check if the frame is for us. If not ignore the frame. */
+                // 接收地址是否为Modbus地址或广播地址
                 if ((ucRcvAddress == ucMBAddress) || (ucRcvAddress == MB_ADDRESS_BROADCAST))
                 {
                     (void)xMBPortEventPost(EV_EXECUTE);
@@ -383,18 +384,19 @@ eMBPoll(void)
             }
             break;
 
-        case EV_EXECUTE: // Modbus执行事件
-            ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
+        case EV_EXECUTE:                                 // Modbus执行事件
+            ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF]; // 获取Modbus功能码
             eException = MB_EX_ILLEGAL_FUNCTION;
             for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
             {
                 /* No more function handlers registered. Abort. */
-                if (xFuncHandlers[i].ucFunctionCode == 0)
+                if (xFuncHandlers[i].ucFunctionCode == 0) // 没有注册Modbus功能码处理函数
                 {
                     break;
                 }
-                else if (xFuncHandlers[i].ucFunctionCode == ucFunctionCode)
+                else if (xFuncHandlers[i].ucFunctionCode == ucFunctionCode) // 功能码匹配
                 {
+                    // 调用Modbus功能码处理函数
                     eException = xFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
                     break;
                 }
@@ -402,6 +404,7 @@ eMBPoll(void)
 
             /* If the request was not sent to the broadcast address we
              * return a reply. */
+            // 接收地址是否为Modbus地址或广播地址
             if (ucRcvAddress != MB_ADDRESS_BROADCAST)
             {
                 if (eException != MB_EX_NONE)
@@ -415,7 +418,7 @@ eMBPoll(void)
                 {
                     vMBPortTimersDelay(MB_ASCII_TIMEOUT_WAIT_BEFORE_SEND_MS);
                 }
-                eStatus = peMBFrameSendCur(ucMBAddress, ucMBFrame, usLength);
+                eStatus = peMBFrameSendCur(ucMBAddress, ucMBFrame, usLength); // 发送Modbus数据帧当前帧
             }
             break;
 
@@ -427,7 +430,7 @@ eMBPoll(void)
 }
 
 extern UART_HandleTypeDef huart2;
-u8 g_485_send_Error_num = 0; // 4485发送超时故障次数
+u8 g_485_send_Error_num = 0;    // 4485发送超时故障次数
 u8 g_485_receive_Error_num = 0; // 485接收超限故障次数
 
 void eMBsend_Error(void)
@@ -438,13 +441,18 @@ void eMBsend_Error(void)
         // 1.强制释放485总线
         RS485_DE_LOW_OFF;
         // g_485_tx_busy = 0;// 485总线释放
+        // 2.关闭所有发送相关中断（超时可能发生在发送中途）
+        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // ← 新增！防止TXE还在触发
         __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
 
-        // 2.Modbus协议状态复位，丢弃半帧
+        // 3.恢复接收能力
+        __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // ← 新增！准备接收下一帧
+
+        // 4.Modbus协议状态复位，丢弃半帧
         Modbus_ResetRx();
-        // 发送标志位清零
+        // 5发送标志位清零
         g_b_485_send_tick = 0;
-        // 3.??必须把错误标记清零，否则会一直重复进这个分支
+        // 6.??必须把错误标记清零，否则会一直重复进这个分支
         g_b_485_send_Error = 0;
         if (g_485_send_Error_num < 255)
             g_485_send_Error_num++; // 发送超时故障次数加1,最大255次
@@ -454,13 +462,17 @@ void eMBsend_Error(void)
         // 1.强制释放485总线
         RS485_DE_LOW_OFF;
 
-        // 2.Modbus协议状态复位，丢弃半帧
+        // 2.接收出错时也要确保发送中断关闭
+        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // ← 新增
+        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);  // ← 新增
+
+        // 3.Modbus协议状态复位，丢弃半帧
         Modbus_ResetRx();
 
-        if (g_485_receive_Error_num < 255)
-            g_485_receive_Error_num++; // 发送接收超限故障次数加1,最大255次
+        if (g_485_receive_Error_num < 253)
+            g_485_receive_Error_num++; // 发送接收超限故障次数加1,最大253次
 
-        // 3.??必须把错误标记清零，否则会一直重复进这个分支
+        // 4.??必须把错误标记清零，否则会一直重复进这个分支
         g_b_485_receive_Error = 0;
     }
 }

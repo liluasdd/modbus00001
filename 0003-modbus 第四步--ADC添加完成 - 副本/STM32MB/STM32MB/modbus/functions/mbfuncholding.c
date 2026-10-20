@@ -72,8 +72,14 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 
 #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
 
+/*
+ * @brief 写入保持寄存器
+ * @param pucFrame Modbus PDU数据指针
+ * @param usLen Modbus PDU数据长度指针
+ * @return eMBException Modbus异常码
+*/
 eMBException
-eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )// 写入保持寄存器
 {
     USHORT          usRegAddress;
     eMBException    eStatus = MB_EX_NONE;
@@ -81,8 +87,8 @@ eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
     if( *usLen == ( MB_PDU_FUNC_WRITE_SIZE + MB_PDU_SIZE_MIN ) )
     {
-        usRegAddress = ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF] << 8 );
-        usRegAddress |= ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF + 1] );
+        usRegAddress = ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF] << 8 );//高8位
+        usRegAddress |= ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF + 1] );//低8位
         usRegAddress++;
 
         /* Make callback to update the value. */
@@ -106,7 +112,7 @@ eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED > 0
 eMBException
-eMBFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )// 写入多个保持寄存器
 {
     USHORT          usRegAddress;
     USHORT          usRegCount;
@@ -166,7 +172,7 @@ eMBFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 #if MB_FUNC_READ_HOLDING_ENABLED > 0
 
 eMBException
-eMBFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )// 读取保持寄存器
 {
     USHORT          usRegAddress;
     USHORT          usRegCount;
@@ -231,7 +237,7 @@ eMBFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 #if MB_FUNC_READWRITE_HOLDING_ENABLED > 0
 
 eMBException
-eMBFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )// 读取多个保持寄存器
 {
     USHORT          usRegReadAddress;
     USHORT          usRegReadCount;

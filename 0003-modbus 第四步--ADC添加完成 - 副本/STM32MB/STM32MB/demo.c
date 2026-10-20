@@ -53,7 +53,7 @@ int Main1(void)
     }
 }
 eMBErrorCode
-eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
+eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)// 输入寄存器回调函数
 {
     eMBErrorCode eStatus = MB_ENOERR;
     int iRegIndex;
@@ -64,10 +64,10 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
     InputBuff[3] = 0x44;
     InputBuff[4] = 0x55;
 
-    if ((usAddress >= REG_INPUT_START) && (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))
+    if ((usAddress >= REG_INPUT_START) && (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))// 检查地址是否在有效范围内
     {
         iRegIndex = (int)(usAddress - usRegInputStart);
-        for (i = 0; i < usNRegs; i++)
+        for (i = 0; i < usNRegs; i++)// 遍历请求的寄存器数量
         {
             *pucRegBuffer = InputBuff[i + usAddress - 1] >> 8;
             pucRegBuffer++;

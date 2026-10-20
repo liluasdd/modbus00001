@@ -49,6 +49,10 @@
 /** @addtogroup GPIO_IOToggle
  * @{
  */
+// extern volatile USHORT usRcvBufferPos;
+// extern volatile UCHAR ucRTUBuf[256];
+// extern inline void vMBPortTimersEnable(); // ÆôÓÃ¶¨Ê±Æ÷1
+
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
@@ -164,6 +168,28 @@ void SysTick_Handler(void)
 {
   HAL_IncTick();
 }
+
+extern ADC_HandleTypeDef adc_handle; // ADC¾ä±ú
+/*
+ADC+DMA×ª»»Íê³É»Øµ÷º¯Êý
+ **/
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+{
+  // 40¸öÊý¾Ý²É¼¯Íê³É
+  // ÔÚÕâÀï´¦Àí adc_buf Êý¾Ý
+  adc_ch0[adc_DMA_num] = adc_result[0]; // CH0 µÄÖµ;
+  adc_ch1[adc_DMA_num] = adc_result[1]; // CH1 µÄÖµ;
+  adc_ch2[adc_DMA_num] = adc_result[2]; // CH2 µÄÖµ;
+  adc_ch3[adc_DMA_num] = adc_result[3]; // CH3 µÄÖµ;
+  adc_DMA_num++;
+  if (adc_DMA_num >= adc_DMA_max)
+  {
+    adc_DMA_num = 0;
+    // ´¦ÀíÍêºóÍ£Ö¹ ADC
+    HAL_ADC_Stop_DMA(&adc_handle);
+  }
+}
+
 /**
  * @brief This function handles TIM4 global interrupt.
  */
@@ -174,13 +200,13 @@ void TIM4_IRQHandler(void)
   /* USER CODE END TIM4_IRQn 0 */
   // HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
-  // å®šæ—¶å™¨ä¸­æ–­
+  // ¶¨Ê±Æ÷ÖÐ¶Ï
   if (TIM4->SR & (1 << 0))
   {
-    // å®šæ—¶å™¨ä¸­æ–­
+    // ¶¨Ê±Æ÷ÖÐ¶Ï
     prvvTIMERExpiredISR();
 
-    TIM4->SR &= ~(1 << 0); // æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
+    TIM4->SR &= ~(1 << 0); // Çå³ýÖÐ¶Ï±êÖ¾Î»
   }
   // prvvTIMERExpiredISR();
   /* USER CODE END TIM4_IRQn 1 */
@@ -189,11 +215,9 @@ void TIM4_IRQHandler(void)
 /**
  * @brief This function handles USART2 global interrupt.
  */
-// xMBRTUReceiveFSM() æŽ¥æ”¶ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbusæŽ¥æ”¶æ•°æ®
-// xMBRTUReceiveFSM() å‘é€ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbuså‘é€æ•°æ®
 void USART2_IRQHandler(void)
 {
-  // // æŽ¥æ”¶ä¸­æ–­
+  // // ½ÓÊÕÖÐ¶Ï
   // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET)
   // {
   //   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
@@ -202,8 +226,7 @@ void USART2_IRQHandler(void)
   //     prvvUARTRxISR();
   //   }
   // }
-
-  // // å‘é€ä¸­æ–­
+  // // ·¢ËÍÖÐ¶Ï
   // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) != RESET)
   // {
   //   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET)
@@ -220,15 +243,48 @@ void USART2_IRQHandler(void)
   /* USER CODE BEGIN USART2_IRQn 1 */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
   {
-    prvvUARTRxISR(); // æŽ¥æ”¶ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbusæŽ¥æ”¶æ•°æ®
+    // uint8_t ch = (uint8_t)(huart2.Instance->DR);
+    if (g_b_485_send_tick) // ·¢ËÍÊý¾Ý±ê×¼£¬·¢ËÍÊý¾ÝÊ±£¬²»½ÓÊÕÊý¾Ý¡£
+    {
+      // uint8_t ch = (uint8_t)(huart2.Instance->DR);
+      (void)huart2.Instance->DR; // ·¢ËÍÖÐ£º¶Á DR Çå RXNE£¬Êý¾Ý¶ªÆú
+    }
+    else
+    {
+      // /* ´æ½ø»º³åÇø */
+      // if (usRcvBufferPos < 256)
+      // {
+      //   ucRTUBuf[usRcvBufferPos++] = ch;
+      // }
+      // /* ÖØÖÃ 3.5 ×Ö·û¶¨Ê±Æ÷ */
+      // vMBPortTimersEnable();
+      prvvUARTRxISR(); // ½ÓÊÕÖÐ¶Ï·þÎñº¯Êý£¬ÓÃÓÚModbus½ÓÊÕÊý¾Ý
+    }
   }
-
+  ///* ·¢ËÍ½×¶Î */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET)
   {
-    prvvUARTTxReadyISR(); // å‘é€ä¸­æ–­æœåŠ¡å‡½æ•°ï¼Œç”¨äºŽModbuså‘é€æ•°æ®
+    prvvUARTTxReadyISR(); // ·¢ËÍÖÐ¶Ï·þÎñº¯Êý£¬ÓÃÓÚModbus·¢ËÍÊý¾Ý
   }
 
-  HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
+  
+  ///* ·¢ËÍ×îºóÒ»¸ö×Ö½Ú *//* µ±Ó²¼þÕæÕý·¢Íê×îºóÒ»¸ö×Ö½Ú£¬´¥·¢ TC ÖÐ¶Ï */
+  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
+      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
+  {
+    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // Çå TC ±êÖ¾
+    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // ¹Ø TC ÖÐ¶Ï
+
+    RS485_DE_LOW_OFF; // ÏÖÔÚ¿ÉÒÔ°²È«ÇÐ»Ø½ÓÊÕÁË
+    g_b_485_send_Error = 0;
+    g_b_485_send_tick = 0; // Çå³ý·¢ËÍ±êÖ¾
+
+    /* È·±£½ÓÊÕÖÐ¶ÏÊÇ´ò¿ªµÄ£¬×¼±¸½ÓÊÕÖ÷Õ¾ÏÂÒ»Ö¡ */
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+  }
+
+  /*Çå NVIC pending Î»£¬·ÀÖ¹ÖÐ¶ÏÍË³öºóÁ¢¿ÌÓÖ½øÀ´¡£µ«Õý³£Çé¿öÓ²¼þ»á×Ô¶¯´¦Àí£¬ÕâÐÐÊÇ±£ÏÕ¡£*/
+  // HAL_NVIC_ClearPendingIRQ(USART2_IRQn);//²»ÆÁ±Î£¬¿ÉÄÜ¶ª×Ö½Ú£ºÇå³ýÁËºÏ·¨µÄÐÂ pending ÇëÇó
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE END USART2_IRQn 1 */
 }
