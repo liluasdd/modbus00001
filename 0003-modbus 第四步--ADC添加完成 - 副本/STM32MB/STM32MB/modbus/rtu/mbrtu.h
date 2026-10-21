@@ -41,7 +41,6 @@ eMBErrorCode    eMBRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT 
 eMBErrorCode    eMBRTUSend( UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
 BOOL            xMBRTUReceiveFSM( void );
 BOOL            xMBRTUTransmitFSM( void );
-BOOL            xMBRTUTimerT15Expired( void );
 BOOL            xMBRTUTimerT35Expired( void );
 void Modbus_ResetRx(void);
 

@@ -18,6 +18,7 @@
         "ctp.h": "c",
         "touch.h": "c",
         "port.h": "c",
-        "w25qx.h": "c"
+        "w25qx.h": "c",
+        "mbrtu.h": "c"
     }
 }

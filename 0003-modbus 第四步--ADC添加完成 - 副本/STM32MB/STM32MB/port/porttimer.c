@@ -31,45 +31,70 @@
 // static void prvvTIMERExpiredISR( void );
 
 /* ----------------------- Start implementation -----------------------------*/
-
 /*
  * 初始化定时器
  * @param usTim1Timerout50us 定时器1的超时时间，单位50us
  */
 BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // 初始化定时器1
 {
-	// __HAL_RCC_TIM4_CLK_ENABLE();  // 初始化定时器4时钟使能
-	// RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // 初始化定时器4使能位
-	RCC->APB1ENR |= (1 << 2);			// 初始化定时器4使能位  //RCC->APB1ENR |= 0x04;
-	TIM4->ARR = usTim1Timerout50us - 1; // 初始化定时器4自动重装载寄存器
-	TIM4->PSC = 3599;					// 72MHz/3600 = 20k = 50us
-	TIM4->DIER |= 1 << 0;				// TIM4->DIER |= TIM_DIER_UIE; // 初始化定时器4更新中断使能位
+	// 先关闭定时器，修改PSC
+	__HAL_TIM_DISABLE(&htim4);
 
-	// HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 初始化定时器4中断优先级为0
+	__HAL_TIM_SET_PRESCALER(&htim4, 3599);
 
-	// NVICInit(1,0,TIM4_IRQn,4);// 初始化定时器4中断优先级为0
-	// HAL_NVIC_EnableIRQ(TIM4_IRQn);		   // 初始化定时器4中断
+	// 更新预分频影子寄存器，让PSC立刻生效
+	htim4.Instance->EGR |= TIM_EGR_UG;
+	//    __HAL_TIM_UPDATE_PRESCALER(&htim4);
+
+	// 设置ARR
+	__HAL_TIM_SET_AUTORELOAD(&htim4, usTim1Timerout50us - 1);
+	// 打开更新中断
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
 
 	return TRUE;
 }
+// BOOL xMBPortT15Init(USHORT usT15Tick)
+// {
+// 	// 先关闭定时器，修改PSC
+// 	__HAL_TIM_DISABLE(&htim2);
 
+// 	__HAL_TIM_SET_PRESCALER(&htim2, 3599);
+
+// 	// 更新预分频影子寄存器，让PSC立刻生效
+// 	htim2.Instance->EGR |= TIM_EGR_UG;
+// 	//    __HAL_TIM_UPDATE_PRESCALER(&htim2);
+// 	// 设置ARR
+// 	__HAL_TIM_SET_AUTORELOAD(&htim2, usT15Tick - 1);
+// 	// 打开更新中断
+// 	__HAL_TIM_ENABLE_IT(&htim2, TIM_IT_UPDATE);
+// 	return TRUE;
+// }
 /*
  * 启用定时器
  * @param usTim1Timerout50us 定时器1的超时时间，单位50us
  */
 inline void
-vMBPortTimersEnable() // 启用定时器1
+ vMBPortTimersEnable() // 启用定时器1
 {
 	/* 启用定时器1 */
 	// TIM4->CNT = 0;		 // 初始化定时器1计时寄数器
 	// TIM4->CR1 |= 1 << 0; // 启用定时器1计数器
 	// TIM4->CR1 |= 1 << 1; // 启用定时器1更新中断使能位
 
+	// /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
+	// __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+	// __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_UPDATE);
+	// __HAL_TIM_SET_COUNTER(&htim2, 0);
+	// __HAL_TIM_ENABLE(&htim2);
+
 	/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
-	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
-	__HAL_TIM_SET_COUNTER(&htim4, 0);
-	__HAL_TIM_ENABLE(&htim4);
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);//清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);//使能定时器4更新中断 —— 开启溢出/更新中断使能
+	__HAL_TIM_SET_COUNTER(&htim4, 0);//将定时器4计数器值清零 —— 重置计数值为0
+	__HAL_TIM_ENABLE(&htim4);//使能定时器4 —— 启动定时器运行
+
+	// HAL_TIM_Base_Start_IT(&htim2);
+	// HAL_TIM_Base_Start_IT(&htim4);
 }
 
 /*
@@ -81,11 +106,20 @@ vMBPortTimersDisable() // 禁用定时器1
 	/* 禁用定时器1 */
 	// TIM4->CR1 &= ~(1 << 0); // 禁用定时器1计数器
 
+	// /* Disable any pending timers. */
+	// __HAL_TIM_DISABLE(&htim2);
+	// __HAL_TIM_SET_COUNTER(&htim2, 0);
+	// __HAL_TIM_DISABLE_IT(&htim2, TIM_IT_UPDATE);
+	// __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
 	/* Disable any pending timers. */
-	__HAL_TIM_DISABLE(&htim4);
-	__HAL_TIM_SET_COUNTER(&htim4, 0);
-	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE);
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
+	__HAL_TIM_DISABLE(&htim4);//禁用定时器4 —— 停止定时器运行
+	__HAL_TIM_SET_COUNTER(&htim4, 0);//将定时器4计数器值清零 —— 重置计数值为0
+	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE);//禁用定时器4更新中断 —— 关闭溢出/更新中断使能
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);//清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
+
+	// // 超时后、空闲时关闭定时器
+	// HAL_TIM_Base_Stop_IT(&htim2);
+	// HAL_TIM_Base_Stop_IT(&htim4);
 }
 
 /* Create an ISR which is called whenever the timer has expired. This function
@@ -110,7 +144,6 @@ void prvvTIMERExpiredISR(void) // 定时器1中断服务函数
 // 	{
 // 		// 定时器1中断服务函数实现
 // 		prvvTIMERExpiredISR();
-
 // 		TIM4->SR &= ~(1 << 0); // 清除定时器1中断标志位
 // 	}
 // 	// prvvTIMERExpiredISR();

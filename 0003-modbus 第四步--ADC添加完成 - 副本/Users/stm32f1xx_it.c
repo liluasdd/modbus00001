@@ -59,6 +59,11 @@ extern UART_HandleTypeDef huart2;
 extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);
 extern void prvvTIMERExpiredISR(void);
+
+u8 s_tim0_10ms = 0;
+u16 s_tim0_100ms = 1;
+u8 s_tim0_2s = 0;
+u8 g_485_send_tim = 0;
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -190,26 +195,113 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
   }
 }
 
+// /**
+//  * @brief This function handles TIM4 global interrupt.
+//  */
+// void TIM2_IRQHandler(void)
+// {
+//   if (TIM2->SR & (1 << 0)) // 定时器中断  50/100us一次
+//   {
+//     TIM2->SR &= ~(1 << 0); // 清除中断标志位
+
+//     // /* 停掉定时器 */
+//     // HAL_TIM_Base_Stop_IT(&htim2);
+
+//     __HAL_TIM_DISABLE(&htim2);
+//     __HAL_TIM_SET_COUNTER(&htim2, 0);
+//     __HAL_TIM_DISABLE_IT(&htim2, TIM_IT_UPDATE);
+//     __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+
+//     // /* 强制切回接收空闲状态，并清空缓冲区 */
+//     // extern void vMBRTUReceiveBufferFlush(void);
+//     // vMBRTUReceiveBufferFlush();
+//   }
+// }
+
+void TIM3_IRQHandler(void)
+{
+  if (TIM3->SR & (1 << 0)) // 定时器中断 100us一次
+  {
+    TIM3->SR &= ~(1 << 0); // 清除中断标志位
+    s_tim0_10ms++;
+    s_tim0_100ms++;
+    if (s_tim0_10ms >= 100)
+    {
+      g_b_task_jtim = 1;
+      s_tim0_10ms = 0;
+      if (g_b_485_send_tick) // 485发送超时
+      {
+        g_485_send_tim++;
+        if (g_485_send_tim >= 50)
+        {
+          g_485_send_tim = 0;
+          g_b_485_send_Error = 1;
+        }
+      }
+      else //
+      {
+        g_485_send_tim = 0;
+      }
+    }
+    if (s_tim0_100ms >= 1000)
+    {
+      s_tim0_2s++;
+      s_tim0_100ms = 0;
+      g_b_100ms_jtim = 1;
+
+      if (s_tim0_2s >= 20)
+      {
+        s_tim0_2s = 0;
+        g_b_2s_jtim = 1;
+      }
+    }
+  }
+}
+
+extern void vMBRTUReceiveBufferFlush(void);
+ULONG eCurrentTimerState = 0;
+extern ULONG usTimerT15_50us;
+extern ULONG usTimerT35_50us;
 /**
  * @brief This function handles TIM4 global interrupt.
  */
 void TIM4_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM4_IRQn 0 */
-
-  /* USER CODE END TIM4_IRQn 0 */
-  // HAL_TIM_IRQHandler(&htim4);
-  /* USER CODE BEGIN TIM4_IRQn 1 */
-  // 定时器中断
-  if (TIM4->SR & (1 << 0))
+  //  if (htim->Instance == TIM4)
+  if (TIM4->SR & (1 << 0)) // 定时器中断  50/100us一次
   {
-    // 定时器中断
-    prvvTIMERExpiredISR();
-
     TIM4->SR &= ~(1 << 0); // 清除中断标志位
+
+    if (eCurrentTimerState == usTimerT15_50us)
+    {
+      /* ================= 第一阶段：T1.5 超时 ================= */
+      /* 说明：两个字符之间间隔超过了 1.5 个字符，当前帧作废 */
+
+      eCurrentTimerState = usTimerT35_50us; // 状态机切换到 T3.5
+
+      // /* 1. 清空接收缓冲区，把 Modbus 状态机拉回 IDLE */
+      vMBRTUReceiveBufferFlush();
+
+      /* 2. 变轨：重新装载剩余时间 (T3.5 - T1.5) */
+      HAL_TIM_Base_Stop_IT(&htim4);
+      __HAL_TIM_SET_COUNTER(&htim4, 0);
+      __HAL_TIM_SET_AUTORELOAD(&htim4, (usTimerT35_50us - usTimerT15_50us) - 1);
+      __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE);
+      HAL_TIM_Base_Start_IT(&htim4);
+      // vMBPortTimersEnable();
+    }
+    else if (eCurrentTimerState == usTimerT35_50us)
+    {
+      /* ================= 第二阶段：T3.5 超时 ================= */
+      /* 说明：总线彻底安静了，一帧接收完毕 */
+      eCurrentTimerState = usTimerT15_50us; // 状态机切换到 T1.5
+
+      HAL_TIM_Base_Stop_IT(&htim4); // 停掉定时器，防止反复进
+
+      /* 通知 FreeModbus 协议栈：产生 EV_FRAME_RECEIVED 事件 */
+      prvvTIMERExpiredISR();
+    }
   }
-  // prvvTIMERExpiredISR();
-  /* USER CODE END TIM4_IRQn 1 */
 }
 
 /**
@@ -267,7 +359,6 @@ void USART2_IRQHandler(void)
     prvvUARTTxReadyISR(); // 发送中断服务函数，用于Modbus发送数据
   }
 
-  
   ///* 发送最后一个字节 *//* 当硬件真正发完最后一个字节，触发 TC 中断 */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
       __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
@@ -306,14 +397,6 @@ void USART2_IRQHandler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
-
-/**
- * @}
- */
-
-/**
- * @}
- */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

@@ -4,13 +4,13 @@
  * @author  STMicroelectronics
  * @version V1.0
  * @date    2020-xx-xx
- * @brief   é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·æ—¶é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·æ—¶é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹?
+ * @brief   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï??
  ******************************************************************************
  * @attention
  *
- * å®žé”Ÿæ–¤æ‹·å¹³å°:é‡Žé”Ÿæ–¤æ‹·  STM32 F429 é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹?
- * é”Ÿæ–¤æ‹·å›    :http://www.firebbs.cn
- * é”Ÿçš†æ†‹æ‹·    :http://fire-stm32.taobao.com
+ * Êµï¿½ï¿½Æ½Ì¨:Ò°ï¿½ï¿½  STM32 F429 ï¿½ï¿½ï¿½ï¿½ï¿½ï??
+ * ï¿½ï¿½Ì³    :http://www.firebbs.cn
+ * ï¿½Ô±ï¿½    :http://fire-stm32.taobao.com
  *
  ******************************************************************************
  */
@@ -20,16 +20,17 @@
 
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim2;
 
 /* TIM4 init function */
 void MX_TIM4_Init(void)
 {
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  // é”Ÿæ–¤æ‹·æ—¶é”Ÿæ–¤æ‹·æ—¶é”Ÿæ–¤æ‹·æºTIMxCLK = 2 * PCLK1
+  // ï¿½ï¿½Ê±ï¿½ï¿½Ê±ï¿½ï¿½Ô´TIMxCLK = 2 * PCLK1
   //				PCLK1 = HCLK / 4
   //				=> TIMxCLK=HCLK/2=SystemCoreClock/2=90MHz
-  //  é”Ÿå€Ÿå®šé”Ÿæ–¤æ‹·æ—¶é”Ÿæ–¤æ‹·é?‘é”Ÿæ–¤æ‹·ä¸?=TIMxCLK/(TIM_Prescaler+1)=20000Hz
+  //  ï¿½è¶¨ï¿½ï¿½Ê±ï¿½ï¿½???ï¿½ï¿½??=TIMxCLK/(TIM_Prescaler+1)=20000Hz
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 1800 - 1; // 20KHZ
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -57,7 +58,7 @@ void MX_TIM4_Init(void)
   
 }
 
-/* TIM3 init function - 100uså®šæ—¶ */
+/* TIM3 init function - 100us¶¨Ê± */
 void MX_TIM3_Init(void)
 {
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
@@ -74,22 +75,22 @@ void MX_TIM3_Init(void)
     while (1)
       ;
   }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;// ä½¿èƒ½æ—¶é’Ÿ
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)// é…ç½®æ—¶é’Ÿæº?
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;// Ê¹ÄÜÊ±ÖÓ
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)// ÅäÖÃÊ±ÖÓ??
   {
     while (1)
       ;
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;// ä½¿èƒ½ä¸?æ–?
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;// ç¦ç”¨ä¸»ä»Žæ¨¡å¼
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)// é…ç½®ä¸»ä»Žæ¨¡å¼
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;// Ê¹ÄÜ????
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;// ½ûÓÃÖ÷´ÓÄ£Ê½
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)// ÅäÖÃÖ÷´ÓÄ£Ê½
   {
     while (1)
       ;
   }
 }
 
-// åˆå?‹åŒ–  æ—¶é’Ÿå’Œä¸­æ–?
+// ³õ???»¯  Ê±ÖÓºÍÖÐ??
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
@@ -98,9 +99,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     /* TIM4 clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
 
-    // TIM4ä¸?æ–?é…ç½®
+    // TIM4????ÅäÖÃ
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 1);
-    // TIM4ä¸?æ–?ä½¿èƒ½
+    // TIM4????Ê¹ÄÜ
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
   else if (tim_baseHandle->Instance == TIM3)
@@ -108,7 +109,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     /* TIM3 clock enable */
     __HAL_RCC_TIM3_CLK_ENABLE();
 
-    /* TIM3ä¸?æ–?é…ç½® */
+    /* TIM3????ÅäÖÃ */
     HAL_NVIC_SetPriority(TIM3_IRQn, 0, 2);
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   }
@@ -117,13 +118,13 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 {
 
-  if (tim_baseHandle->Instance == TIM4) // ä½¿èƒ½TIM4å®šæ—¶å™?
+  if (tim_baseHandle->Instance == TIM4) // Ê¹ÄÜTIM4¶¨Ê±??
   {
     /* Peripheral clock disable */
-    __HAL_RCC_TIM4_CLK_DISABLE(); // ç¦ç”¨TIM4æ—¶é’Ÿ
+    __HAL_RCC_TIM4_CLK_DISABLE(); // ½ûÓÃTIM4Ê±ÖÓ
 
     /* TIM4 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(TIM4_IRQn); // ç¦ç”¨TIM4ä¸?æ–?
+    HAL_NVIC_DisableIRQ(TIM4_IRQn); // ½ûÓÃTIM4????
   }
   else if (tim_baseHandle->Instance == TIM3)
   {
@@ -137,10 +138,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 
 /* USER CODE BEGIN 1 */
 
-u8 s_tim0_10ms = 0;
-u16 s_tim0_100ms = 1;
-u8 s_tim0_2s = 0;
-u8 g_485_send_tim = 0;
+
 
 //u8 g_b_task_jtim = 0;
 //u8 g_b_485_send_tick = 0;
@@ -150,51 +148,51 @@ u8 g_485_send_tim = 0;
 
 extern void prvvTIMERExpiredISR(void);
 
-/* TIM3ä¸?æ–?å›žè°ƒå‡½æ•° - 100uså®šæ—¶ä¸?æ–? */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  if (htim->Instance == TIM3)
-  {
+// /* TIM3????»Øµ÷º¯Êý - 100us¶¨Ê±???? */
+// void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+// {
+//   if (htim->Instance == TIM3)
+//   {
 
-    s_tim0_10ms++;
-    s_tim0_100ms++;
-    if (s_tim0_10ms >= 100)
-    {
-      g_b_task_jtim = 1;
-      s_tim0_10ms = 0;
-      if (g_b_485_send_tick)// ·¢ËÍ×´Ì¬»ú×´Ì¬ÇÐ»»Îª·¢ËÍÌ¬
-      {
-        g_485_send_tim++;
-        if (g_485_send_tim >= 50)
-        {
-          g_485_send_tim = 0;
-          g_b_485_send_Error = 1;
-        }
-      }
-      else// ½ÓÊÕ×´Ì¬»ú×´Ì¬ÇÐ»»Îª¿ÕÏÐ×´Ì¬
-      {
-        g_485_send_tim = 0;
-      }
-    }
-    if (s_tim0_100ms >= 1000)
-    {
-      s_tim0_2s++;
-      s_tim0_100ms = 0;
-      g_b_100ms_jtim = 1;
+//     s_tim0_10ms++;
+//     s_tim0_100ms++;
+//     if (s_tim0_10ms >= 100)
+//     {
+//       g_b_task_jtim = 1;
+//       s_tim0_10ms = 0;
+//       if (g_b_485_send_tick)// 485·¢ËÍ³¬Ê±
+//       {
+//         g_485_send_tim++;
+//         if (g_485_send_tim >= 50)
+//         {
+//           g_485_send_tim = 0;
+//           g_b_485_send_Error = 1;
+//         }
+//       }
+//       else//
+//       {
+//         g_485_send_tim = 0;
+//       }
+//     }
+//     if (s_tim0_100ms >= 1000)
+//     {
+//       s_tim0_2s++;
+//       s_tim0_100ms = 0;
+//       g_b_100ms_jtim = 1;
 
-      if (s_tim0_2s >= 20)
-      {
-        s_tim0_2s = 0;
-        g_b_2s_jtim = 1;
-      }
-    }
-  }
+//       if (s_tim0_2s >= 20)
+//       {
+//         s_tim0_2s = 0;
+//         g_b_2s_jtim = 1;
+//       }
+//     }
+//   }
 
-  if (htim->Instance == TIM4)
-  {
-    prvvTIMERExpiredISR(); // è°ƒç”¨å®šæ—¶å™¨ä¸­æ–?æœåŠ¡å‡½æ•°
-  }
-}
+//   if (htim->Instance == TIM4)
+//   {
+//     prvvTIMERExpiredISR(); // µ÷ÓÃ¶¨Ê±Æ÷ÖÐ??·þÎñº¯Êý
+//   }
+// }
 
 /* USER CODE END 1 */
 

@@ -90,6 +90,7 @@ BOOL xMBPortSerialPutByte(CHAR ucByte);
 
 /* ----------------------- Timers functions ---------------------------------*/
 BOOL xMBPortTimersInit(USHORT usTimeOut50us);
+// BOOL xMBPortT15Init(USHORT usT15Tick);
 
 void xMBPortTimersClose(void);
 
@@ -114,6 +115,8 @@ void vMBPortTimersDelay(USHORT usTimeOutMS);
  *   tasks which are currently blocked on the eventqueue.
  */
 extern BOOL (*pxMBFrameCBByteReceived)(void);
+extern BOOL (*pxMBRTUTimerT15Expired)( void );
+
 
 extern BOOL (*pxMBFrameCBTransmitterEmpty)(void);
 

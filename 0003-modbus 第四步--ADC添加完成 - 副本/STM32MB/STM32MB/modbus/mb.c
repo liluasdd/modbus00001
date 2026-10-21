@@ -168,6 +168,7 @@ eMBInit(eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMB
             pxMBFrameCBTransmitterEmpty = xMBRTUTransmitFSM;             // 发送Modbus数据为空状态机
             pxMBPortCBTimerExpired = xMBRTUTimerT35Expired;              // 定时器超时回调函数
 
+
             eStatus = eMBRTUInit(ucMBAddress, ucPort, ulBaudRate, eParity); // 初始化Modbus协议栈
             break;
 #endif
@@ -463,14 +464,14 @@ void eMBsend_Error(void)
         RS485_DE_LOW_OFF;
 
         // 2.接收出错时也要确保发送中断关闭
-        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // ← 新增
-        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);  // ← 新增
+        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); //
+        __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);  //
 
         // 3.Modbus协议状态复位，丢弃半帧
         Modbus_ResetRx();
 
-        if (g_485_receive_Error_num < 253)
-            g_485_receive_Error_num++; // 发送接收超限故障次数加1,最大253次
+        if (g_485_receive_Error_num < 255)
+            g_485_receive_Error_num++; // 发送接收超限故障次数加1,最大255次
 
         // 4.??必须把错误标记清零，否则会一直重复进这个分支
         g_b_485_receive_Error = 0;
