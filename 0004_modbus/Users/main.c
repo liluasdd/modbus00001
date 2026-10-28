@@ -118,7 +118,6 @@ void ADC_DMA_scan(void)
     }
 
     num_i = 0;
-
     ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
     ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
     adc_dma_result_max1 = 0;
