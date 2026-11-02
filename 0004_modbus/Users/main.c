@@ -75,78 +75,78 @@ u16 ADC_CHi_NUM1 = 100;
 u16 ADC_CHi_NUM2 = 200;
 u16 ADC_CHi_tmp1 = 0;
 u16 ADC_CHi_tmp2 = 0;
+u8 oled_ADC_CHi_num = 1;
+
+void u16_to_4digits(char *s, uint16_t v)
+{
+    s[0] = '0' + (v / 1000) % 10;
+    s[1] = '0' + (v / 100) % 10;
+    s[2] = '0' + (v / 10) % 10;
+    s[3] = '0' + v % 10;
+    s[4] = '\0';
+}
 
 void ADC_DMA_scan(void)
 {
-    char str[10] = {0}; // 定义一个足够大的字符数组
-    static uint8_t num_i = 0;
-    
-    num_i = 0;
-    if (adc_done_flag == 1)
+    char str[5];
+    uint8_t i = 0;
+    uint16_t base, v0, v1;
+
+    if (oled_ADC_CHi_num)
     {
-        for (num_i = 0; num_i < ADC_GROUP_PER_HALF; num_i++)
-        {
-            ADC_CHi_NUM1 += adc_result[num_i][0];
-            ADC_CHi_NUM2 += adc_result[num_i][1];
-            if (adc_result[num_i][0] < adc_dma_result_min1)
-                adc_dma_result_min1 = adc_result[num_i][0];
-            if (adc_result[num_i][0] > adc_dma_result_max1)
-                adc_dma_result_max1 = adc_result[num_i][0];
-
-            if (adc_result[num_i][1] < adc_dma_result_min2)
-                adc_dma_result_min2 = adc_result[num_i][1];
-            if (adc_result[num_i][1] > adc_dma_result_max2)
-                adc_dma_result_max2 = adc_result[num_i][1];
-        }
+        oled_ADC_CHi_num = 0;
+        Show_Str(10, 10, "AD1:0000", 24, 0);
+        Show_Str(120, 10, "AD2:0000", 24, 0);
+        Show_Str(10, 40, "AD3:0000", 24, 0);
+        Show_Str(120, 40, "AD4:0000", 24, 0);
     }
-    else if (adc_done_flag == 2)
-    {
-        for (num_i = 0; num_i < ADC_GROUP_PER_HALF; num_i++)
-        {
-            ADC_CHi_NUM1 += adc_result[10 + num_i][0];
-            ADC_CHi_NUM2 += adc_result[10 + num_i][1];
-            if (adc_result[10 + num_i][0] < adc_dma_result_min1)
-                adc_dma_result_min1 = adc_result[10 + num_i][0];
-            if (adc_result[10 + num_i][0] > adc_dma_result_max1)
-                adc_dma_result_max1 = adc_result[10 + num_i][0];
+    if (adc_done_flag != 1 && adc_done_flag != 2)
+        return;
+    base = (adc_done_flag == 1) ? 0 : ADC_GROUP_PER_HALF;
 
-            if (adc_result[10 + num_i][1] < adc_dma_result_min2)
-                adc_dma_result_min2 = adc_result[10 + num_i][1];
-            if (adc_result[10 + num_i][1] > adc_dma_result_max2)
-                adc_dma_result_max2 = adc_result[10 + num_i][1];
-        }
-    }
-
-    num_i = 0;
-    ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
-    ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
     adc_dma_result_max1 = 0;
     adc_dma_result_min1 = 0xFFFF;
     adc_dma_result_max2 = 0;
     adc_dma_result_min2 = 0xFFFF;
+    ADC_CHi_NUM1 = 0;
+    ADC_CHi_NUM2 = 0;
+
+    for (i = 0; i < ADC_GROUP_PER_HALF; i++)
+    {
+        v0 = adc_result[base + i][0];
+        v1 = adc_result[base + i][1];
+
+        ADC_CHi_NUM1 += v0;
+        ADC_CHi_NUM2 += v1;
+
+        if (v0 < adc_dma_result_min1)
+            adc_dma_result_min1 = v0;
+        if (v0 > adc_dma_result_max1)
+            adc_dma_result_max1 = v0;
+        if (v1 < adc_dma_result_min2)
+            adc_dma_result_min2 = v1;
+        if (v1 > adc_dma_result_max2)
+            adc_dma_result_max2 = v1;
+    }
+
+    ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
+    ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
 
     if (ADC_CHi_tmp1 != ADC_CHi_NUM1)
     {
         ADC_CHi_tmp1 = ADC_CHi_NUM1;
-        // LCD_Fill(10, 50, 240, 100, WHITE);
-        // 将数字格式化为字符串，存进 str 中
-        sprintf(str, "%04u", ADC_CHi_NUM1);
-        if (adc_done_flag == 1)
-            Show_Str(10, 50, (u8 *)str, 24, 0);
-        else if (adc_done_flag == 2)
-            Show_Str(50, 50, (u8 *)str, 24, 0);
+        u16_to_4digits(str, ADC_CHi_NUM1);
+        // sprintf(str, "%04u", ADC_CHi_NUM1);
+        Show_Str((base == 0 ? 58 : 168), 10, (u8 *)str, 24, 0);
     }
     if (ADC_CHi_tmp2 != ADC_CHi_NUM2)
     {
         ADC_CHi_tmp2 = ADC_CHi_NUM2;
-        // LCD_Fill(10, 100, 240, 150, WHITE);
-        sprintf(str, "%04u", ADC_CHi_NUM2);
-        if (adc_done_flag == 1)
-            Show_Str(10, 150, (u8 *)str, 24, 0);
-        else if (adc_done_flag == 2)
-            Show_Str(50, 150, (u8 *)str, 24, 0);
+        u16_to_4digits(str, ADC_CHi_NUM2);
+        Show_Str((base == 0 ? 58 : 168), 40, (u8 *)str, 24, 0);
     }
 }
+
 int main(void)
 {
     // uint8_t num = 0;
@@ -225,17 +225,12 @@ int main(void)
             }
         }
 
-        // Show_Str(10, 100, "ADC_CHi_NUM:%d", ADC_CHi_NUM, 0);
-        // Show_Str(10,200,"ADC_CHi_NUM2:%d",ADC_CHi_NUM2,0);
-
-        // // uint8_t test_byte = 0xAA;
-        // // HAL_UART_Transmit(&huart2, &test_byte, 1, 1000); // 串口2  打印 0xAA
         // /////* 1秒轮询一次Modbus从站，处理数据交换 */
         // // HAL_Delay(1000);
-        // /* 发送超时故障处理 */
-        // eMBsend_Error();
-        // /* 轮询Modbus从站 */
-        // eMBPoll();
+        /* 发送超时故障处理 */
+        eMBsend_Error();
+        /* 轮询Modbus从站 */
+        eMBPoll();
     }
     // if (g_b_100ms_jtim == 1)
     // {
