@@ -218,34 +218,6 @@ void Read_ADC1_AllChannel(uint16_t *adcValues) // ????????????ADC?
   }
   HAL_ADC_Stop(&hadc1);
 }
-// /* USER CODE END Init */
-// void HAL_ADC_MspInit(ADC_HandleTypeDef *adcHandle)
-// {
-
-//   GPIO_InitTypeDef GPIO_InitStruct = {0};
-//   if (adcHandle->Instance == ADC1)
-//   {
-//     /* ADC1 clock enable */
-//     __HAL_RCC_ADC1_CLK_ENABLE();
-//     __HAL_RCC_GPIOA_CLK_ENABLE();
-//     /**ADC1 GPIO Configuration
-//     PA2     ------> ADC1_IN2
-//     PA5     ------> ADC1_IN5
-//     PA7     ------> ADC1_IN7
-//     */
-//     GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_5 | GPIO_PIN_7;
-//     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-//     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-//     /* USER CODE BEGIN ADC1_MspInit 1 */
-//     GPIO_InitStruct.Pin = GPIO_PIN_3;
-//     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-//     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-//     GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
-//     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-//     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-//     /* USER CODE END ADC1_MspInit 1 */
-//   }
-// }
 
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef *adcHandle)
 {
@@ -269,7 +241,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *adcHandle)
 #include "adc.h"
 
 ADC_HandleTypeDef adc_handle = {0}; // ADC句柄
-DMA_HandleTypeDef hdma_adc1 = {0}; // 全局定义
+DMA_HandleTypeDef hdma_adc1 = {0};  // 全局定义
 // DMA_HandleTypeDef dma_handle = {0}; // DMA句柄
 
 // 配置ADC通道
@@ -336,23 +308,19 @@ void adc_config(void)
   // adc_channel_config(&adc_handle, PT10_ADC, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_239CYCLES_5);
   // adc_channel_config(&adc_handle, PT100_ADC, ADC_REGULAR_RANK_2, ADC_SAMPLETIME_239CYCLES_5);
 }
-// 配置ADC通道
+/*配置ADC通道， HAL_ADC_Init 自动调用不需要手动调用*/
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
-
   if (hadc->Instance == ADC1) // 判断是否为ADC1
   {
     RCC_PeriphCLKInitTypeDef adc_clk_init = {0}; //// ADC时钟配置结构体
     GPIO_InitTypeDef gpio_init_struct = {0};     //// GPIO配置结构体
 
-    __HAL_RCC_ADC1_CLK_ENABLE();  // 使能ADC1时钟
-    __HAL_RCC_GPIOA_CLK_ENABLE(); // 使能GPIOA时钟（ADC通道引脚所在端口）
-
-    // 配置GPIO引脚为模拟输入模式（ADC通道0-3）
+    /*外部未配置时，需要配置ADC通道引脚为模拟输入模式*/
+    __HAL_RCC_ADC1_CLK_ENABLE();  // 使能ADC1时钟  (配置调用前已使能了)
+    __HAL_RCC_GPIOA_CLK_ENABLE(); // 使能GPIOA时钟（GPIO已经初始化了）
     /*多通道*/
-    gpio_init_struct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3;
-    // /*单通道*/
-    // gpio_init_struct.Pin = GPIO_PIN_1;
+    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_5;  //请在进入前配置ADC通道引脚为模拟输入模式
     gpio_init_struct.Mode = GPIO_MODE_ANALOG; // 模拟输入模式
     HAL_GPIO_Init(GPIOA, &gpio_init_struct);  // 初始化GPIOA
 
@@ -382,7 +350,7 @@ void dma_config(void)
   hdma_adc1.Init.Mode = DMA_CIRCULAR;
   HAL_DMA_Init(&hdma_adc1);                          // 初始化DMA1通道1
   __HAL_LINKDMA(&adc_handle, DMA_Handle, hdma_adc1); // 将DMA与ADC关联（ADC的DMA_Handle指向hdma_adc1）
-  
+
   /* ---------- 新增：开启 DMA 中断 ---------- */
   // 半传输中断（Half Transfer）→ 触发 ConvHalfCpltCallback
   // 传输完成中断（Transfer Complete）→ 触发 ConvCpltCallback

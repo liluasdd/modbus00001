@@ -596,14 +596,14 @@ void LCD_ShowChar(u16 x, u16 y, u8 num, u8 size, u8 mode)
 	num = num - ' ';										   // 得到偏移后的值（ASCII字库是从空格开始取模，所以-' '就是对应字符的字库）
 	for (t = 0; t < csize; t++)
 	{
-		if (size == 12)
-			temp = asc2_1206[num][t]; // 调用1206字体
-		else if (size == 16)
+		// if (size == 12)
+		// 	temp = asc2_1206[num][t]; // 调用1206字体
+		// else if (size == 16)
 			temp = asc2_1608[num][t]; // 调用1608字体
-		else if (size == 24)
-			temp = asc2_2412[num][t]; // 调用2412字体
-		else
-			return; // 没有的字库
+		// else if (size == 24)
+		// 	temp = asc2_2412[num][t]; // 调用2412字体
+		// else
+		// 	return; // 没有的字库
 		for (t1 = 0; t1 < 8; t1++)
 		{
 			if (temp & 0x80)
@@ -717,148 +717,148 @@ void LCD_ShowString(u16 x, u16 y, u16 width, u16 height, u8 size, u8 *p)
 	}
 }
 
-// 汉字 16*16
-void GUI_DrawFont16(u16 x, u16 y, u8 *s, u8 mode)
-{
-	u8 i, j;
-	u16 k;
-	u16 HZnum;
-	u16 x0 = x;
-	HZnum = sizeof(tfont16) / sizeof(typFNT_GB16); // 自动统计汉字数目
+//// 汉字 16*16
+//void GUI_DrawFont16(u16 x, u16 y, u8 *s, u8 mode)
+//{
+//	u8 i, j;
+//	u16 k;
+//	u16 HZnum;
+//	u16 x0 = x;
+//	HZnum = sizeof(tfont16) / sizeof(typFNT_GB16); // 自动统计汉字数目
 
-	for (k = 0; k < HZnum; k++)
-	{
-		if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1))) // 查找对应的点阵字库
-		{
-			LCD_Set_Window(x, y, 16, 16);
-			LCD_WriteRAM_Prepare();
-			for (i = 0; i < 16 * 2; i++)
-			{
-				for (j = 0; j < 8; j++)
-				{
-					if (!mode) // 非叠加方式
-					{
-						if (tfont16[k].Msk[i] & (0x80 >> j))
-							LCD_WriteRAM(POINT_COLOR);
-						else
-							LCD_WriteRAM(BACK_COLOR);
-					}
-					else
-					{
-						// POINT_COLOR=fc;
-						if (tfont16[k].Msk[i] & (0x80 >> j))
-							LCD_DrawPoint(x, y); // 画一个点
-						x++;
-						if ((x - x0) == 16)
-						{
-							x = x0;
-							y++;
-							break;
-						}
-					}
-				}
-			}
-		}
-		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
-	}
+//	for (k = 0; k < HZnum; k++)
+//	{
+//		if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1))) // 查找对应的点阵字库
+//		{
+//			LCD_Set_Window(x, y, 16, 16);
+//			LCD_WriteRAM_Prepare();
+//			for (i = 0; i < 16 * 2; i++)
+//			{
+//				for (j = 0; j < 8; j++)
+//				{
+//					if (!mode) // 非叠加方式
+//					{
+//						if (tfont16[k].Msk[i] & (0x80 >> j))
+//							LCD_WriteRAM(POINT_COLOR);
+//						else
+//							LCD_WriteRAM(BACK_COLOR);
+//					}
+//					else
+//					{
+//						// POINT_COLOR=fc;
+//						if (tfont16[k].Msk[i] & (0x80 >> j))
+//							LCD_DrawPoint(x, y); // 画一个点
+//						x++;
+//						if ((x - x0) == 16)
+//						{
+//							x = x0;
+//							y++;
+//							break;
+//						}
+//					}
+//				}
+//			}
+//		}
+//		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
+//	}
 
-	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
-}
+//	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
+//}
 
-// 汉字 24*24
-void GUI_DrawFont24(u16 x, u16 y, u8 *s, u8 mode)
-{
-	u8 i, j;
-	u16 k;
-	u16 HZnum;
-	u16 x0 = x;
-	HZnum = sizeof(tfont24) / sizeof(typFNT_GB24); // 自动统计汉字数目
+//// 汉字 24*24
+//void GUI_DrawFont24(u16 x, u16 y, u8 *s, u8 mode)
+//{
+//	u8 i, j;
+//	u16 k;
+//	u16 HZnum;
+//	u16 x0 = x;
+//	HZnum = sizeof(tfont24) / sizeof(typFNT_GB24); // 自动统计汉字数目
 
-	for (k = 0; k < HZnum; k++)
-	{
-		if ((tfont24[k].Index[0] == *(s)) && (tfont24[k].Index[1] == *(s + 1)))
-		{
-			LCD_Set_Window(x, y, 24, 24);
-			LCD_WriteRAM_Prepare();
-			for (i = 0; i < 24 * 3; i++)
-			{
-				for (j = 0; j < 8; j++)
-				{
-					if (!mode) // 非叠加方式
-					{
-						if (tfont24[k].Msk[i] & (0x80 >> j))
-							LCD_WriteRAM(POINT_COLOR);
-						else
-							LCD_WriteRAM(BACK_COLOR);
-					}
-					else
-					{
-						// POINT_COLOR=fc;
-						if (tfont24[k].Msk[i] & (0x80 >> j))
-							LCD_DrawPoint(x, y); // 画一个点
-						x++;
-						if ((x - x0) == 24)
-						{
-							x = x0;
-							y++;
-							break;
-						}
-					}
-				}
-			}
-		}
-		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
-	}
+//	for (k = 0; k < HZnum; k++)
+//	{
+//		if ((tfont24[k].Index[0] == *(s)) && (tfont24[k].Index[1] == *(s + 1)))
+//		{
+//			LCD_Set_Window(x, y, 24, 24);
+//			LCD_WriteRAM_Prepare();
+//			for (i = 0; i < 24 * 3; i++)
+//			{
+//				for (j = 0; j < 8; j++)
+//				{
+//					if (!mode) // 非叠加方式
+//					{
+//						if (tfont24[k].Msk[i] & (0x80 >> j))
+//							LCD_WriteRAM(POINT_COLOR);
+//						else
+//							LCD_WriteRAM(BACK_COLOR);
+//					}
+//					else
+//					{
+//						// POINT_COLOR=fc;
+//						if (tfont24[k].Msk[i] & (0x80 >> j))
+//							LCD_DrawPoint(x, y); // 画一个点
+//						x++;
+//						if ((x - x0) == 24)
+//						{
+//							x = x0;
+//							y++;
+//							break;
+//						}
+//					}
+//				}
+//			}
+//		}
+//		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
+//	}
 
-	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
-}
+//	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
+//}
 
-// 汉字 32*32
-void GUI_DrawFont32(u16 x, u16 y, u8 *s, u8 mode)
-{
-	u8 i, j;
-	u16 k;
-	u16 HZnum;
-	u16 x0 = x;
-	HZnum = sizeof(tfont32) / sizeof(typFNT_GB32); // 自动统计汉字数目
-	for (k = 0; k < HZnum; k++)
-	{
-		if ((tfont32[k].Index[0] == *(s)) && (tfont32[k].Index[1] == *(s + 1)))
-		{
-			LCD_Set_Window(x, y, 32, 32);
-			LCD_WriteRAM_Prepare();
-			for (i = 0; i < 32 * 4; i++)
-			{
-				for (j = 0; j < 8; j++)
-				{
-					if (!mode) // 非叠加方式
-					{
-						if (tfont32[k].Msk[i] & (0x80 >> j))
-							LCD_WriteRAM(POINT_COLOR);
-						else
-							LCD_WriteRAM(BACK_COLOR);
-					}
-					else
-					{
-						// POINT_COLOR=fc;
-						if (tfont32[k].Msk[i] & (0x80 >> j))
-							LCD_DrawPoint(x, y); // 画一个点
-						x++;
-						if ((x - x0) == 32)
-						{
-							x = x0;
-							y++;
-							break;
-						}
-					}
-				}
-			}
-		}
-		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
-	}
+// // 汉字 32*32
+// void GUI_DrawFont32(u16 x, u16 y, u8 *s, u8 mode)
+// {
+// 	u8 i, j;
+// 	u16 k;
+// 	u16 HZnum;
+// 	u16 x0 = x;
+// 	HZnum = sizeof(tfont32) / sizeof(typFNT_GB32); // 自动统计汉字数目
+// 	for (k = 0; k < HZnum; k++)
+// 	{
+// 		if ((tfont32[k].Index[0] == *(s)) && (tfont32[k].Index[1] == *(s + 1)))
+// 		{
+// 			LCD_Set_Window(x, y, 32, 32);
+// 			LCD_WriteRAM_Prepare();
+// 			for (i = 0; i < 32 * 4; i++)
+// 			{
+// 				for (j = 0; j < 8; j++)
+// 				{
+// 					if (!mode) // 非叠加方式
+// 					{
+// 						if (tfont32[k].Msk[i] & (0x80 >> j))
+// 							LCD_WriteRAM(POINT_COLOR);
+// 						else
+// 							LCD_WriteRAM(BACK_COLOR);
+// 					}
+// 					else
+// 					{
+// 						// POINT_COLOR=fc;
+// 						if (tfont32[k].Msk[i] & (0x80 >> j))
+// 							LCD_DrawPoint(x, y); // 画一个点
+// 						x++;
+// 						if ((x - x0) == 32)
+// 						{
+// 							x = x0;
+// 							y++;
+// 							break;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 		continue; // 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
+// 	}
 
-	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
-}
+// 	LCD_Set_Window(0, 0, lcddev.width, lcddev.height); // 恢复窗口为全屏
+// }
 
 //void Show_Str2(u16 x, u16 y, u8 str, u8 size, u8 mode)
 //{
@@ -935,12 +935,12 @@ void Show_Str(u16 x, u16 y, u8 *str, u8 size, u8 mode)
 			if (x > (lcddev.width - size) || y > (lcddev.height - size))
 				return;
 			bHz = 0; // 有汉字库
-			if (size == 32)
-				GUI_DrawFont32(x, y, str, mode);
-			else if (size == 24)
-				GUI_DrawFont24(x, y, str, mode);
-			else
-				GUI_DrawFont16(x, y, str, mode);
+			// if (size == 32)
+			// 	GUI_DrawFont32(x, y, str, mode);
+			// else if (size == 24)
+			// 	GUI_DrawFont24(x, y, str, mode);
+			// else
+			//	GUI_DrawFont16(x, y, str, mode);
 
 			str += 2;
 			x += size; // 下一个汉字偏移

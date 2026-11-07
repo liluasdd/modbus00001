@@ -1,5 +1,5 @@
 ..\..\output\user_mb_app.o: ..\..\software\mb_user\user_mb_app.c
-..\..\output\user_mb_app.o: ..\..\software\mb_user\user_mb_app.h
+..\..\output\user_mb_app.o: ..\..\software\inc\user_mb_app.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
@@ -68,6 +68,13 @@
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
 ..\..\output\user_mb_app.o: ..\..\Users\usertype.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\gpio.h

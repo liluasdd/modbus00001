@@ -30,7 +30,7 @@
 
 #define MB_MASTER_USARTx												2 			//使用串口2
 #define MB_MASTER_USART_BAUDRATE								115200	//波特率
-#define MB_MASTER_USART_PARITY									UART_PARITY_NONE
+#define MB_MASTER_USART_PARITY									UART_PARITY_NONE//无校验
 
 /*********************usart end***************************************/
 /***********************485*****************************/

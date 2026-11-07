@@ -58,7 +58,7 @@
 ..\..\output\lcd.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\lcd.o: ..\..\Users\main.h
 ..\..\output\lcd.o: ..\..\Users\usertype.h
-..\..\output\lcd.o: ..\..\software\mb_user\user_mb_app.h
+..\..\output\lcd.o: ..\..\software\inc\user_mb_app.h
 ..\..\output\lcd.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\lcd.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\lcd.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
@@ -69,6 +69,13 @@
 ..\..\output\lcd.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\lcd.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\lcd.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\lcd.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\lcd.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\lcd.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\lcd.o: ..\..\software\inc\gpio.h

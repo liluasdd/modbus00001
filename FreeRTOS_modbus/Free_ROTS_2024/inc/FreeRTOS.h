@@ -56,9 +56,9 @@
 /* *INDENT-ON* */
 
 /* Acceptable values for configTICK_TYPE_WIDTH_IN_BITS. */
-#define TICK_TYPE_WIDTH_16_BITS    0
-#define TICK_TYPE_WIDTH_32_BITS    1
-#define TICK_TYPE_WIDTH_64_BITS    2
+#define TICK_TYPE_WIDTH_16_BITS    0/*16位Tick*/
+#define TICK_TYPE_WIDTH_32_BITS    1/*32位Tick*/
+#define TICK_TYPE_WIDTH_64_BITS    2/*64位Tick*/
 
 /* Application specific configuration options. */
 #include "FreeRTOSConfig.h"
@@ -73,7 +73,7 @@
 
 /* Define configTICK_TYPE_WIDTH_IN_BITS according to the
  * value of configUSE_16_BIT_TICKS for backward compatibility. */
-#ifndef configTICK_TYPE_WIDTH_IN_BITS
+#ifndef configTICK_TYPE_WIDTH_IN_BITS/*配置Tick类型宽度*/
     #if ( configUSE_16_BIT_TICKS == 1 )
         #define configTICK_TYPE_WIDTH_IN_BITS    TICK_TYPE_WIDTH_16_BITS
     #else
@@ -82,22 +82,22 @@
 #endif
 
 /* Set configUSE_MPU_WRAPPERS_V1 to 1 to use MPU wrappers v1. */
-#ifndef configUSE_MPU_WRAPPERS_V1
+#ifndef configUSE_MPU_WRAPPERS_V1/*配置使用MPU包装器v1*/
     #define configUSE_MPU_WRAPPERS_V1    0
 #endif
 
 /* Set configENABLE_ACCESS_CONTROL_LIST to 1 to enable access control list support. */
-#ifndef configENABLE_ACCESS_CONTROL_LIST
+#ifndef configENABLE_ACCESS_CONTROL_LIST/*配置启用访问控制列表支持*/
     #define configENABLE_ACCESS_CONTROL_LIST    0
 #endif
 
 /* Set default value of configNUMBER_OF_CORES to 1 to use single core FreeRTOS. */
-#ifndef configNUMBER_OF_CORES
+#ifndef configNUMBER_OF_CORES/*配置核心数量*/
     #define configNUMBER_OF_CORES    1
 #endif
 
-#ifndef configUSE_MALLOC_FAILED_HOOK
-    #define configUSE_MALLOC_FAILED_HOOK    0
+#ifndef configUSE_MALLOC_FAILED_HOOK/*配置使用内存分配失败钩子*/
+    #define configUSE_MALLOC_FAILED_HOOK    0 
 #endif
 
 /* Basic FreeRTOS definitions. */
@@ -107,33 +107,33 @@
 #include "portable.h"
 
 /* Must be defaulted before configUSE_NEWLIB_REENTRANT is used below. */
-#ifndef configUSE_NEWLIB_REENTRANT
+#ifndef configUSE_NEWLIB_REENTRANT/*配置使用新lib重入*/
     #define configUSE_NEWLIB_REENTRANT    0
 #endif
 
 /* Required if struct _reent is used. */
-#if ( configUSE_NEWLIB_REENTRANT == 1 )
+#if ( configUSE_NEWLIB_REENTRANT == 1 )/*配置使用新lib重入*/
 
     #include "newlib-freertos.h"
 
 #endif /* if ( configUSE_NEWLIB_REENTRANT == 1 ) */
 
 /* Must be defaulted before configUSE_PICOLIBC_TLS is used below. */
-#ifndef configUSE_PICOLIBC_TLS
+#ifndef configUSE_PICOLIBC_TLS/*配置使用picolibc tls*/
     #define configUSE_PICOLIBC_TLS    0
 #endif
 
-#if ( configUSE_PICOLIBC_TLS == 1 )
+#if ( configUSE_PICOLIBC_TLS == 1 )/*配置使用picolibc tls*/
 
     #include "picolibc-freertos.h"
 
 #endif /* if ( configUSE_PICOLIBC_TLS == 1 ) */
 
-#ifndef configUSE_C_RUNTIME_TLS_SUPPORT
+#ifndef configUSE_C_RUNTIME_TLS_SUPPORT/*配置使用C运行时tls支持*/
     #define configUSE_C_RUNTIME_TLS_SUPPORT    0
 #endif
 
-#if ( configUSE_C_RUNTIME_TLS_SUPPORT == 1 )
+#if ( configUSE_C_RUNTIME_TLS_SUPPORT == 1 )/*配置使用C运行时tls支持*/
 
     #ifndef configTLS_BLOCK_TYPE
         #error Missing definition:  configTLS_BLOCK_TYPE must be defined in FreeRTOSConfig.h when configUSE_C_RUNTIME_TLS_SUPPORT is set to 1.
@@ -190,31 +190,32 @@
 
 #if ( ( configTICK_TYPE_WIDTH_IN_BITS != TICK_TYPE_WIDTH_16_BITS ) && \
     ( configTICK_TYPE_WIDTH_IN_BITS != TICK_TYPE_WIDTH_32_BITS ) &&   \
-    ( configTICK_TYPE_WIDTH_IN_BITS != TICK_TYPE_WIDTH_64_BITS ) )
+    ( configTICK_TYPE_WIDTH_IN_BITS != TICK_TYPE_WIDTH_64_BITS ) )/*配置tick类型宽度*/
     #error Macro configTICK_TYPE_WIDTH_IN_BITS is defined to incorrect value.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef configUSE_CO_ROUTINES
+#ifndef configUSE_CO_ROUTINES/*配置使用协程*/
     #define configUSE_CO_ROUTINES    0
 #endif
 
-#ifndef INCLUDE_vTaskPrioritySet
-    #define INCLUDE_vTaskPrioritySet    0
+#ifndef INCLUDE_vTaskPrioritySet/*配置使用任务优先级设置*/
+    // #define INCLUDE_vTaskPrioritySet    0
+    #define INCLUDE_vTaskPrioritySet    1
 #endif
 
-#ifndef INCLUDE_uxTaskPriorityGet
+#ifndef INCLUDE_uxTaskPriorityGet/*配置使用任务优先级获取 允许查询任务优先级*/
     #define INCLUDE_uxTaskPriorityGet    0
 #endif
 
-#ifndef INCLUDE_vTaskDelete
+#ifndef INCLUDE_vTaskDelete/*允许删除任务*/
     #define INCLUDE_vTaskDelete    0
 #endif
 
-#ifndef INCLUDE_vTaskSuspend
+#ifndef INCLUDE_vTaskSuspend/*允许任务挂起*/
     #define INCLUDE_vTaskSuspend    0
 #endif
 
-#ifdef INCLUDE_xTaskDelayUntil
+#ifdef INCLUDE_xTaskDelayUntil /*周期延迟*/
     #ifdef INCLUDE_vTaskDelayUntil
 
 /* INCLUDE_vTaskDelayUntil was replaced by INCLUDE_xTaskDelayUntil.  Backward
@@ -236,55 +237,55 @@
     #endif
 #endif
 
-#ifndef INCLUDE_xTaskDelayUntil
+#ifndef INCLUDE_xTaskDelayUntil /*周期延迟*/
     #define INCLUDE_xTaskDelayUntil    0
 #endif
 
-#ifndef INCLUDE_vTaskDelay
+#ifndef INCLUDE_vTaskDelay  /*固定延迟多久*/
     #define INCLUDE_vTaskDelay    0
 #endif
 
-#ifndef INCLUDE_xTaskGetIdleTaskHandle
+#ifndef INCLUDE_xTaskGetIdleTaskHandle  /*获取空闲任务句柄*/
     #define INCLUDE_xTaskGetIdleTaskHandle    0
 #endif
 
-#ifndef INCLUDE_xTaskAbortDelay
+#ifndef INCLUDE_xTaskAbortDelay     /*中断延时强制任务执行*/
     #define INCLUDE_xTaskAbortDelay    0
 #endif
 
-#ifndef INCLUDE_xQueueGetMutexHolder
+#ifndef INCLUDE_xQueueGetMutexHolder    /*获取队列互斥锁持有者*/
     #define INCLUDE_xQueueGetMutexHolder    0
 #endif
 
-#ifndef INCLUDE_xSemaphoreGetMutexHolder
+#ifndef INCLUDE_xSemaphoreGetMutexHolder    /*获取信号量互斥锁持有者*/
     #define INCLUDE_xSemaphoreGetMutexHolder    INCLUDE_xQueueGetMutexHolder
 #endif
 
-#ifndef INCLUDE_xTaskGetHandle
+#ifndef INCLUDE_xTaskGetHandle  /*获取任务句柄*/
     #define INCLUDE_xTaskGetHandle    0
 #endif
 
-#ifndef INCLUDE_uxTaskGetStackHighWaterMark
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark /*获取任务栈高水位  返回值类型UBaseType_t*/
     #define INCLUDE_uxTaskGetStackHighWaterMark    0
 #endif
 
-#ifndef INCLUDE_uxTaskGetStackHighWaterMark2
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark2 /*获取任务栈高水位  uint32_t（或 StackType_t）*/
     #define INCLUDE_uxTaskGetStackHighWaterMark2    0
 #endif
 
-#ifndef INCLUDE_eTaskGetState
+#ifndef INCLUDE_eTaskGetState  /*获取任务状态*/
     #define INCLUDE_eTaskGetState    0
 #endif
 
-#ifndef INCLUDE_xTaskResumeFromISR
+#ifndef INCLUDE_xTaskResumeFromISR/*允许任务从ISR恢复*/
     #define INCLUDE_xTaskResumeFromISR    1
 #endif
 
-#ifndef INCLUDE_xTimerPendFunctionCall
+#ifndef INCLUDE_xTimerPendFunctionCall/*允许定时器挂起函数调用*/
     #define INCLUDE_xTimerPendFunctionCall    0
 #endif
 
-#ifndef INCLUDE_xTaskGetSchedulerState
+#ifndef INCLUDE_xTaskGetSchedulerState/*获取任务调度器状态*/
     #define INCLUDE_xTaskGetSchedulerState    0
 #endif
 
@@ -298,73 +299,73 @@
     #endif
 #endif
 
-#ifndef configUSE_APPLICATION_TASK_TAG
+#ifndef configUSE_APPLICATION_TASK_TAG/*配置使用应用任务标签*/
     #define configUSE_APPLICATION_TASK_TAG    0
 #endif
 
-#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
+#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS/*线程本地存储指针数量*/
     #define configNUM_THREAD_LOCAL_STORAGE_POINTERS    0
 #endif
 
-#ifndef configUSE_RECURSIVE_MUTEXES
+#ifndef configUSE_RECURSIVE_MUTEXES/*递归互斥锁*/
     #define configUSE_RECURSIVE_MUTEXES    0
 #endif
 
-#ifndef configUSE_MUTEXES
+#ifndef configUSE_MUTEXES/*互斥锁*/
     #define configUSE_MUTEXES    0
 #endif
 
-#ifndef configUSE_TIMERS
+#ifndef configUSE_TIMERS/*软件定时器*/
     #define configUSE_TIMERS    0
 #endif
 
-#ifndef configUSE_EVENT_GROUPS
+#ifndef configUSE_EVENT_GROUPS/*事件组*/
     #define configUSE_EVENT_GROUPS    1
 #endif
 
-#ifndef configUSE_STREAM_BUFFERS
+#ifndef configUSE_STREAM_BUFFERS/*流缓冲区*/
     #define configUSE_STREAM_BUFFERS    1
 #endif
 
-#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
+#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK/*守护任务启动钩子*/
     #define configUSE_DAEMON_TASK_STARTUP_HOOK    0
 #endif
 
-#if ( configUSE_DAEMON_TASK_STARTUP_HOOK != 0 )
+#if ( configUSE_DAEMON_TASK_STARTUP_HOOK != 0 )/*守护任务启动钩子*/
     #if ( configUSE_TIMERS == 0 )
         #error configUSE_DAEMON_TASK_STARTUP_HOOK is set, but the daemon task is not created because configUSE_TIMERS is 0.
     #endif
 #endif
 
-#ifndef configUSE_COUNTING_SEMAPHORES
+#ifndef configUSE_COUNTING_SEMAPHORES/*计数信号量*/
     #define configUSE_COUNTING_SEMAPHORES    0
 #endif
 
-#ifndef configUSE_TASK_PREEMPTION_DISABLE
+#ifndef configUSE_TASK_PREEMPTION_DISABLE/*任务抢占禁用*/
     #define configUSE_TASK_PREEMPTION_DISABLE    0
 #endif
 
-#ifndef configUSE_ALTERNATIVE_API
+#ifndef configUSE_ALTERNATIVE_API/*替代API*/
     #define configUSE_ALTERNATIVE_API    0
 #endif
 
-#ifndef portCRITICAL_NESTING_IN_TCB
+#ifndef portCRITICAL_NESTING_IN_TCB/*任务控制块中的临界区嵌套*/
     #define portCRITICAL_NESTING_IN_TCB    0
 #endif
 
-#ifndef configMAX_TASK_NAME_LEN
+#ifndef configMAX_TASK_NAME_LEN/*任务名称最大长度*/
     #define configMAX_TASK_NAME_LEN    16
 #endif
 
-#ifndef configIDLE_SHOULD_YIELD
+#ifndef configIDLE_SHOULD_YIELD/*空闲任务是否应该让出*/
     #define configIDLE_SHOULD_YIELD    1
 #endif
 
-#if configMAX_TASK_NAME_LEN < 1
+#if configMAX_TASK_NAME_LEN < 1/*任务名称最大长度*/
     #error configMAX_TASK_NAME_LEN must be set to a minimum of 1 in FreeRTOSConfig.h
 #endif
 
-#ifndef configASSERT
+#ifndef configASSERT/*断言*/
     #define configASSERT( x )
     #define configASSERT_DEFINED    0
 #else
@@ -376,7 +377,7 @@
  * A configPRECONDITION statement should express an implicit invariant or
  * assumption made.  A configASSERT statement should express an invariant that must
  * hold explicit before calling the code. */
-#ifndef configPRECONDITION
+#ifndef configPRECONDITION/*前条件*/
     #define configPRECONDITION( X )    configASSERT( X )
     #define configPRECONDITION_DEFINED    0
 #else
@@ -2657,7 +2658,7 @@
     #define traceRETURN_xCoRoutineRemoveFromEventList( xReturn )
 #endif
 
-#ifndef configGENERATE_RUN_TIME_STATS
+#ifndef configGENERATE_RUN_TIME_STATS/*配置使用生成运行时间统计*/
     #define configGENERATE_RUN_TIME_STATS    0
 #endif
 
@@ -2715,7 +2716,7 @@
     #define configPOST_SLEEP_PROCESSING( x )
 #endif
 
-#ifndef configUSE_QUEUE_SETS
+#ifndef configUSE_QUEUE_SETS/*配置使用队列设置*/
     #define configUSE_QUEUE_SETS    0
 #endif
 
@@ -2775,7 +2776,7 @@
     #define configENABLE_HEAP_PROTECTOR    0
 #endif
 
-#ifndef configUSE_TASK_NOTIFICATIONS
+#ifndef configUSE_TASK_NOTIFICATIONS/*配置使用任务通知*/
     #define configUSE_TASK_NOTIFICATIONS    1
 #endif
 

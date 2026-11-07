@@ -546,7 +546,7 @@ System_ON:
     // else if (!Flag.Adapt_In && (R_ADAdaptVol > 200 && R_ADAdaptVol < Adpt6V))
     // CheckCharing_Compare(); // ¼ì²é³äµç×´Ì¬
     R_Task = D_Task1;
-    Flag_SleepWake = 1;
+    // Flag_SleepWake = 1;
 }
 
 static void APP_EnterStop(void)

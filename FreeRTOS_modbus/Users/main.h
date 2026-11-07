@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "sys.h"
+#include "FreeRTOS.h"
 #include "delay.h"
 #include "uart.h"
 
@@ -37,6 +38,11 @@ extern uint8_t R_Task;
 extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);
 extern void prvvTIMERExpiredISR(void);
+
+extern void freertos_test(void);
+extern void u16_to_4digits(char *s, uint16_t v);
+extern void ADC_DMA_scan(void);
+extern void Led_scan(void);
 
 static void SystemClock_Config(void);
 void Error_Handler(void);

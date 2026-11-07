@@ -3,23 +3,23 @@
 #include "string.h"
 #include "main.h"
 
-UART_HandleTypeDef uart1_handle; /* UART1句柄 */
-UART_HandleTypeDef uart2_handle; /* UART2句柄 */
-UART_HandleTypeDef uart3_handle; /* UART3句柄 */
+UART_HandleTypeDef uart1_handle; /* UART1��� */
+UART_HandleTypeDef uart2_handle; /* UART2��� */
+UART_HandleTypeDef uart3_handle; /* UART3��� */
 
-uint8_t uart1_rx_buf[UART1_RX_BUF_SIZE]; /* UART1接收缓冲区 */
-uint16_t uart1_rx_len = 0;               /* UART1接收字符长度 */
+uint8_t uart1_rx_buf[UART1_RX_BUF_SIZE]; /* UART1���ջ����� */
+uint16_t uart1_rx_len = 0;               /* UART1�����ַ����� */
 
 /**
- * @brief       重定义fputc函数
- * @note        printf函数最终会通过调用fputc输出字符串到 对应 串口
+ * @brief       �ض���fputc����
+ * @note        printf�������ջ�ͨ������fputc����ַ����� ��Ӧ ����
  */
 int fputc(int ch, FILE *f)
 {
     uint16_t fputc_num = 0;
 #if 1
-    ///* 串口1发送*/
-    while ((USART1->SR & 0X40) == 0) /* 等待上一个字符发送完成 */
+    ///* ����1����*/
+    while ((USART1->SR & 0X40) == 0) /* �ȴ���һ���ַ�������� */
     {
         fputc_num++;
         if (fputc_num > 65530)
@@ -28,10 +28,10 @@ int fputc(int ch, FILE *f)
         }
     }
 
-    USART1->DR = (uint8_t)ch; /* 将要发送的字符 ch 写入到DR寄存器 */
+    USART1->DR = (uint8_t)ch; /* ��Ҫ���͵��ַ� ch д�뵽DR�Ĵ��� */
 
-    // 串口2发送
-    // while ((USART2->SR & 0X40) == 0) /* 等待上一个字符发送完成 */
+    // ����2����
+    // while ((USART2->SR & 0X40) == 0) /* �ȴ���һ���ַ�������� */
     // {
     //     fputc_num++;
     //     if (fputc_num > 65530)
@@ -39,10 +39,10 @@ int fputc(int ch, FILE *f)
     //         return ch;
     //     }
     // }
-    // USART2->DR = (uint8_t)ch; /* 将要发送的字符 ch 写入到DR寄存器 */
+    // USART2->DR = (uint8_t)ch; /* ��Ҫ���͵��ַ� ch д�뵽DR�Ĵ��� */
 #else
 
-    while ((USART2->SR & 0X40) == 0) /* 等待上一个字符发送完成 */
+    while ((USART2->SR & 0X40) == 0) /* �ȴ���һ���ַ�������� */
     {
         fputc_num++;
         if (fputc_num > 65530)
@@ -51,9 +51,9 @@ int fputc(int ch, FILE *f)
         }
     }
 
-    USART2->DR = (uint8_t)ch; /* 将要发送的字符 ch 写入到DR寄存器 */
-    ///* 串口3发送*/
-    while ((USART3->SR & 0X40) == 0) /* 等待上一个字符发送完成 */
+    USART2->DR = (uint8_t)ch; /* ��Ҫ���͵��ַ� ch д�뵽DR�Ĵ��� */
+    ///* ����3����*/
+    while ((USART3->SR & 0X40) == 0) /* �ȴ���һ���ַ�������� */
     {
         fputc_num++;
         if (fputc_num > 65530)
@@ -62,83 +62,83 @@ int fputc(int ch, FILE *f)
         }
     }
 
-    USART3->DR = (uint8_t)ch; /* 将要发送的字符 ch 写入到DR寄存器 */
+    USART3->DR = (uint8_t)ch; /* ��Ҫ���͵��ַ� ch д�뵽DR�Ĵ��� */
 #endif
 
     return ch;
 }
 
 /**
- * @brief       串口1初始化函数
- * @param       baudrate: 波特率, 根据自己需要设置波特率值
- * @retval      无
+ * @brief       ����1��ʼ������
+ * @param       baudrate: ������, �����Լ���Ҫ���ò�����ֵ
+ * @retval      ��
  */
 void uart_init(uint32_t baudrate)
 {
-    /*UART1 初始化设置*/
+    /*UART1 ��ʼ������*/
     uart1_handle.Instance = USART1;                    /* USART1 */
-    uart1_handle.Init.BaudRate = baudrate;             /* 波特率 */
-    uart1_handle.Init.WordLength = UART_WORDLENGTH_8B; /* 字长为8位数据格式 */
-    uart1_handle.Init.StopBits = UART_STOPBITS_1;      /* 一个停止位 */
-    uart1_handle.Init.Parity = UART_PARITY_NONE;       /* 无奇偶校验位 */
-    uart1_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* 无硬件流控 */
-    uart1_handle.Init.Mode = UART_MODE_TX_RX;          /* 收发模式 */
-    HAL_Delay(1);                                      // 1ms稳定延时，专门解决115200首字符乱码
+    uart1_handle.Init.BaudRate = baudrate;             /* ������ */
+    uart1_handle.Init.WordLength = UART_WORDLENGTH_8B; /* �ֳ�Ϊ8λ���ݸ�ʽ */
+    uart1_handle.Init.StopBits = UART_STOPBITS_1;      /* һ��ֹͣλ */
+    uart1_handle.Init.Parity = UART_PARITY_NONE;       /* ����żУ��λ */
+    uart1_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* ��Ӳ������ */
+    uart1_handle.Init.Mode = UART_MODE_TX_RX;          /* �շ�ģʽ */
+    HAL_Delay(1);                                      // 1ms�ȶ���ʱ��ר�Ž��115200���ַ�����
 
-    HAL_UART_Init(&uart1_handle); /* HAL_UART_Init()会使能UART1 */
+    HAL_UART_Init(&uart1_handle); /* HAL_UART_Init()��ʹ��UART1 */
 
-    //     /*UART2 初始化设置*/
+    //     /*UART2 ��ʼ������*/
     //     uart2_handle.Instance = USART2;                    /* USART2 */
-    //     uart2_handle.Init.BaudRate = baudrate;             /* 波特率 */
-    //     uart2_handle.Init.WordLength = UART_WORDLENGTH_8B; /* 字长为8位数据格式 */
-    //     uart2_handle.Init.StopBits = UART_STOPBITS_1;      /* 一个停止位 */
-    //     uart2_handle.Init.Parity = UART_PARITY_NONE;       /* 无奇偶校验位 */
-    //     uart2_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* 无硬件流控 */
-    //     uart2_handle.Init.Mode = UART_MODE_TX_RX;          /* 收发模式 */
-    //     HAL_UART_Init(&uart2_handle);                      /* HAL_UART_Init()会使能UART2 */
+    //     uart2_handle.Init.BaudRate = baudrate;             /* ������ */
+    //     uart2_handle.Init.WordLength = UART_WORDLENGTH_8B; /* �ֳ�Ϊ8λ���ݸ�ʽ */
+    //     uart2_handle.Init.StopBits = UART_STOPBITS_1;      /* һ��ֹͣλ */
+    //     uart2_handle.Init.Parity = UART_PARITY_NONE;       /* ����żУ��λ */
+    //     uart2_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* ��Ӳ������ */
+    //     uart2_handle.Init.Mode = UART_MODE_TX_RX;          /* �շ�ģʽ */
+    //     HAL_UART_Init(&uart2_handle);                      /* HAL_UART_Init()��ʹ��UART2 */
 
-    //     /*UART3 初始化设置*/
+    //     /*UART3 ��ʼ������*/
     //     uart3_handle.Instance = USART3;                    /* USART3 */
-    //     uart3_handle.Init.BaudRate = baudrate;             /* 波特率 */
-    //     uart3_handle.Init.WordLength = UART_WORDLENGTH_8B; /* 字长为8位数据格式 */
-    //     uart3_handle.Init.StopBits = UART_STOPBITS_1;      /* 一个停止位 */
-    //     uart3_handle.Init.Parity = UART_PARITY_NONE;       /* 无奇偶校验位 */
-    //     uart3_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* 无硬件流控 */
-    //     uart3_handle.Init.Mode = UART_MODE_TX_RX;          /* 收发模式 */
-    //     HAL_UART_Init(&uart3_handle);                      /* HAL_UART_Init()会使能UART3 */
+    //     uart3_handle.Init.BaudRate = baudrate;             /* ������ */
+    //     uart3_handle.Init.WordLength = UART_WORDLENGTH_8B; /* �ֳ�Ϊ8λ���ݸ�ʽ */
+    //     uart3_handle.Init.StopBits = UART_STOPBITS_1;      /* һ��ֹͣλ */
+    //     uart3_handle.Init.Parity = UART_PARITY_NONE;       /* ����żУ��λ */
+    //     uart3_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE; /* ��Ӳ������ */
+    //     uart3_handle.Init.Mode = UART_MODE_TX_RX;          /* �շ�ģʽ */
+    //     HAL_UART_Init(&uart3_handle);                      /* HAL_UART_Init()��ʹ��UART3 */
 }
 
 /**
- * @brief       UART底层初始化函数
- * @param       huart: UART句柄类型指针
- * @note        此函数会被HAL_UART_Init()调用
- *              完成时钟使能，引脚配置，中断配置
- * @retval      无
+ * @brief       UART�ײ��ʼ������
+ * @param       huart: UART�������ָ��
+ * @note        �˺����ᱻHAL_UART_Init()����
+ *              ���ʱ��ʹ�ܣ��������ã��ж�����
+ * @retval      ��
  */
 // void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 // {
 //     GPIO_InitTypeDef gpio_init_struct;
 
-//     if (huart->Instance == USART1) /* 如果是串口1，进行串口1 MSP初始化 */
+//     if (huart->Instance == USART1) /* ����Ǵ���1�����д���1 MSP��ʼ�� */
 //     {
-//         __HAL_RCC_GPIOA_CLK_ENABLE();  /* 使能串口TX脚时钟 */
-//         __HAL_RCC_USART1_CLK_ENABLE(); /* 使能串口时钟 */
+//         __HAL_RCC_GPIOA_CLK_ENABLE();  /* ʹ�ܴ���TX��ʱ�� */
+//         __HAL_RCC_USART1_CLK_ENABLE(); /* ʹ�ܴ���ʱ�� */
 
-//         gpio_init_struct.Pin = GPIO_PIN_9;             /* 串口发送引脚号 */
-//         gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* 复用推挽输出 */
-//         gpio_init_struct.Pull = GPIO_PULLUP;           /* 上拉 */
-//         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO速度设置为高速 */
+//         gpio_init_struct.Pin = GPIO_PIN_9;             /* ���ڷ������ź� */
+//         gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* ����������� */
+//         gpio_init_struct.Pull = GPIO_PULLUP;           /* ���� */
+//         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO�ٶ�����Ϊ���� */
 //         HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
-//         gpio_init_struct.Pin = GPIO_PIN_10; /* 串口RX脚 模式设置 */
+//         gpio_init_struct.Pin = GPIO_PIN_10; /* ����RX�� ģʽ���� */
 //         gpio_init_struct.Mode = GPIO_MODE_AF_INPUT;
-//         HAL_GPIO_Init(GPIOA, &gpio_init_struct); /* 串口RX脚 必须设置成输入模式 */
+//         HAL_GPIO_Init(GPIOA, &gpio_init_struct); /* ����RX�� �������ó�����ģʽ */
 
-//         HAL_NVIC_EnableIRQ(USART1_IRQn);         /* 使能USART1中断通道 */
-//         HAL_NVIC_SetPriority(USART1_IRQn, 3, 3); /* 组2，最低优先级:抢占优先级3，子优先级3 */
+//         HAL_NVIC_EnableIRQ(USART1_IRQn);         /* ʹ��USART1�ж�ͨ�� */
+//         HAL_NVIC_SetPriority(USART1_IRQn, 3, 3); /* ��2��������ȼ�:��ռ���ȼ�3�������ȼ�3 */
 
-//         __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* 使能UART1接收中断 */
-//         __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* 使能UART1总线空闲中断 */
+//         __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* ʹ��UART1�����ж� */
+//         __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* ʹ��UART1���߿����ж� */
 //     }
 
 //     if (huart->Instance == USART2)
@@ -147,14 +147,14 @@ void uart_init(uint32_t baudrate)
 
 //         /* USER CODE END USART2_MspInit 0 */
 //         /* USART2 clock enable */
-//         __HAL_RCC_USART2_CLK_ENABLE(); // 使能串口2时钟
+//         __HAL_RCC_USART2_CLK_ENABLE(); // ʹ�ܴ���2ʱ��
 
-//         __HAL_RCC_GPIOD_CLK_ENABLE(); // 使能串口2RX脚时钟
+//         __HAL_RCC_GPIOD_CLK_ENABLE(); // ʹ�ܴ���2RX��ʱ��
 //         /**USART2 GPIO Configuration
 //         PA2     ------> USART2_TX
 //         PA3     ------> USART2_RX
 //         */
-//         /* 配置Tx引脚为复用功能  */
+//         /* ����Tx����Ϊ���ù���  */
 //         gpio_init_struct.Pin = GPIO_PIN_2;
 //         gpio_init_struct.Mode = GPIO_MODE_AF_PP;
 //         gpio_init_struct.Pull = GPIO_NOPULL;
@@ -166,91 +166,91 @@ void uart_init(uint32_t baudrate)
 //         HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
 //         /* USART2 interrupt Init */
-//         HAL_NVIC_SetPriority(USART2_IRQn, 0, 0); // 抢占优先级0，子优先级0
-//         HAL_NVIC_EnableIRQ(USART2_IRQn);         // 使能USART2中断通道
+//         HAL_NVIC_SetPriority(USART2_IRQn, 0, 0); // ��ռ���ȼ�0�������ȼ�0
+//         HAL_NVIC_EnableIRQ(USART2_IRQn);         // ʹ��USART2�ж�ͨ��
 //     }
 
-//     // if (huart->Instance == USART2) /* 如果是串口2，进行串口2 MSP初始化 */
+//     // if (huart->Instance == USART2) /* ����Ǵ���2�����д���2 MSP��ʼ�� */
 //     // {
-//     //     __HAL_RCC_GPIOA_CLK_ENABLE();  /* 使能串口TX脚时钟 */
-//     //     __HAL_RCC_USART2_CLK_ENABLE(); /* 使能串口时钟 */
+//     //     __HAL_RCC_GPIOA_CLK_ENABLE();  /* ʹ�ܴ���TX��ʱ�� */
+//     //     __HAL_RCC_USART2_CLK_ENABLE(); /* ʹ�ܴ���ʱ�� */
 
-//     //     gpio_init_struct.Pin = GPIO_PIN_2;             /* 串口发送引脚号 */
-//     //     gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* 复用推挽输出 */
-//     //     gpio_init_struct.Pull = GPIO_PULLUP;           /* 上拉 */
-//     //     gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO速度设置为高速 */
+//     //     gpio_init_struct.Pin = GPIO_PIN_2;             /* ���ڷ������ź� */
+//     //     gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* ����������� */
+//     //     gpio_init_struct.Pull = GPIO_PULLUP;           /* ���� */
+//     //     gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO�ٶ�����Ϊ���� */
 //     //     HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
-//     //     gpio_init_struct.Pin = GPIO_PIN_3; /* 串口RX脚 模式设置 */
+//     //     gpio_init_struct.Pin = GPIO_PIN_3; /* ����RX�� ģʽ���� */
 //     //     gpio_init_struct.Mode = GPIO_MODE_AF_INPUT;
-//     //     HAL_GPIO_Init(GPIOA, &gpio_init_struct); /* 串口RX脚 必须设置成输入模式 */
+//     //     HAL_GPIO_Init(GPIOA, &gpio_init_struct); /* ����RX�� �������ó�����ģʽ */
 
-//     //     HAL_NVIC_EnableIRQ(USART2_IRQn);         /* 使能USART2中断通道 */
-//     //     HAL_NVIC_SetPriority(USART2_IRQn, 3, 3); /* 组2，最低优先级:抢占优先级3，子优先级3 */
+//     //     HAL_NVIC_EnableIRQ(USART2_IRQn);         /* ʹ��USART2�ж�ͨ�� */
+//     //     HAL_NVIC_SetPriority(USART2_IRQn, 3, 3); /* ��2��������ȼ�:��ռ���ȼ�3�������ȼ�3 */
 
-//     //     __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* 使能UART1接收中断 */
-//     //     __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* 使能UART1总线空闲中断 */
+//     //     __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* ʹ��UART1�����ж� */
+//     //     __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* ʹ��UART1���߿����ж� */
 //     // }
 
-//     if (huart->Instance == USART3) /* 如果是串口3，进行串口3 MSP初始化 */
+//     if (huart->Instance == USART3) /* ����Ǵ���3�����д���3 MSP��ʼ�� */
 //     {
-//         __HAL_RCC_GPIOB_CLK_ENABLE();  /* 使能串口TX脚时钟 */
-//         __HAL_RCC_USART3_CLK_ENABLE(); /* 使能串口时钟 */
+//         __HAL_RCC_GPIOB_CLK_ENABLE();  /* ʹ�ܴ���TX��ʱ�� */
+//         __HAL_RCC_USART3_CLK_ENABLE(); /* ʹ�ܴ���ʱ�� */
 
-//         gpio_init_struct.Pin = GPIO_PIN_10;            /* 串口发送引脚号 */
-//         gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* 复用推挽输出 */
-//         gpio_init_struct.Pull = GPIO_PULLUP;           /* 上拉 */
-//         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO速度设置为高速 */
+//         gpio_init_struct.Pin = GPIO_PIN_10;            /* ���ڷ������ź� */
+//         gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* ����������� */
+//         gpio_init_struct.Pull = GPIO_PULLUP;           /* ���� */
+//         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* IO�ٶ�����Ϊ���� */
 //         HAL_GPIO_Init(GPIOB, &gpio_init_struct);
 
-//         gpio_init_struct.Pin = GPIO_PIN_11; /* 串口RX脚 模式设置 */
+//         gpio_init_struct.Pin = GPIO_PIN_11; /* ����RX�� ģʽ���� */
 //         gpio_init_struct.Mode = GPIO_MODE_AF_INPUT;
-//         HAL_GPIO_Init(GPIOB, &gpio_init_struct); /* 串口RX脚 必须设置成输入模式 */
+//         HAL_GPIO_Init(GPIOB, &gpio_init_struct); /* ����RX�� �������ó�����ģʽ */
 
-//         HAL_NVIC_EnableIRQ(USART3_IRQn);         /* 使能USART3中断通道 */
-//         HAL_NVIC_SetPriority(USART3_IRQn, 3, 3); /* 组2，最低优先级:抢占优先级3，子优先级3 */
+//         HAL_NVIC_EnableIRQ(USART3_IRQn);         /* ʹ��USART3�ж�ͨ�� */
+//         HAL_NVIC_SetPriority(USART3_IRQn, 3, 3); /* ��2��������ȼ�:��ռ���ȼ�3�������ȼ�3 */
 
-//         __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* 使能UART1接收中断 */
-//         __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* 使能UART1总线空闲中断 */
+//         __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE); /* ʹ��UART1�����ж� */
+//         __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE); /* ʹ��UART1���߿����ж� */
 //     }
 // }
 
 /**
- * @brief       UART1接收缓冲区清除
- * @param       无
- * @retval      无
+ * @brief       UART1���ջ��������
+ * @param       ��
+ * @retval      ��
  */
 void uart1_rx_clear(void)
 {
-    memset(uart1_rx_buf, 0, sizeof(uart1_rx_buf)); /* 清空接收缓冲区 */
-    uart1_rx_len = 0;                              /* 接收计数器清零 */
+    memset(uart1_rx_buf, 0, sizeof(uart1_rx_buf)); /* ��ս��ջ����� */
+    uart1_rx_len = 0;                              /* ���ռ��������� */
 }
 
 /**
- * @brief       串口1中断服务函数
- * @note        在此使用接收中断及空闲中断，实现不定长数据收发
- * @param       无
- * @retval      无
+ * @brief       ����1�жϷ�����
+ * @note        �ڴ�ʹ�ý����жϼ������жϣ�ʵ�ֲ����������շ�
+ * @param       ��
+ * @retval      ��
  */
 void USART1_IRQHandler(void)
 {
     uint8_t receive_data = 0;
     if (__HAL_UART_GET_FLAG(&uart1_handle, UART_FLAG_RXNE) != RESET)
-    {                                                            /* 获取接收RXNE标志位是否被置位 */
-        if (uart1_rx_len >= sizeof(uart1_rx_buf))                /* 如果接收的字符数大于接收缓冲区大小， */
-            uart1_rx_len = 0;                                    /* 则将接收计数器清零 */
-        HAL_UART_Receive(&uart1_handle, &receive_data, 1, 1000); /* 接收一个字符 */
-        uart1_rx_buf[uart1_rx_len++] = receive_data;             /* 将接收到的字符保存在接收缓冲区 */
+    {                                                            /* ��ȡ����RXNE��־λ�Ƿ���λ */
+        if (uart1_rx_len >= sizeof(uart1_rx_buf))                /* ������յ��ַ������ڽ��ջ�������С�� */
+            uart1_rx_len = 0;                                    /* �򽫽��ռ��������� */
+        HAL_UART_Receive(&uart1_handle, &receive_data, 1, 1000); /* ����һ���ַ� */
+        uart1_rx_buf[uart1_rx_len++] = receive_data;             /* �����յ����ַ������ڽ��ջ����� */
     }
 
-    if (__HAL_UART_GET_FLAG(&uart1_handle, UART_FLAG_IDLE) != RESET) /* 获取接收空闲中断标志位是否被置位 */
+    if (__HAL_UART_GET_FLAG(&uart1_handle, UART_FLAG_IDLE) != RESET) /* ��ȡ���տ����жϱ�־λ�Ƿ���λ */
     {
 #if DEBUG_UART_ENABLE
-        printf("recv: %s\r\n", uart1_rx_buf); /* 将接收到的数据打印出来 */
+        printf("recv: %s\r\n", uart1_rx_buf); /* �����յ������ݴ�ӡ���� */
 
 #endif
         uart1_rx_clear();
-        __HAL_UART_CLEAR_IDLEFLAG(&uart1_handle); /* 清除UART总线空闲中断 */
+        __HAL_UART_CLEAR_IDLEFLAG(&uart1_handle); /* ���UART���߿����ж� */
     }
 }
 
@@ -272,21 +272,21 @@ void USART1_IRQHandler(void)
 //         __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TXE);
 //     }
 
-//     // 源码
+//     // Դ��
 //     /* USER CODE END USART2_IRQn 0 */
-//     // HAL_UART_IRQHandler(&huart2);//处理USART2中断
+//     // HAL_UART_IRQHandler(&huart2);//����USART2�ж�
 //     /* USER CODE BEGIN USART2_IRQn 1 */
 //     //   if(__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE)!= RESET)
 //     //   	{
-//     //   		prvvUARTRxISR();//接收中断
+//     //   		prvvUARTRxISR();//�����ж�
 //     //   	}
 
 //     //   if(__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE)!= RESET)
 //     //   	{
-//     //   		prvvUARTTxReadyISR();//发送中断
+//     //   		prvvUARTTxReadyISR();//�����ж�
 //     //   	}
 
-//     //   HAL_NVIC_ClearPendingIRQ(USART2_IRQn);//清除USART2中断标志位
-//     //   HAL_UART_IRQHandler(&huart2);//处理USART2中断
+//     //   HAL_NVIC_ClearPendingIRQ(USART2_IRQn);//���USART2�жϱ�־λ
+//     //   HAL_UART_IRQHandler(&huart2);//����USART2�ж�
 //     /* USER CODE END USART2_IRQn 1 */
 // }

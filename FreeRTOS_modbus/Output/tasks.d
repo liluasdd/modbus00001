@@ -1,0 +1,16 @@
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\src\tasks.c
+..\..\output\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\..\output\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\timers.h
+..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\stack_macros.h

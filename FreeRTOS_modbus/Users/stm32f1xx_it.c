@@ -41,6 +41,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /** @addtogroup STM32F1xx_HAL_Examples
  * @{
@@ -67,6 +69,10 @@ u8 s_tim_100ms = 1;
 u8 s_tim_2s = 0;
 volatile u8 g_485_send_tim = 0;
 volatile u8 adc_done_flag = 0;
+
+extern ADC_HandleTypeDef adc_handle; // ADC句柄
+extern volatile u8 adc_done_flag;
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -140,14 +146,14 @@ void UsageFault_Handler(void)
   }
 }
 
-/**
- * @brief  This function handles SVCall exception.
- * @param  None
- * @retval None
- */
-void SVC_Handler(void)
-{
-}
+// /**
+//  * @brief  This function handles SVCall exception.
+//  * @param  None
+//  * @retval None
+//  */
+// void SVC_Handler(void)
+// {
+// }
 
 /**
  * @brief  This function handles Debug Monitor exception.
@@ -158,14 +164,14 @@ void DebugMon_Handler(void)
 {
 }
 
-/**
- * @brief  This function handles PendSVC exception.
- * @param  None
- * @retval None
- */
-void PendSV_Handler(void)
-{
-}
+// /**
+//  * @brief  This function handles PendSVC exception.
+//  * @param  None
+//  * @retval None
+//  */
+// void PendSV_Handler(void)
+// {
+// }
 
 /**
  * @brief  This function handles SysTick Handler.
@@ -175,9 +181,11 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   HAL_IncTick();
+  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) // 只在调度器起来后才跑
+  {
+    xPortSysTickHandler(); // FreeRTOS 内核的 xTickCount + 触发 PendSV
+  }
 }
-
-extern ADC_HandleTypeDef adc_handle; // ADC句柄
 
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA转换半完成回调函数
 {
@@ -197,58 +205,9 @@ void DMA1_Channel1_IRQHandler(void)
   HAL_DMA_IRQHandler(&hdma_adc1); // ??:??? HAL ??????
 }
 
-// /*
-// ADC+DMA转换完成回调函数
-//  **/
-// void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
-// {
-//   // 40个数据采集完成
-//   // 在这里处理 adc_buf 数据
-//   // adc_ch0[adc_DMA_num] = adc_result[0]; // CH0 的值;
-//   // adc_ch1[adc_DMA_num] = adc_result[1]; // CH1 的值;
-//   // adc_ch2[adc_DMA_num] = adc_result[2]; // CH2 的值;
-//   // adc_ch3[adc_DMA_num] = adc_result[3]; // CH3 的值;
-//   // adc_DMA_num = 0;
-//   // for (adc_DMA_num = 0; adc_DMA_num < adc_DMA_max; adc_DMA_num++)
-//   // {
-//   //   adc_ch0[adc_DMA_num] = adc_result[adc_DMA_num][0]; // CH0 的值;
-//   //   adc_ch1[adc_DMA_num] = adc_result[adc_DMA_num][1]; // CH1 的值;
-//   // }
-//   // // if (adc_DMA_num >= adc_DMA_max)
-//   // // {
-//   //   // adc_DMA_num = 0;
-//   //   // 处理完后停止 ADC
-//   //   HAL_ADC_Stop_DMA(&adc_handle);
-//   // // }
-//   if (hadc == &adc_handle)
-//   {
-//     adc_done_flag = 1; // 只置标志，不搬数据不Stop
-//   }
-// }
-// /**
-//  * @brief This function handles TIM4 global interrupt.
-//  */
-// void TIM2_IRQHandler(void)
-// {
-//   if (TIM2->SR & (1 << 0)) // 定时器中断  50/100us一次
-//   {
-//     TIM2->SR &= ~(1 << 0); // 清除中断标志位
-//     // /* 停掉定时器 */
-//     // HAL_TIM_Base_Stop_IT(&htim2);
-//     __HAL_TIM_DISABLE(&htim2);
-//     __HAL_TIM_SET_COUNTER(&htim2, 0);
-//     __HAL_TIM_DISABLE_IT(&htim2, TIM_IT_UPDATE);
-//     __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
-//     // /* 强制切回接收空闲状态，并清空缓冲区 */
-//     // extern void vMBRTUReceiveBufferFlush(void);
-//     // vMBRTUReceiveBufferFlush();
-//   }
-// }
-
-extern volatile u8 adc_done_flag;
 void TIM2_IRQHandler(void)
 {
-  if (TIM2->SR & TIM_SR_UIF)//10ms中断
+  if (TIM2->SR & TIM_SR_UIF) // 10ms中断
   {
     TIM2->SR = ~TIM_SR_UIF;
 
@@ -285,40 +244,7 @@ void TIM2_IRQHandler(void)
         g_b_2s_jtim = 1;
       }
     }
-
-    // s_tim0_10ms++; //10ms
-    // s_tim0_100ms++;
-    // if (s_tim0_10ms >= 100)
-    // {
-    //   R_Task = 0;// 任务循环
-    //   g_b_task_jtim = 1;
-    //   s_tim0_10ms = 0;
-    //   if (g_b_485_send_tick) // 485发送超时
-    //   {
-    //     g_485_send_tim++;
-    //     if (g_485_send_tim >= 50)
-    //     {
-    //       g_485_send_tim = 0;
-    //       g_b_485_send_Error = 1;
-    //     }
-    //   }
-    //   else //
-    //   {
-    //     g_485_send_tim = 0;
-    //   }
-    // }
-    // if (s_tim0_100ms >= 1000)
-    // {
-    //   s_tim0_2s++;
-    //   s_tim0_100ms = 0;
-    //   g_b_100ms_jtim = 1;
-
-    //   if (s_tim0_2s >= 20)
-    //   {
-    //     s_tim0_2s = 0;
-    //     g_b_2s_jtim = 1;
-    //   }
-    // }
+    KEY_Filter_processing();
   }
 }
 void TIM3_IRQHandler(void)
@@ -330,46 +256,6 @@ void TIM3_IRQHandler(void)
   if (TIM3->SR & TIM_SR_UIF) // 用宏，别用 (1<<0)
   {
     TIM3->SR = ~TIM_SR_UIF; // 清标志，写法更标准
-
-    // if (adc_done_flag < 9)
-    // {
-    //   adc_done_flag++;
-    // }
-    // else
-    // {
-    //   adc_done_flag = 3;
-    // }
-    // s_tim0_10ms++;
-    // s_tim0_100ms++;
-    // if (s_tim0_10ms >= 100)
-    // {
-    //   g_b_task_jtim = 1;
-    //   s_tim0_10ms = 0;
-    //   if (g_b_485_send_tick) // 485发送超时
-    //   {
-    //     g_485_send_tim++;
-    //     if (g_485_send_tim >= 50)
-    //     {
-    //       g_485_send_tim = 0;
-    //       g_b_485_send_Error = 1;
-    //     }
-    //   }
-    //   else //
-    //   {
-    //     g_485_send_tim = 0;
-    //   }
-    // }
-    // if (s_tim0_100ms >= 1000)
-    // {
-    //   s_tim0_2s++;
-    //   s_tim0_100ms = 0;
-    //   g_b_100ms_jtim = 1;
-    //   if (s_tim0_2s >= 20)
-    //   {
-    //     s_tim0_2s = 0;
-    //     g_b_2s_jtim = 1;
-    //   }
-    // }
   }
 }
 
@@ -468,6 +354,22 @@ void USART2_IRQHandler(void)
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE END USART2_IRQn 1 */
 }
+
+#if configUSE_TICK_HOOK
+void vApplicationTickHook(void)
+{
+  // __WFI();
+  /* 每个 Tick 调用一次，ISR 上下文，尽量少做处理 */
+}
+#endif // 新增
+
+#if configUSE_IDLE_HOOK
+void vApplicationIdleHook(void)
+{
+  // __WFI();
+  /* 空闲任务调用，不能调用会阻塞的 API */
+}
+#endif // 新增
 
 /* USER CODE BEGIN 1 */
 

@@ -61,7 +61,7 @@
 ..\..\output\portserial.o: ..\..\software\inc\usart.h
 ..\..\output\portserial.o: ..\..\Users\main.h
 ..\..\output\portserial.o: ..\..\Users\usertype.h
-..\..\output\portserial.o: ..\..\software\mb_user\user_mb_app.h
+..\..\output\portserial.o: ..\..\software\inc\user_mb_app.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
@@ -69,6 +69,13 @@
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\portserial.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\portserial.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\portserial.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\portserial.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\portserial.o: ..\..\software\inc\gpio.h

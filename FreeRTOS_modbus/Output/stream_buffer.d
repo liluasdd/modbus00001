@@ -1,0 +1,14 @@
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\src\stream_buffer.c
+..\..\output\stream_buffer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\stream_buffer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\stream_buffer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\stream_buffer.o: ..\..\Free_ROTS_2024\inc\stream_buffer.h

@@ -61,7 +61,7 @@
 ..\..\output\porttimer.o: ..\..\software\inc\tim.h
 ..\..\output\porttimer.o: ..\..\Users\main.h
 ..\..\output\porttimer.o: ..\..\Users\usertype.h
-..\..\output\porttimer.o: ..\..\software\mb_user\user_mb_app.h
+..\..\output\porttimer.o: ..\..\software\inc\user_mb_app.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
@@ -69,6 +69,13 @@
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\porttimer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\porttimer.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\porttimer.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\porttimer.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\porttimer.o: ..\..\software\inc\gpio.h

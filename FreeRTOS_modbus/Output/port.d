@@ -1,0 +1,12 @@
+..\..\output\port.o: ..\..\Free_ROTS_2024\port\port.c
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\port.o: ..\..\Free_ROTS_2024\inc\list.h

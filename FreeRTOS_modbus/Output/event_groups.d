@@ -1,0 +1,15 @@
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\src\event_groups.c
+..\..\output\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\timers.h
+..\..\output\event_groups.o: ..\..\Free_ROTS_2024\inc\event_groups.h

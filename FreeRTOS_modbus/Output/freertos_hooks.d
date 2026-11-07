@@ -1,0 +1,12 @@
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\src\freertos_hooks.c
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\freertos_hooks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\freertos_hooks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\freertos_hooks.o: ..\..\Free_ROTS_2024\inc\list.h

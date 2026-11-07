@@ -1,0 +1,15 @@
+..\..\output\timers.o: ..\..\Free_ROTS_2024\src\timers.c
+..\..\output\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\..\output\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\queue.h
+..\..\output\timers.o: ..\..\Free_ROTS_2024\inc\timers.h

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc;..\..\software\mb_user;..\..\software\app_tft_lcd</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers;..\..\Users;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\uart1;..\..\Drivers\BSP\led;..\..\STM32MB\STM32MB\modbus\rtu;..\..\STM32MB\STM32MB\port;..\..\STM32MB\STM32MB\modbus\include;..\..\software\inc;..\..\software\mb_user;..\..\software\app_tft_lcd;..\..\Free_ROTS_2024\port;..\..\Free_ROTS_2024\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -417,6 +417,11 @@
               <FileName>usertype.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Users\usertype.h</FilePath>
+            </File>
+            <File>
+              <FileName>FreeRTOSConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -517,11 +522,6 @@
               <FileName>stm32f1xx_hal_iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_iwdg.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f1xx_hal_msp_template.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_msp_template.c</FilePath>
             </File>
             <File>
               <FileName>stm32f1xx_hal_pwr.c</FileName>
@@ -812,6 +812,76 @@
               <FileName>touch.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\software\app_tft_lcd\touch.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeRTOS_2024/port</GroupName>
+          <Files>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\port\heap_4.c</FilePath>
+            </File>
+            <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\port\port.c</FilePath>
+            </File>
+            <File>
+              <FileName>portmacro.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Free_ROTS_2024\port\portmacro.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeRTOS_2024/src</GroupName>
+          <Files>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\event_groups.c</FilePath>
+            </File>
+            <File>
+              <FileName>list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\list.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\stream_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>freertos_hooks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Free_ROTS_2024\src\freertos_hooks.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeRTOS_test</GroupName>
+          <Files>
+            <File>
+              <FileName>freertos_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_FreeRTOS\freertos_test.c</FilePath>
             </File>
           </Files>
         </Group>
