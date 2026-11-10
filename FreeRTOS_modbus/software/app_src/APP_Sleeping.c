@@ -30,10 +30,10 @@ void syssleep(void) // 进入睡眠状态
     // u8 syssleep_num_tmp1 = 0;
     u8 KEY_1_STATUS_kajian = 0;
     u8 usb_slp_error_tim = 0;
-    Write_Command(0xAE);                       // 关闭OLED
-    Clear_Screen();                            // 清除屏幕
-    Flag_Key.LongPress = 1;                    // 长按按键
-    LL_GPIO_InitTypeDef GPIO_InitStruct = {0}; // 初始化GPIO结构体
+    Write_Command(0xAE);                         // 关闭OLED
+    Clear_Screen();                              // 清除屏幕
+    Flag_Key.LongPress = 1;                      // 长按按键
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};   // 初始化GPIO结构体
     HAL_SuspendTick();                           // 禁用SysTick中断
     DBGMCU->CR = 0;                              // 禁用调试模式(原样保留)
     __HAL_RCC_ADC1_FORCE_RESET();                // 强制复位ADC1(APB2)
@@ -635,3 +635,225 @@ void Wakeup_Check_Batt(void) // 电池电量检查
         //        R_DisBatLevelQQ=R_DisBatLevel;
     }
 }
+
+#if configUSE_TICKLESS_IDLE、
+
+// low_power.c
+#include "low_power.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "stm32f1xx_hal.h"
+#include "modbus.h"         // 需要读 mb_state
+#include "periph_manager.h" // 外设关/开
+
+bool CanEnterStop(void)
+{
+    /* 快速判断，不做浮点、不做循环 */
+    if (mb_state != MB_IDLE)
+        return false;
+    if (has_pending_tx)
+        return false;
+    if ((HAL_GetTick() - last_rx_tick) < 5)
+        return false;
+    return true;
+}
+
+/* FreeRTOS 空闲钩子 */
+void vApplicationIdleHook(void)
+{
+    /* 注意：这个函数在 Idle 任务上下文中运行 */
+    /* Idle 任务栈很小（默认 128 words），别在这里做重活 */
+
+    if (CanEnterStop())
+    {
+        Enter_Stop_Mode();
+        /* 唤醒后从这里继续，然后 Idle 任务继续循环 */
+    }
+
+    /* 不能睡时，直接返回，Idle 任务继续跑 */
+}
+
+void Periph_Stop_Shutdown(void)
+{
+    /* ===== 1. 先停 DMA 传输（所有在用的通道）===== */
+    // UART RX/TX
+    HAL_UART_DMAStop(&huart1);
+    // ADC DMA
+    HAL_ADC_Stop_DMA(&hadc1);
+    // 如果有 TIM 触发 DMA（比如 TIM2->DAC 或 TIM3->DMA）
+    // HAL_TIM_DMABurst_Stop(&htim2, ...);  // 按你实际用的加
+
+    /* ===== 2. 停所有定时器 ===== */
+    HAL_TIM_Base_Stop_IT(&htim2);
+    HAL_TIM_Base_Stop_IT(&htim3);
+    HAL_TIM_Base_Stop_IT(&htim4);
+    // 如果你用了 PWM/OC/IC 模式，也要停：
+    // HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+    // HAL_TIM_IC_Stop(&htim2, TIM_CHANNEL_1);
+
+    /* ===== 3. 停 ADC ===== */
+    HAL_ADC_Stop(&hadc1);
+    // 如果 ADC 在扫描模式且用了 DMA，确保 DMA 也停了（上面已停）
+
+    /* ===== 4. 关外设时钟（按总线批量关）===== */
+    // APB1 上的 TIM2/3/4
+    __HAL_RCC_TIM2_CLK_DISABLE();
+    __HAL_RCC_TIM3_CLK_DISABLE();
+    __HAL_RCC_TIM4_CLK_DISABLE();
+    // APB2 上的 USART1 + ADC1
+    __HAL_RCC_USART1_CLK_DISABLE();
+    __HAL_RCC_ADC1_CLK_DISABLE();
+    // AHB 上的 DMA1
+    __HAL_RCC_DMA1_CLK_DISABLE();
+
+    /* ===== 5. GPIO 收尾 ===== */
+    // RX 切 EXTI（唤醒源）
+    UART_RX_To_EXTI();
+    // 未用脚模拟输入
+    GPIO_UnusedToAnalog();
+    // RS485 低功耗
+    RS485_Sleep();
+}
+
+void Periph_Stop_Restore(void)
+{
+    /* ===== 1. 先恢复时钟（所有用到的）===== */
+    // AHB
+    __HAL_RCC_DMA1_CLK_ENABLE();
+    // APB2
+    __HAL_RCC_USART1_CLK_ENABLE();
+    __HAL_RCC_ADC1_CLK_ENABLE();
+    // APB1
+    __HAL_RCC_TIM2_CLK_ENABLE();
+    __HAL_RCC_TIM3_CLK_ENABLE();
+    __HAL_RCC_TIM4_CLK_ENABLE();
+
+    /* ===== 2. 重初始化外设 ===== */
+    // 串口（必须重配，Stop 后寄存器丢失部分状态）
+    MX_USART1_Init();
+    // ADC
+    MX_ADC1_Init();
+
+    // ////第五步 关
+    // HAL_ADC_Stop_DMA(&hadc1);     // 先停 DMA 传输
+    // HAL_ADC_Stop(&hadc1);         // 再停 ADC 转换
+    // __HAL_RCC_ADC1_CLK_DISABLE(); // 最后关时钟
+    //  开
+    // __HAL_RCC_ADC1_CLK_ENABLE();
+    // MX_ADC1_Init();
+    // HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, len);
+    // HAL_ADCEx_Calibration_Start(&hadc1);
+    //     // 关（以 TIM3 为例，2/4 同理）
+    // HAL_TIM_Base_Stop_IT(&htim3);
+    // __HAL_TIM_DISABLE(&htim3);
+    // __HAL_RCC_TIM3_CLK_DISABLE();
+    // // 开
+    // __HAL_RCC_TIM3_CLK_ENABLE();
+    // MX_TIM3_Init();
+    // HAL_TIM_Base_Start_IT(&htim3);
+    // 关（逐个 Stream/Channel 停）
+    // HAL_DMA_Abort(&hdma_usart1_rx);
+    // HAL_DMA_Abort(&hdma_adc1);
+    // // 然后关 DMA 时钟
+    // __HAL_RCC_DMA1_CLK_DISABLE();
+    // // 开
+    // __HAL_RCC_DMA1_CLK_ENABLE();
+    // // DMA 不用重新 Init，但 Stream/Channel 配置要重新设：
+    // __HAL_LINKDMA(&huart1, hdmarx, hdma_usart1_rx);
+    // __HAL_LINKDMA(&hadc1, DMA_Handle, hdma_adc1);
+    // 六、一个容易漏的点：DMA 中断标志
+    // Stop 唤醒后 DMA 中断标志可能残留，导致一恢复就进 DMA 中断。建议清一下：
+    // __HAL_DMA_CLEAR_FLAG(&hdma_usart1_rx, DMA_FLAG_TCIFx);
+    // __HAL_DMA_CLEAR_FLAG(&hdma_adc1, DMA_FLAG_TCIFx);
+    //     // 七.快速检查
+    //     进 Stop 前逐条过：
+    // [ ] 所有 HAL_xxx_Stop_DMA() 调了
+    // [ ] 所有 HAL_TIM_xxx_Stop() 调了
+    // [ ] HAL_ADC_Stop() 调了
+    // [ ] 所有外设时钟 _CLK_DISABLE() 调了
+    // [ ] RX 切 EXTI
+    // [ ] GPIO 未用脚模拟输入
+    // [ ] HAL_SuspendTick()
+    // 唤醒后逐条过：
+    // [ ] SystemClock_ReConfig() 第一
+    // [ ] 外设时钟 _CLK_ENABLE()
+    // [ ] MX_xxx_Init() 重初始化
+    // [ ] 重启工作模式（DMA 接收、TIM 启动、ADC 启动）
+    // [ ] RX 切回 UART 复用
+    // [ ] HAL_ResumeTick()
+
+
+    HAL_ADC_Start(&hadc1); // 如果原来是一直采的
+    // 定时器
+    MX_TIM2_Init();
+    MX_TIM3_Init();
+    MX_TIM4_Init();
+
+    /* ===== 3. 重启各自的工作模式 ===== */
+    // UART DMA 接收
+    HAL_UART_Receive_DMA(&huart1, mb_rx_buf, MB_BUF_LEN);
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+
+    // ADC DMA 连续采样
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc_buf, ADC_BUF_LEN);
+
+    // TIM 重启
+    HAL_TIM_Base_Start_IT(&htim3); // 比如 TIM3 做 Modbus 3.5T 守护
+    // HAL_TIM_Base_Start_IT(&htim2);
+    // HAL_TIM_Base_Start_IT(&htim4);
+    // 如果有 PWM：
+    // HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+
+    /* ===== 4. RX 从 EXTI 切回 UART 复用 ===== */
+    UART_RX_To_UART();
+
+    /* ===== 5. RS485 恢复接收态 ===== */
+    RS485_SetRxMode();
+}
+
+void Enter_Stop_Mode(void)
+{
+    /* 1. 睡前检查 */
+    if (!CanEnterStop())
+        return;
+
+    /* 2. 关外设 */
+    Periph_Stop_Shutdown();
+
+    /* 3. 挂起 SysTick */
+    HAL_SuspendTick();
+
+    /* 4. 进 Stop */
+    HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+
+    /* ===== 唤醒后 ===== */
+
+    /* 5. 恢复时钟（SystemClock_ReConfig 里已经开了 HSE+PLL）*/
+    SystemClock_ReConfig();
+
+    /* 6. 恢复外设 */
+    Periph_Stop_Restore();
+
+    /* 7. 恢复 SysTick */
+    HAL_ResumeTick();
+
+    last_wake_tick = HAL_GetTick();
+}
+
+#endif
+
+#if configUSE_TICK_HOOK
+void vApplicationTickHook(void)
+{
+    // __WFI();
+    /* 每个 Tick 调用一次，ISR 上下文，尽量少做处理 */
+}
+#endif // 新增
+
+#if configUSE_IDLE_HOOK
+void vApplicationIdleHook(void)
+{
+    // __WFI();
+    /* 空闲任务调用，不能调用会阻塞的 API */
+}
+#endif // 新增

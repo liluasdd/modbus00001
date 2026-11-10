@@ -55,7 +55,8 @@
 #define configUSE_MUTEXES             1 /*互斥量设置*/
 #define configUSE_RECURSIVE_MUTEXS    0 /*递归互斥量设置*/
 #define configUSE_COUNTING_SEMAPHORES 0 /*计数信号量设置*/
-
+#define configUSE_TICKLESS_IDLE              0/*无Tick空闲模式*/
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 5  /*预期空闲时间，单位：ms*/
 
 
 #define configTICK_RATE_HZ 1000                        /* 定义系统时钟节拍频率, 单位: Hz, 无默认需定义 */

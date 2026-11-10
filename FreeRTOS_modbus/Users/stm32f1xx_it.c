@@ -355,21 +355,8 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 1 */
 }
 
-#if configUSE_TICK_HOOK
-void vApplicationTickHook(void)
-{
-  // __WFI();
-  /* 每个 Tick 调用一次，ISR 上下文，尽量少做处理 */
-}
-#endif // 新增
 
-#if configUSE_IDLE_HOOK
-void vApplicationIdleHook(void)
-{
-  // __WFI();
-  /* 空闲任务调用，不能调用会阻塞的 API */
-}
-#endif // 新增
+
 
 /* USER CODE BEGIN 1 */
 
