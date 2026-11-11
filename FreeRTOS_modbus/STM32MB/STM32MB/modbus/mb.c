@@ -189,7 +189,7 @@ eMBInit(eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMB
             eStatus = MB_EINVAL;
         }
 
-        if (eStatus == MB_ENOERR)
+        if (eStatus == MB_ENOERR) /* 初始化成功 */
         {
             if (!xMBPortEventInit())
             {
@@ -420,7 +420,7 @@ eMBPoll(void)
                 {
                     vMBPortTimersDelay(MB_ASCII_TIMEOUT_WAIT_BEFORE_SEND_MS); // 等待ASCII模式发送超时时间
                 }
-#endif 
+#endif
 
                 eStatus = peMBFrameSendCur(ucMBAddress, ucMBFrame, usLength); // 发送Modbus数据帧当前帧
             }

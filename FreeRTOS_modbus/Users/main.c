@@ -182,34 +182,15 @@ int main(void)
     /*  Modbus_RTU从站初始化
     MB_SAMPLE_TEST_SLAVE_ADDR 从站地址为0x01    MB_MASTER_USARTx 串口2   MB_MASTER_USART_BAUDRATE 波特率
     MB_PAR_NONE 校验选择    MB_PAR_NONE 无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验 */
-    // eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
-    // eMBEnable();/* 启用Modbus_RTU从站 */
+    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
+    eMBEnable();                     /* 启用Modbus_RTU从站 */
     LCD_Init();                      // 初始化LCD
     tp_dev.touchtype |= USE_TP_TYPE; //// 电屏容触摸&电阻触摸
-    // LCD_Display_Dir(USE_LCM_DIR);	幕方向
-    LCD_Display_Dir(1);  // 屏幕方向
+
+    LCD_Display_Dir(1);  // 屏幕方向    // LCD_Display_Dir(USE_LCM_DIR);	幕方向
     POINT_COLOR = WHITE; // 设置字体为白色
     BACK_COLOR = BLACK;  // 背景色
     LCD_Clear(BLACK);    // 清屏
-    // Show_Str(10, 0, "AD1", 16, 0);
-    //     main_test("IC:ST7789"); // 测试主页
-    // //    	Color_Test();			// 纯色测试
-    // // Read_Test();			// 读颜色测试
-    // //    	FillRec_Test(); // 图形测试
-    // //    	English_Font_test();	// 英文测试
-    // Chinese_Font_test(); // 中文测试
-    // // Pic_test(); // 图片测试
-    // // Switch_test();			// 显示开关测试
-    // //	Rotate_Test();			// 旋转测试
-
-    // // 不需要触摸请注释掉以下代码
-    // LCD_Display_Dir(0); // 屏幕切换为竖屏状态
-    // tp_dev.init();      // 触摸屏初始化
-    // POINT_COLOR = RED;  // 设置字体为红色
-
-    // // Load_Drow_Dialog();
-    // // if (tp_dev.touchtype & 0X80)
-    // ctp_test(); // 电容屏测试
 
 #if DEBUG_UART_ENABLE
     uart_init(115200);               // 初始化串口1
@@ -217,50 +198,12 @@ int main(void)
     HAL_Delay(400);                  //  延时400ms
 #endif
     HAL_Delay(200); //  延时200ms    // delay_ms(3000);
-    // Show_Str(10, 20, "AD2", 16, 0);
-
     /* Init scheduler */
     freertos_test(); // 测试FreeRTOS
 
     vTaskStartScheduler(); // 启动任务调度器
-
-    // osKernelInitialize();  // 初始化FreeRTOS
-    // /* Call init function for freertos objects (in cmsis_os2.c) */
-    // MX_FREERTOS_Init(); // 初始化FreeRTOS对象
-
-    // /* Start scheduler */
-    // osKernelStart(); // 启动任务
-
     while (1)
     {
-        //     if (g_b_task_jtim == 1)
-        //     {
-        //         g_b_task_jtim = 0;
-        //         key_scan();
-        //         if (g_b_2s_jtim == 1)
-        //         {
-        //             g_b_2s_jtim = 0;
-        //             // if (R_Task != D_Task2)
-        //             //     return;
-        //             Led_scan();
-        //             ADC_DMA_scan();
-        //         }
-        //         if (R_Task < 0xF0) // 任务循环// if (R_Task < 0xC0) // 任务循环
-        //             R_Task++;
-        //     }
-
-        //     // /////* 1秒轮询一次Modbus从站，处理数据交换 */
-        //     // // HAL_Delay(1000);
-        //     /* 发送超时故障处理 */
-        //     // eMBsend_Error();
-        //     // /* 轮询Modbus从站 */
-        //     // eMBPoll();
-        // }
-        // if (g_b_100ms_jtim == 1)
-        // {
-        //     g_b_100ms_jtim = 0;
-        //     adc_value = Read_ADC(PT100_ADC, 10);
-        //     usSRegHoldBuf[1] = adc_value;
     }
 }
 

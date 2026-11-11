@@ -87,12 +87,12 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
     {
         eStatus = MB_ENOREG; // 寄存器地址超出范围
     }
-#if DEBUG_UART_ENABLE
-    printf("hello %d\r\n", pusRegInputBuf[iRegIndex - 1]); // usSRegInBuf[S_REG_INPUT_NREGS]
-#endif
+// #if DEBUG_UART_ENABLE
+//     printf("hello %d\r\n", pusRegInputBuf[iRegIndex - 1]); // usSRegInBuf[S_REG_INPUT_NREGS]
+// #endif
     return eStatus;
 }
-
+#if 1
 /**
  * Modbus slave holding register callback function.
  * @param pucRegBuffer holding register buffer
@@ -101,8 +101,7 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
  * @param eMode read or write
  * @return result
  */
-
-/* Modbus保持寄存器回调函数
+/* Modbus保持寄存器回调函数  原版
 0x03 读取保持寄存器值      MB_REG_READ   MB_FUNC_READ_HOLDING_ENABLED
 0x06 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_SINGLE_HOLDING
 0x10 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_MULTIPLE_HOLDING
@@ -120,12 +119,10 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
     USHORT REG_HOLDING_START;
     USHORT REG_HOLDING_NREGS;
     USHORT usRegHoldStart;
-
     pusRegHoldingBuf = usSRegHoldBuf;
     REG_HOLDING_START = S_REG_HOLDING_START;
     REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
     usRegHoldStart = usSRegHoldStart;
-
     /* it already plus one in modbus function method. */
     usAddress--;
     if ((usAddress >= REG_HOLDING_START) && (usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS))
@@ -143,7 +140,6 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
                 usNRegs--;
             }
             break;
-
         /* write current register values with new values from the protocol stack. */
         case MB_REG_WRITE: // 写入保持寄存器值
             while (usNRegs > 0)
@@ -161,12 +157,13 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
         eStatus = MB_ENOREG;
     }
 
-#if DEBUG_UART_ENABLE
-    printf("0x03,0x06,0x10=16. %d\r\n", pusRegHoldingBuf[iRegIndex - 1]);
-#endif
+// #if DEBUG_UART_ENABLE
+//     printf("0x03,0x06,0x10=16. %d\r\n", pusRegHoldingBuf[iRegIndex - 1]);
+// #endif
 
      return eStatus;
 }
+#endif
 
 /**
  * Modbus slave coils callback function.

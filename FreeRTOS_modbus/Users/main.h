@@ -26,6 +26,7 @@
 #include "mb.h"
 #include "mbport.h"
 #include "user_mb_app.h"
+#include "APP_modbus.h"
 
 //////lcd
 #include "lcd.h"

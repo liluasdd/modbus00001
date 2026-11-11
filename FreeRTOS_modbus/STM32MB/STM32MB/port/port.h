@@ -26,6 +26,8 @@
 #include <inttypes.h>
 #include "stm32f1xx_hal.h"
 #include "sys.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #define INLINE inline
 #define PR_BEGIN_EXTERN_C \
@@ -33,13 +35,9 @@
     {
 #define PR_END_EXTERN_C }
 
-// 临界区
-#define ENTER_CRITICAL_SECTION() __set_PRIMASK(1) // 进入临界区
-#define EXIT_CRITICAL_SECTION() __set_PRIMASK(0)  // 退出临界区
-
 // freertos临界区
-// #define ENTER_CRITICAL_SECTION( )   taskENTER_CRITICAL() 	 //进入临界区
-// #define EXIT_CRITICAL_SECTION( )    taskEXIT_CRITICAL()   //退出临界区
+#define ENTER_CRITICAL_SECTION() taskENTER_CRITICAL() // 进入临界区
+#define EXIT_CRITICAL_SECTION() taskEXIT_CRITICAL()   // 退出临界区
 
 // 中断
 // #define ENTER_CRITICAL_SECTION( )   interruptDisable() 	 //禁用中断
@@ -47,7 +45,7 @@
 
 typedef uint8_t BOOL;
 
-typedef unsigned char UCHAR;  //????????
+typedef unsigned char UCHAR; //????????
 typedef char CHAR;
 
 typedef uint16_t USHORT;

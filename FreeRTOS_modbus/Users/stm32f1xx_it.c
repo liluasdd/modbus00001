@@ -66,6 +66,7 @@ extern void prvvTIMERExpiredISR(void);
 u8 s_tim_20ms = 0;
 // u16 s_tim_100ms = 1;
 u8 s_tim_100ms = 1;
+u8 s_tim_500ms = 1;
 u8 s_tim_2s = 0;
 volatile u8 g_485_send_tim = 0;
 volatile u8 adc_done_flag = 0;
@@ -209,7 +210,7 @@ void TIM2_IRQHandler(void)
 {
   if (TIM2->SR & TIM_SR_UIF) // 10ms中断
   {
-    TIM2->SR = ~TIM_SR_UIF;
+    TIM2->SR = (uint16_t)~TIM_SR_UIF; // 清标志
 
     s_tim_20ms++; // 10ms
     s_tim_100ms++;
@@ -236,6 +237,11 @@ void TIM2_IRQHandler(void)
     {
       s_tim_100ms = 0;
       s_tim_2s++;
+      if (s_tim_500ms < 10)
+      {
+        s_tim_500ms++;
+      }
+
       g_b_100ms_jtim = 1;
 
       if (s_tim_2s >= 20)
@@ -249,13 +255,9 @@ void TIM2_IRQHandler(void)
 }
 void TIM3_IRQHandler(void)
 {
-  // if (TIM3->SR & (1 << 0)) // 定时器中断 100us一次
-  // {
-  //   TIM3->SR &= ~(1 << 0); // 清除中断标志位
-  // HAL_TIM_IRQHandler(&htim3);// 处理定时器中断
   if (TIM3->SR & TIM_SR_UIF) // 用宏，别用 (1<<0)
   {
-    TIM3->SR = ~TIM_SR_UIF; // 清标志，写法更标准
+    TIM3->SR = (uint16_t)~TIM_SR_UIF; // 清标志
   }
 }
 
@@ -268,13 +270,10 @@ extern ULONG usTimerT35_50us;
  */
 void TIM4_IRQHandler(void)
 {
-  //  if (htim->Instance == TIM4)
-  // if (TIM4->SR & (1 << 0)) // 定时器中断  50/100us一次
-  // {
-  //   TIM4->SR &= ~(1 << 0); // 清除中断标志位
   if (TIM4->SR & TIM_SR_UIF) // 用宏，别用 (1<<0)
   {
-    TIM4->SR = ~TIM_SR_UIF; // 清标志，写法更标准
+    TIM4->SR = (uint16_t)~TIM_SR_UIF; // 清标志
+    // __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE); // 清除更新标志位
 
     if (eCurrentTimerState == usTimerT15_50us)
     {
@@ -291,8 +290,8 @@ void TIM4_IRQHandler(void)
       __HAL_TIM_SET_COUNTER(&htim4, 0);
       __HAL_TIM_SET_AUTORELOAD(&htim4, (usTimerT35_50us - usTimerT15_50us) - 1);
       __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE);
-      // HAL_TIM_Base_Start_IT(&htim4);
-      // vMBPortTimersEnable();
+      // 5. 重新启动
+      __HAL_TIM_ENABLE(&htim4);
     }
     else if (eCurrentTimerState == usTimerT35_50us)
     {
@@ -300,7 +299,8 @@ void TIM4_IRQHandler(void)
       /* 说明：总线彻底安静了，一帧接收完毕 */
       eCurrentTimerState = usTimerT15_50us; // 状态机切换到 T1.5
 
-      HAL_TIM_Base_Stop_IT(&htim4); // 停掉定时器，防止反复进
+      __HAL_TIM_DISABLE(&htim4);                   // 直接写 CR1 寄存器，关闭计数器
+      __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // 直接写 DIER 寄存器，关闭中断
 
       /* 通知 FreeModbus 协议栈：产生 EV_FRAME_RECEIVED 事件 */
       prvvTIMERExpiredISR();
@@ -313,6 +313,61 @@ void TIM4_IRQHandler(void)
  */
 void USART2_IRQHandler(void)
 {
+#if freertos_modbus
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  // 1. 处理溢出错误（不处理的话串口会卡死）
+  if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET)
+  {
+    __HAL_UART_CLEAR_OREFLAG(&huart2); // 清除 ORE 标志（先读 SR 再读 DR）
+    // 发生溢出说明丢数据了，直接丢弃当前帧，等待下一帧
+    Modbus_ResetRx(); // Modbus 复位函数
+  }
+
+  // 2. 接收中断
+  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET &&
+      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET)
+  {
+    if (g_b_485_send_tick)
+    {
+      (void)huart2.Instance->DR; // 发送中：读 DR 清 RXNE，数据丢弃
+    }
+    else
+    {
+      // 交给 FreeModbus 处理。
+      // 注意：内部的 xMBRTUReceiveFSM 会读走 DR（也就是调用了你的 GetByte）
+      // 并且在收完一帧后调用 xQueueSendFromISR 产生 EV_FRAME_RECEIVED 事件
+      prvvUARTRxISR();
+    }
+  }
+
+  // 3. 发送空（TXE）中断
+  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET &&
+      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) != RESET)
+  {
+    // 注意：通常不用手动清 TXE，因为向 DR 写数据会自动清 TXE
+    prvvUARTTxReadyISR();
+  }
+
+  // 4. 发送完成（TC）中断
+  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
+      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
+  {
+    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // 清 TC 标志
+    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // 关 TC 中断
+
+    RS485_DE_LOW_OFF; // 切回接收
+    g_b_485_send_Error = 0;
+    g_b_485_send_tick = 0;
+
+    /* 确保接收中断是打开的，准备接收主站下一帧 */
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+  }
+
+  ///* 不能在这里调用 HAL_UART_IRQHandler(&huart2);  我已经在上面完全接管了硬件！*/
+  /* USER CODE END USART2_IRQn 1 */
+
+#else
   /* USER CODE BEGIN USART2_IRQn 1 */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
   {
@@ -353,10 +408,8 @@ void USART2_IRQHandler(void)
   // HAL_NVIC_ClearPendingIRQ(USART2_IRQn);//不屏蔽，可能丢字节：清除了合法的新 pending 请求
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE END USART2_IRQn 1 */
+#endif
 }
-
-
-
 
 /* USER CODE BEGIN 1 */
 

@@ -4,13 +4,13 @@
  * @author  STMicroelectronics
  * @version V1.0
  * @date    2020-xx-xx
- * @brief   ä¸²å£èŒƒä¾‹
+ * @brief   ´®¿Ú·¶Àı
  ******************************************************************************
  * @attention
  *
- * å®éªŒå¹³å°:é‡ç«  STM32 F103 å¼€å‘æ¿
- * è®ºå›    :http://www.firebbs.cn
- * æ·˜å®    :http://fire-stm32.taobao.com
+ * ÊµÑéÆ½Ì¨:Ò°»ğ  STM32 F103 ¿ª·¢°å
+ * ÂÛÌ³    :http://www.firebbs.cn
+ * ÌÔ±¦    :http://fire-stm32.taobao.com
  *
  ******************************************************************************
  */
@@ -22,13 +22,13 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /**
- * @brief  DEBUG_USART GPIO é…ç½®,å·¥ä½œæ¨¡å¼é…ç½®ã€‚115200 8-N-1
- * @param  æ— 
- * @retval æ— 
+ * @brief  DEBUG_USART GPIO ÅäÖÃ,¹¤×÷Ä£Ê½ÅäÖÃ¡£115200 8-N-1
+ * @param  ÎŞ
+ * @retval ÎŞ
  */
 void MX_USART2_UART_Init(uint8_t ucPORT, uint32_t ulBaudRate, uint8_t eParity)
 {
-  if (ucPORT != 2) // å¿…é¡»è®¾ç½®ä¸ºä¸²å£2
+  if (ucPORT != 2) // ±ØĞëÉèÖÃÎª´®¿Ú2
     return;
   huart2.Instance = DEBUG_USART;
   huart2.Init.BaudRate = ulBaudRate;
@@ -43,36 +43,38 @@ void MX_USART2_UART_Init(uint8_t ucPORT, uint32_t ulBaudRate, uint8_t eParity)
     while (1)
       ;
   }
+  HAL_NVIC_SetPriority(USART2_IRQn, 6, 0); // Í¬ÑùÒª >= 6
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 /**
- * @brief UART MSP åˆå§‹åŒ–
+ * @brief UART MSP ³õÊ¼»¯
  * @param huart: UART handle
- * @retval æ— 
+ * @retval ÎŞ
  */
 void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  if (uartHandle->Instance == USART1) /* å¦‚æœæ˜¯ä¸²å£1ï¼Œè¿›è¡Œä¸²å£1 MSPåˆå§‹åŒ– */
+  if (uartHandle->Instance == USART1) /* Èç¹ûÊÇ´®¿Ú1£¬½øĞĞ´®¿Ú1 MSP³õÊ¼»¯ */
   {
-    __HAL_RCC_GPIOA_CLK_ENABLE();  /* ä½¿èƒ½ä¸²å£TXè„šæ—¶é’Ÿ */
-    __HAL_RCC_USART1_CLK_ENABLE(); /* ä½¿èƒ½ä¸²å£æ—¶é’Ÿ */
+    __HAL_RCC_GPIOA_CLK_ENABLE();  /* Ê¹ÄÜ´®¿ÚTX½ÅÊ±ÖÓ */
+    __HAL_RCC_USART1_CLK_ENABLE(); /* Ê¹ÄÜ´®¿ÚÊ±ÖÓ */
 
-    GPIO_InitStruct.Pin = GPIO_PIN_9;             /* ä¸²å£å‘é€å¼•è„šå· */
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;       /* å¤ç”¨æ¨æŒ½è¾“å‡º */
-    GPIO_InitStruct.Pull = GPIO_PULLUP;           /* ä¸Šæ‹‰ */
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH; /* IOé€Ÿåº¦è®¾ç½®ä¸ºé«˜é€Ÿ */
+    GPIO_InitStruct.Pin = GPIO_PIN_9;             /* ´®¿Ú·¢ËÍÒı½ÅºÅ */
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;       /* ¸´ÓÃÍÆÍìÊä³ö */
+    GPIO_InitStruct.Pull = GPIO_PULLUP;           /* ÉÏÀ­ */
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH; /* IOËÙ¶ÈÉèÖÃÎª¸ßËÙ */
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_10; /* ä¸²å£RXè„š æ¨¡å¼è®¾ç½® */
+    GPIO_InitStruct.Pin = GPIO_PIN_10; /* ´®¿ÚRX½Å Ä£Ê½ÉèÖÃ */
     GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); /* ä¸²å£RXè„š å¿…é¡»è®¾ç½®æˆè¾“å…¥æ¨¡å¼ */
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); /* ´®¿ÚRX½Å ±ØĞëÉèÖÃ³ÉÊäÈëÄ£Ê½ */
 
-    HAL_NVIC_EnableIRQ(USART1_IRQn);         /* ä½¿èƒ½USART1ä¸­æ–­é€šé“ */
-    HAL_NVIC_SetPriority(USART1_IRQn, 3, 3); /* ç»„2ï¼Œæœ€ä½ä¼˜å…ˆçº§:æŠ¢å ä¼˜å…ˆçº§3ï¼Œå­ä¼˜å…ˆçº§3 */
+    HAL_NVIC_EnableIRQ(USART1_IRQn);         /* Ê¹ÄÜUSART1ÖĞ¶ÏÍ¨µÀ */
+    HAL_NVIC_SetPriority(USART1_IRQn, 3, 3); /* ×é2£¬×îµÍÓÅÏÈ¼¶:ÇÀÕ¼ÓÅÏÈ¼¶3£¬×ÓÓÅÏÈ¼¶3 */
 
-    __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* ä½¿èƒ½UART1æ¥æ”¶ä¸­æ–­ */
-    __HAL_UART_ENABLE_IT(uartHandle, UART_IT_IDLE); /* ä½¿èƒ½UART1æ€»çº¿ç©ºé—²ä¸­æ–­ */
+    __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* Ê¹ÄÜUART1½ÓÊÕÖĞ¶Ï */
+    __HAL_UART_ENABLE_IT(uartHandle, UART_IT_IDLE); /* Ê¹ÄÜUART1×ÜÏß¿ÕÏĞÖĞ¶Ï */
   }
 
   if (uartHandle->Instance == USART2)
@@ -88,7 +90,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    /* é…ç½®Txå¼•è„šä¸ºå¤ç”¨åŠŸèƒ½  */
+    /* ÅäÖÃTxÒı½ÅÎª¸´ÓÃ¹¦ÄÜ  */
     GPIO_InitStruct.Pin = DEBUG_USART_TX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -99,12 +101,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
     HAL_GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &GPIO_InitStruct);
 
-    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* ä½¿èƒ½UART2æ¥æ”¶ä¸­æ–­ */
-    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_IDLE); /* ä½¿èƒ½UART2æ€»çº¿ç©ºé—²ä¸­æ–­ */
-    
+    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* Ê¹ÄÜUART2½ÓÊÕÖĞ¶Ï */
+    // __HAL_UART_ENABLE_IT(uartHandle, UART_IT_IDLE); /* Ê¹ÄÜUART2×ÜÏß¿ÕÏĞÖĞ¶Ï */
+
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(DEBUG_USART_IRQ, 0, 0); // æŠ¢å ä¼˜å…ˆçº§0ï¼Œå­ä¼˜å…ˆçº§0
-    HAL_NVIC_EnableIRQ(DEBUG_USART_IRQ);         // ä½¿èƒ½USART2ä¸­æ–­é€šé“
+    HAL_NVIC_SetPriority(DEBUG_USART_IRQ, 0, 0); // ÇÀÕ¼ÓÅÏÈ¼¶0£¬×ÓÓÅÏÈ¼¶0
+    HAL_NVIC_EnableIRQ(DEBUG_USART_IRQ);         // Ê¹ÄÜUSART2ÖĞ¶ÏÍ¨µÀ
   }
 }
 
@@ -127,7 +129,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
   }
 }
 
-// ä¸²å£2å‘é€ä¸€ä¸ªå­—ç¬¦ä¸²
+// ´®¿Ú2·¢ËÍÒ»¸ö×Ö·û´®
 void usart_send_string(uint8_t *s)
 {
   while (*s != NULL)
@@ -137,7 +139,7 @@ void usart_send_string(uint8_t *s)
   }
 }
 
-// 485æ”¶å‘çŠ¶æ€åˆ‡æ¢ç®¡è„š
+// 485ÊÕ·¢×´Ì¬ÇĞ»»¹Ü½Å
 void modbus_master_control_init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};

@@ -43,30 +43,38 @@
 #define xPortPendSVHandler PendSV_Handler /*PendSV_Handler函数*/
 #define configUSE_QUEUE_SETS 1            /*队列设置*/
 // 队列注册表大小（用于调试时给队列命名查看，不用调试可设为 0 省内存）
-#define configQUEUE_REGISTRY_SIZE 10          /*队列注册表大小*/
-#define INCLUDE_xTaskGetSchedulerState 1      /*获取任务调度器状态*/
-#define INCLUDE_uxTaskGetStackHighWaterMark 1 /*获取任务栈水位*/
-#define configRECORD_STACK_HIGH_ADDRESS 1     /*记录栈顶高地址（方便调试器可视化显示，可选）*/
-#define INCLUDE_xTaskAbortDelay 0             /*中断延时强制任务执行*/
-#define configUSE_MALLOC_FAILED_HOOK 0        /*malloc失败钩子*/
-#define configCHECK_FOR_STACK_OVERFLOW 0      /*检查堆栈溢出*/
-#define configUSE_IDLE_HOOK 0                 /*空闲钩子 */
-#define configUSE_TICK_HOOK 0                 /*Tick钩子 */
-#define configUSE_MUTEXES             1 /*互斥量设置*/
-#define configUSE_RECURSIVE_MUTEXS    0 /*递归互斥量设置*/
-#define configUSE_COUNTING_SEMAPHORES 0 /*计数信号量设置*/
-#define configUSE_TICKLESS_IDLE              0/*无Tick空闲模式*/
-#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 5  /*预期空闲时间，单位：ms*/
-
+#define configQUEUE_REGISTRY_SIZE 10            /*队列注册表大小*/
+#define INCLUDE_xTaskGetSchedulerState 1        /*获取任务调度器状态*/
+#define INCLUDE_uxTaskGetStackHighWaterMark 1   /*获取任务栈水位*/
+#define configRECORD_STACK_HIGH_ADDRESS 1       /*记录栈顶高地址（方便调试器可视化显示，可选）*/
+#define INCLUDE_xTaskAbortDelay 0               /*中断延时强制任务执行*/
+#define configUSE_MALLOC_FAILED_HOOK 0          /*malloc失败钩子*/
+#define configCHECK_FOR_STACK_OVERFLOW 0        /*检查堆栈溢出*/
+#define configUSE_IDLE_HOOK 0                   /*空闲钩子 */
+#define configUSE_TICK_HOOK 0                   /*Tick钩子 */
+#define configUSE_MUTEXES 1                     /*互斥量设置*/
+#define configUSE_RECURSIVE_MUTEXS 0            /*递归互斥量设置*/
+#define configUSE_COUNTING_SEMAPHORES 0         /*计数信号量设置*/
+#define configUSE_TICKLESS_IDLE 0               /*无Tick空闲模式*/
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 5 /*预期空闲时间，单位：ms*/
+// #define configASSERT(x) do{ if ((x) == 0) { taskDISABLE_INTERRUPTS();for (;;);}} while (0)
+/* The highest interrupt priority that can be used by any interrupt service
+routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+PRIORITY THAN THIS! (higher priorities are lower numeric values. */
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5  // 5 /*最大系统调用中断优先级*/
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY 15/* 2. 最低优先级，留给 SysTick 和 PendSV，必须是 15 */
+#define configPRIO_BITS 4/* 1. 芯片硬件只支持 4 位优先级（必填） */
+#define configUSE_STATS_FORMATTING_FUNCTIONS    1 /*使用统计格式化函数*/
 
 #define configTICK_RATE_HZ 1000                        /* 定义系统时钟节拍频率, 单位: Hz, 无默认需定义 */
 #define configUSE_PREEMPTION 1                         /*抢占式任务 */
 #define configCPU_CLOCK_HZ ((unsigned long)72000000)   /*CPU时钟频率*/
 #define configMAX_PRIORITIES (10)                      /*最大优先级*/
 #define configMINIMAL_STACK_SIZE ((unsigned short)128) /*最小栈大小*/
-#define configTOTAL_HEAP_SIZE ((size_t)(7 * 1024))     /*总堆大小*/
+#define configTOTAL_HEAP_SIZE ((size_t)(8 * 1024))     /*总堆大小*/
 #define configMAX_TASK_NAME_LEN (16)                   /*任务名称最大长度*/
-#define configUSE_TRACE_FACILITY 0                     /*跟踪设施 */
+#define configUSE_TRACE_FACILITY 1                     /*跟踪设施 */
 #define configUSE_16_BIT_TICKS 0                       /*16位Tick */
 #define configIDLE_SHOULD_YIELD 1                      /*空闲任务是否应该让出CPU */
 
@@ -81,13 +89,17 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil 1       /*绝对时间周期延时 */
 #define INCLUDE_vTaskDelay 1            /*任务中正常延时 */
 
-/* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
-(lowest) to 0 (1?) (highest). */
-#define configKERNEL_INTERRUPT_PRIORITY 255 /*配置使用内核中断优先级*/
-/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
-See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-/* 配置使用最大系统调用中断优先级 */ /* equivalent to 0xb0, or priority 11. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 191
+// /* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
+// (lowest) to 0 (1?) (highest). */
+// #define configKERNEL_INTERRUPT_PRIORITY 255 /*配置使用内核中断优先级*/
+// /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+// See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+// /* 配置使用最大系统调用中断优先级 */ /* equivalent to 0xb0, or priority 11. */
+// #define configMAX_SYSCALL_INTERRUPT_PRIORITY 191
+
+/* 4. 根据上面自动算出的寄存器值，千万不要手动写死数字 */
+#define configKERNEL_INTERRUPT_PRIORITY         ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
 /* This is the value being used as per the ST library which permits 16
 priority values, 0 to 15.  This must correspond to the

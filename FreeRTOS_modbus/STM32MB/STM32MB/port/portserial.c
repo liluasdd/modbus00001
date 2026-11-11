@@ -68,16 +68,29 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	/* 2. 只管发送中断的开关和 485 发送方向的开启 */
 	if (xTxEnable)
 	{
+		RS485_DE_HIGH_ON; /* 485 切到发送态 */
+		g_b_485_send_tick = 1;
+		g_485_send_tim = 0;
+		// delay_us(6);// 等待收发器稳定
+		/* 等 GPIO 写完成 + 收发器切换，约 0.5~1us @72MHz */
+		for (volatile uint8_t i = 0; i < 20; i++)
+		{
+			__NOP();
+		}
+		/* 确保新一次发送启动时 TC 是关的，避免残留 TC 标志误触发 */
+		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
+
 		/* 准备发送：打开 TXE 中断 */
 		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
 
-		/* 485 切到发送态 */
-		RS485_DE_HIGH_ON;
-		g_b_485_send_tick = 1;
-		g_485_send_tim = 0;
-
-		/* 等待收发器切换稳定（放在拉高之后） */
-		delay_us(6);
+		//  //  /* 准备发送：打开 TXE 中断 */
+		//  //  __HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
+		//  //  /* 485 切到发送态 */
+		//  //  RS485_DE_HIGH_ON;
+		//  //  g_b_485_send_tick = 1;
+		//  //  g_485_send_tim = 0;
+		//  //  /* 等待收发器切换稳定（放在拉高之后） */
+		//  //  delay_us(6);
 	}
 	else
 	{
@@ -145,6 +158,22 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	}
 #endif
 }
+
+#if freertos_modbus
+// 改为直接写 DR 寄存器
+BOOL xMBPortSerialPutByte(CHAR ucByte)
+{
+	huart2.Instance->DR = (uint8_t)ucByte;
+	return TRUE;
+}
+// 改为直接读 DR 寄存器
+BOOL xMBPortSerialGetByte(CHAR *pucByte)
+{
+	*pucByte = (CHAR)(huart2.Instance->DR & 0xFF);
+	return TRUE;
+}
+
+#else
 // 发送一个字节到串口2
 BOOL xMBPortSerialPutByte(CHAR ucByte)
 {
@@ -169,6 +198,9 @@ BOOL xMBPortSerialGetByte(CHAR *pucByte)
 	else
 		return TRUE;
 }
+
+#endif
+
 /*
  * 发送中断服务函数
  * @param ucByte 发送的字节
@@ -185,23 +217,3 @@ void prvvUARTRxISR(void) // 接收中断服务函数
 {
 	pxMBFrameCBByteReceived(); // 接收中断服务函数回调
 }
-
-/*
- * 串口2中断服务函数
- * @param ucByte 接收的字节
- */
-// void USART2_IRQHandler(void) // 串口2中断服务函数
-// {
-// 	if (usart2->SR & (1 << 5)) // 接收中断
-// 	{
-// 		prvvUARTRxISR(); // 接收中断服务函数
-// 	}
-// 	else if (usart2->SR & (1 << 7)) // 发送中断
-// 	{
-// 		prvvUARTTxReadyISR(); // 发送中断服务函数
-// 	}
-// 	else if (usart2->SR & (1 << 3)) // ORRE中断
-// 	{
-// 		u8 ore = usart2->DR; // 获取ORE值
-// 	}
-// }

@@ -62,12 +62,6 @@
 ..\..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 ..\..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 ..\..\output\main.o: ..\..\Drivers\SYSTEM\sys\sys.h
-..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
-..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
-..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
-..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
-..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
-..\..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\main.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
 ..\..\output\main.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
 ..\..\output\main.o: ..\..\Free_ROTS_2024\inc\projdefs.h
@@ -75,6 +69,14 @@
 ..\..\output\main.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
 ..\..\output\main.o: ..\..\Free_ROTS_2024\port\portmacro.h
 ..\..\output\main.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\main.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\main.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
+..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
+..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
+..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
+..\..\output\main.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
+..\..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\main.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\main.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\main.o: ..\..\software\inc\gpio.h
@@ -83,6 +85,7 @@
 ..\..\output\main.o: ..\..\software\inc\adc.h
 ..\..\output\main.o: ..\..\software\inc\key.h
 ..\..\output\main.o: ..\..\software\inc\tim.h
+..\..\output\main.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\main.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\main.o: ..\..\software\app_tft_lcd\touch.h
 ..\..\output\main.o: ..\..\software\app_tft_lcd\CTP.h

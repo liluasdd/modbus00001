@@ -14,3 +14,4 @@
 ..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\timers.h
 ..\..\output\tasks.o: ..\..\Free_ROTS_2024\inc\stack_macros.h
+..\..\output\tasks.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

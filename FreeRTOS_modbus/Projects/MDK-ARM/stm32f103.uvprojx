@@ -753,6 +753,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\software\inc\usart.h</FilePath>
             </File>
+            <File>
+              <FileName>APP_modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\software\app_src\APP_modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

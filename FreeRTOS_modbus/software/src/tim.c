@@ -55,10 +55,14 @@ void MX_TIM4_Init(void)
     while (1)
       ;
   }
-
-  // ///* 3. 开启 TIM4 的 NVIC 中断*/
-  // HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);// 优先级0
-  // HAL_NVIC_EnableIRQ(TIM4_IRQn);
+#if freertos_modbus
+  HAL_NVIC_SetPriority(TIM4_IRQn, 6, 0); // 必须 >= 5
+  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+#else
+  ///* 3. 开启 TIM4 的 NVIC 中断*/
+  HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 优先级0
+  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+#endif
   // ///* 4.启动定时器，并开启中断*/
   // HAL_TIM_Base_Start_IT(&htim4);
 }
@@ -73,7 +77,7 @@ void MX_TIM2_Init(void)
   // 2. 修改 PSC 和 ARR 实现 100us
   htim2.Init.Prescaler = 72 - 1; // 72MHz / 72 = 1MHz (1us)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 10000  - 1; // 1MHz 计数 100 次 = 100us  10ms
+  htim2.Init.Period = 10000 - 1; // 1MHz 计数 100 次 = 100us  10ms
   // htim2.Init.Period = 200 - 1; // 1MHz 计数 100 次 = 100us
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -86,7 +90,9 @@ void MX_TIM2_Init(void)
   // HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
 
   // 3. 开启 TIM2 的 NVIC 中断
-  HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+  //  HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+  HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
+
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
   // 4.启动定时器，并开启中断
   HAL_TIM_Base_Start_IT(&htim2);
@@ -105,7 +111,7 @@ void MX_TIM3_Init(void)
   htim3.Init.Prescaler = 72 - 1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 1000 - 1; // 1000us = 1ms
-    // htim3.Init.Period = 900 - 1; // 900us 
+                                // htim3.Init.Period = 900 - 1; // 900us
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   HAL_TIM_Base_Init(&htim3);
@@ -115,6 +121,10 @@ void MX_TIM3_Init(void)
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
+
+  HAL_NVIC_SetPriority(TIM3_IRQn, 6, 0);
+
+  HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
   // TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   // TIM_MasterConfigTypeDef sMasterConfig = {0};
@@ -148,7 +158,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM4_CLK_ENABLE();
 
     // TIM4????配置
-    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);// 最高优先级0
+    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 最高优先级0
     // TIM4????使能
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
@@ -208,7 +218,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
 // {
 //   if (htim->Instance == TIM3)
 //   {
-
 //     s_tim0_10ms++;
 //     s_tim0_100ms++;
 //     if (s_tim0_10ms >= 100)

@@ -60,6 +60,15 @@
 ..\..\output\mbutils.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\mbutils.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\mbutils.o: ..\..\Drivers\SYSTEM\sys\sys.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\mbutils.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\mbutils.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\mbutils.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\mbutils.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h

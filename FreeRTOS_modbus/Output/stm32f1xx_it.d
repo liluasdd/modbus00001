@@ -62,12 +62,6 @@
 ..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 ..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 ..\..\output\stm32f1xx_it.o: ..\..\Drivers\SYSTEM\sys\sys.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
-..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
-..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\projdefs.h
@@ -75,6 +69,14 @@
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\port\portmacro.h
 ..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
+..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
+..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
+..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
+..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
+..\..\output\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\stm32f1xx_it.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\stm32f1xx_it.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\gpio.h
@@ -83,7 +85,6 @@
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\adc.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\key.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\tim.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\stm32f1xx_it.h
-..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\task.h
-..\..\output\stm32f1xx_it.o: ..\..\Free_ROTS_2024\inc\list.h

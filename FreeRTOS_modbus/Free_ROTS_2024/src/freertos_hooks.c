@@ -6,8 +6,11 @@ void vApplicationMallocFailedHook(void)
 {
     /* pvPortMalloc 分配失败时进入这里 */
     taskDISABLE_INTERRUPTS();
-    for (;;)
-        ;
+    // for (;;);
+    while (1)
+    {
+        
+    }
 }
 #endif // 新增
 
@@ -18,7 +21,9 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
     (void)xTask;
     (void)pcTaskName;
     taskDISABLE_INTERRUPTS();
-    for (;;)
-        ;
+    while (1)
+    {
+        
+    }
 }
 #endif // 新增

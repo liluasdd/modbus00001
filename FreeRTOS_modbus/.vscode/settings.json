@@ -26,6 +26,8 @@
         "uart.h": "c",
         "freertos.h": "c",
         "task.h": "c",
-        "key.h": "c"
+        "key.h": "c",
+        "mb.h": "c",
+        "mbframe.h": "c"
     }
 }

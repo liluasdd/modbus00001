@@ -13,7 +13,7 @@ extern "C"
 #define CONFIG_NEED_MESSAGESMG 0 // 1 开启消息管理，0关闭
 #define CONFIG_NEED_PWM 0        // 1 开启PWM，0关闭
 #define adc_DMA_max 12
-
+#define freertos_modbus 1
 
 #define ADC_GROUP_PER_HALF 8
 #define ADC_CH_NUM 2

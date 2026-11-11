@@ -60,6 +60,15 @@
 ..\..\output\user_mb_app.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\sys\sys.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
@@ -68,13 +77,6 @@
 ..\..\output\user_mb_app.o: ..\..\Users\main.h
 ..\..\output\user_mb_app.o: ..\..\Users\usertype.h
 ..\..\output\user_mb_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\projdefs.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\portable.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\port\portmacro.h
-..\..\output\user_mb_app.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\user_mb_app.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\gpio.h
@@ -83,4 +85,5 @@
 ..\..\output\user_mb_app.o: ..\..\software\inc\adc.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\key.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\tim.h
+..\..\output\user_mb_app.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\user_mb_app.o: ..\..\software\app_tft_lcd\lcd.h

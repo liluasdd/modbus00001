@@ -52,6 +52,7 @@
 "..\..\output\key.o"
 "..\..\output\tim.o"
 "..\..\output\usart.o"
+"..\..\output\app_modbus.o"
 "..\..\output\ctiic.o"
 "..\..\output\ctp.o"
 "..\..\output\lcd.o"

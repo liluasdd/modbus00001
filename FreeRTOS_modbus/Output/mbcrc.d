@@ -58,4 +58,13 @@
 ..\..\output\mbcrc.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\mbcrc.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\mbcrc.o: ..\..\Drivers\SYSTEM\sys\sys.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\mbcrc.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\mbcrc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

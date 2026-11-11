@@ -25,6 +25,7 @@
 #include "tim.h"
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
+#include "gpio.h"
 #include "mbport.h"
 
 /* ----------------------- static functions ---------------------------------*/
@@ -50,6 +51,8 @@ BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // 初始化定时器1
 	__HAL_TIM_SET_AUTORELOAD(&htim4, usTim1Timerout50us - 1);
 	// 打开更新中断
 	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
+	// 清除可能存在的初始挂起标志
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
 
 	return TRUE;
 }
@@ -57,9 +60,7 @@ BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // 初始化定时器1
 // {
 // 	// 先关闭定时器，修改PSC
 // 	__HAL_TIM_DISABLE(&htim2);
-
 // 	__HAL_TIM_SET_PRESCALER(&htim2, 3599);
-
 // 	// 更新预分频影子寄存器，让PSC立刻生效
 // 	htim2.Instance->EGR |= TIM_EGR_UG;
 // 	//    __HAL_TIM_UPDATE_PRESCALER(&htim2);
@@ -74,27 +75,28 @@ BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // 初始化定时器1
  * @param usTim1Timerout50us 定时器1的超时时间，单位50us
  */
 inline void
- vMBPortTimersEnable() // 启用定时器1
+vMBPortTimersEnable() // 启用定时器1
 {
-	/* 启用定时器1 */
-	// TIM4->CNT = 0;		 // 初始化定时器1计时寄数器
-	// TIM4->CR1 |= 1 << 0; // 启用定时器1计数器
-	// TIM4->CR1 |= 1 << 1; // 启用定时器1更新中断使能位
+#if freertos_modbus
+	/* 进入临界区，防止被 UART 中断打断 */
+	taskENTER_CRITICAL();
 
-	// /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
-	// __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
-	// __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_UPDATE);
-	// __HAL_TIM_SET_COUNTER(&htim2, 0);
-	// __HAL_TIM_ENABLE(&htim2);
+	/* 纯寄存器操作，速度最快 */
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			// 清零计数器
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// 清除更新中断标志
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // 使能更新中断
+	__HAL_TIM_ENABLE(&htim4);					// 启动定时器
 
+	/* 退出临界区 */
+	taskEXIT_CRITICAL();
+#else
 	/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);//清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
-	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);//使能定时器4更新中断 —— 开启溢出/更新中断使能
-	__HAL_TIM_SET_COUNTER(&htim4, 0);//将定时器4计数器值清零 —— 重置计数值为0
-	__HAL_TIM_ENABLE(&htim4);//使能定时器4 —— 启动定时器运行
-
-	// HAL_TIM_Base_Start_IT(&htim2);
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// 清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // 使能定时器4更新中断 —— 开启溢出/更新中断使能
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			// 将定时器4计数器值清零 —— 重置计数值为0
+	__HAL_TIM_ENABLE(&htim4);					// 使能定时器4 —— 启动定时器运行
 	HAL_TIM_Base_Start_IT(&htim4);
+#endif
 }
 
 /*
@@ -103,23 +105,24 @@ inline void
 inline void
 vMBPortTimersDisable() // 禁用定时器1
 {
-	/* 禁用定时器1 */
-	// TIM4->CR1 &= ~(1 << 0); // 禁用定时器1计数器
+#if freertos_modbus
+	/* 进入临界区 */
+	taskENTER_CRITICAL();
 
-	// /* Disable any pending timers. */
-	// __HAL_TIM_DISABLE(&htim2);
-	// __HAL_TIM_SET_COUNTER(&htim2, 0);
-	// __HAL_TIM_DISABLE_IT(&htim2, TIM_IT_UPDATE);
-	// __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
+	__HAL_TIM_DISABLE(&htim4);					 // 停止定时器
+	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // 禁用更新中断
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			 // 清零计数器
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // 清除标志
+
+	/* 退出临界区 */
+	taskEXIT_CRITICAL();
+#else
 	/* Disable any pending timers. */
-	__HAL_TIM_DISABLE(&htim4);//禁用定时器4 —— 停止定时器运行
-	__HAL_TIM_SET_COUNTER(&htim4, 0);//将定时器4计数器值清零 —— 重置计数值为0
-	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE);//禁用定时器4更新中断 —— 关闭溢出/更新中断使能
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);//清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
-
-	// // 超时后、空闲时关闭定时器
-	// HAL_TIM_Base_Stop_IT(&htim2);
-	// HAL_TIM_Base_Stop_IT(&htim4);
+	__HAL_TIM_DISABLE(&htim4);					 // 禁用定时器4 —— 停止定时器运行
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			 // 将定时器4计数器值清零 —— 重置计数值为0
+	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // 禁用定时器4更新中断 —— 关闭溢出/更新中断使能
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // 清除定时器4更新中断挂起标志 —— 清除中断标志位，防止残留中断触发
+#endif
 }
 
 /* Create an ISR which is called whenever the timer has expired. This function

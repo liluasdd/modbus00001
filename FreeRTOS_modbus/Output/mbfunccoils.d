@@ -60,6 +60,15 @@
 ..\..\output\mbfunccoils.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\mbfunccoils.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\mbfunccoils.o: ..\..\Drivers\SYSTEM\sys\sys.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\mbfunccoils.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\mbfunccoils.o: ..\..\STM32MB\STM32MB\modbus\include\mb.h
 ..\..\output\mbfunccoils.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
 ..\..\output\mbfunccoils.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h

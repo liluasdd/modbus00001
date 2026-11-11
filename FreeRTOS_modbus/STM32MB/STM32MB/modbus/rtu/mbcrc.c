@@ -209,32 +209,3 @@ USHORT usMBCRC16(UCHAR *pucFrame, USHORT usLen)
     // }
     // return crc;
 }
-// /**
-//  * @brief CRC16-Modbus 位计算
-//  * @param data 数据指针
-//  * @param len 数据长度
-//  * @return uint16_t CRC16值
-//  */
-// uint16_t CRC16_BitCalc(uint8_t *data, uint16_t len)
-// {
-//     uint16_t crc = CRC16_INIT_VAL;
-//     uint16_t i, j;
-//     for (i = 0; i < len; i++)
-//     {
-//         crc ^= data[i];
-//         // 循环处理8位
-//         for (j = 0; j < 8; j++)
-//         {
-//             if (crc & 0x0001)
-//             {
-//                 crc >>= 1;
-//                 crc ^= CRC16_POLY;
-//             }
-//             else
-//             {
-//                 crc >>= 1;
-//             }
-//         }
-//     }
-//     return crc;
-// }

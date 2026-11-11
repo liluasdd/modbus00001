@@ -85,6 +85,7 @@
 ..\..\output\freertos_test.o: ..\..\software\inc\adc.h
 ..\..\output\freertos_test.o: ..\..\software\inc\key.h
 ..\..\output\freertos_test.o: ..\..\software\inc\tim.h
+..\..\output\freertos_test.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\freertos_test.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\freertos_test.o: ..\..\software\inc\freertos_test.h
 ..\..\output\freertos_test.o: ..\..\Free_ROTS_2024\inc\queue.h

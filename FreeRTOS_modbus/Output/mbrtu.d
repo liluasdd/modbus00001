@@ -60,6 +60,15 @@
 ..\..\output\mbrtu.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\..\output\mbrtu.o: ..\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_mmc.h
 ..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\sys\sys.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\projdefs.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\portable.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\port\portmacro.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\list.h
 ..\..\output\mbrtu.o: ..\..\Users\main.h
 ..\..\output\mbrtu.o: ..\..\Users\usertype.h
 ..\..\output\mbrtu.o: ..\..\software\inc\user_mb_app.h
@@ -70,13 +79,6 @@
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
 ..\..\output\mbrtu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\projdefs.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\portable.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\port\portmacro.h
-..\..\output\mbrtu.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
 ..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\mbrtu.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\mbrtu.o: ..\..\software\inc\gpio.h
@@ -85,6 +87,7 @@
 ..\..\output\mbrtu.o: ..\..\software\inc\adc.h
 ..\..\output\mbrtu.o: ..\..\software\inc\key.h
 ..\..\output\mbrtu.o: ..\..\software\inc\tim.h
+..\..\output\mbrtu.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\mbrtu.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbcrc.h

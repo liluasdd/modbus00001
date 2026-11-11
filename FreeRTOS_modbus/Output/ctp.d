@@ -63,12 +63,6 @@
 ..\..\output\ctp.o: ..\..\STM32MB\STM32MB\port\port.h
 ..\..\output\ctp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 ..\..\output\ctp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
-..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
-..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
-..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
-..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
-..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
-..\..\output\ctp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\projdefs.h
@@ -76,6 +70,14 @@
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\port\portmacro.h
 ..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\ctp.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
+..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
+..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
+..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
+..\..\output\ctp.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
+..\..\output\ctp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\ctp.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\ctp.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\ctp.o: ..\..\software\inc\gpio.h
@@ -84,6 +86,7 @@
 ..\..\output\ctp.o: ..\..\software\inc\adc.h
 ..\..\output\ctp.o: ..\..\software\inc\key.h
 ..\..\output\ctp.o: ..\..\software\inc\tim.h
+..\..\output\ctp.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\ctp.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\ctp.o: ..\..\software\app_tft_lcd\touch.h
 ..\..\output\ctp.o: ..\..\software\app_tft_lcd\ctiic.h

@@ -62,12 +62,6 @@
 ..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 ..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 ..\..\output\key.o: ..\..\Drivers\SYSTEM\sys\sys.h
-..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
-..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
-..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
-..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
-..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
-..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\key.o: ..\..\Free_ROTS_2024\inc\FreeRTOS.h
 ..\..\output\key.o: ..\..\Free_ROTS_2024\inc\FreeRTOSConfig.h
 ..\..\output\key.o: ..\..\Free_ROTS_2024\inc\projdefs.h
@@ -75,6 +69,14 @@
 ..\..\output\key.o: ..\..\Free_ROTS_2024\inc\deprecated_definitions.h
 ..\..\output\key.o: ..\..\Free_ROTS_2024\port\portmacro.h
 ..\..\output\key.o: ..\..\Free_ROTS_2024\inc\mpu_wrappers.h
+..\..\output\key.o: ..\..\Free_ROTS_2024\inc\task.h
+..\..\output\key.o: ..\..\Free_ROTS_2024\inc\list.h
+..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbport.h
+..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbproto.h
+..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbconfig.h
+..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbframe.h
+..\..\output\key.o: ..\..\STM32MB\STM32MB\modbus\include\mbutils.h
+..\..\output\key.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\key.o: ..\..\Drivers\SYSTEM\delay\delay.h
 ..\..\output\key.o: ..\..\Drivers\SYSTEM\uart1\uart.h
 ..\..\output\key.o: ..\..\software\inc\gpio.h
@@ -83,4 +85,5 @@
 ..\..\output\key.o: ..\..\software\inc\adc.h
 ..\..\output\key.o: ..\..\software\inc\key.h
 ..\..\output\key.o: ..\..\software\inc\tim.h
+..\..\output\key.o: ..\..\software\inc\APP_modbus.h
 ..\..\output\key.o: ..\..\software\app_tft_lcd\lcd.h
