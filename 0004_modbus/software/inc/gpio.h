@@ -96,8 +96,8 @@ extern "C"
 #define key1_pin GPIO_PIN_0
 #define key1_port GPIOA
 // KEY1 读取宏
-#define KEY1_STATE (key1_port->IDR & key1_pin)
-#define KEY1_PRESSED (!KEY1_STATE) // 假设按键按下为低电平
+#define READ_KEY1_STATE (key1_port->IDR & key1_pin)
+#define KEY1_PRESSED (!READ_KEY1_STATE) // 假设按键按下为低电平
 // KEY1 上拉/下拉配置宏（直接操作PUPDR寄存器）
 // ley1_pin = GPIO_PIN_0, PUPDR[1:0]控制引脚0
 #define KEY1_PULL_UP                   \
@@ -144,8 +144,8 @@ extern "C"
 #define key2_pin GPIO_PIN_1
 #define key2_port GPIOA
 // KEY2 读取宏
-#define KEY2_STATE (key2_port->IDR & key2_pin)
-#define KEY2_PRESSED (!KEY2_STATE) // 假设按键按下为低电平
+#define READ_KEY2_STATE (key2_port->IDR & key2_pin)
+#define KEY2_PRESSED (!READ_KEY2_STATE) // 假设按键按下为低电平
 
 #define USART1_TX_pin GPIO_PIN_9
 #define USART1_TX_port GPIOA

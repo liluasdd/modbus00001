@@ -9,26 +9,26 @@ u8 B_KEY_JC;
 u8 R_KEY_timMax;
 vu8 R_KEY_timi;
 
-/*æŒ‰é”®è¿‡æ»¤*/
-u8 Key_LB_value;			// å½“å‰æŒ‰é”®çŠ¶æ€
-static u8 Key_LB_i;			// æŒ‰é”®è®¡æ•°
-static u8 Key_LB_data;		// å½“å‰æŒ‰é”®æ•°æ®
-static u8 Key_LB_data_Q;	// ä¸Šä¸€æ¬¡æŒ‰é”®çŠ¶æ€
-static u8 Key_LBUnstable_i; // ä¸ç¨³å®šè®¡æ•°
+/*°´¼ü¹ıÂË*/
+u8 Key_LB_value;			// µ±Ç°°´¼ü×´Ì¬
+static u8 Key_LB_i;			// °´¼ü¼ÆÊı
+static u8 Key_LB_data;		// µ±Ç°°´¼üÊı¾İ
+static u8 Key_LB_data_Q;	// ÉÏÒ»´Î°´¼ü×´Ì¬
+static u8 Key_LBUnstable_i; // ²»ÎÈ¶¨¼ÆÊı
 
 void KEY_Filter_processing(void)
 {
 	Key_LB_data = 0;
-	if (!READ_KEY1_STATE) //ç‚¹ç«é”®è¢«æŒ‰ä¸‹
+	if (!READ_READ_KEY1_STATE) //µã»ğ¼ü±»°´ÏÂ
 		Key_LB_data |= 0x01;
-	if (!READ_KEY2_STATE) // åŠ é”®è¢«æŒ‰ä¸‹
+	if (!READ_READ_KEY2_STATE) // ¼Ó¼ü±»°´ÏÂ
 		Key_LB_data |= 0x02;
-	if (!READ_KEY3_STATE) // å‡é”®è¢«æŒ‰ä¸‹
+	if (!READ_KEY3_STATE) // ¼õ¼ü±»°´ÏÂ
 		Key_LB_data |= 0x04;
 	//   if(!READ_KEY3_STATE)
 	//		Key_LB_data |= 0x08;
 
-	// æ¶ˆæŠ–
+	// Ïû¶¶
 	if (Key_LB_data_Q == Key_LB_data)
 	{
 		if (Key_LB_i < 10)
@@ -86,7 +86,7 @@ void Key_smoke(void)
 			if (tim3)
 			{
 				tim3--;
-				if (!B_Sleep_YES) // ç­‰äº0åˆ™ä¸€å®šä¼šåˆå§‹åŒ–
+				if (!B_Sleep_YES) // µÈÓÚ0ÔòÒ»¶¨»á³õÊ¼»¯
 					tim = 15;
 			}
 			else
@@ -148,24 +148,24 @@ void Key_smoke(void)
 }
 /****************************************************************************/
 
-u8 R_key_anxia;		 // æŒ‰ä¸‹
-u8 R_key_Open;		 // æ¾å¼€
-u8 R_key_anxiaOpen;	 // çŸ­æŒ‰æ¾å¼€
-u8 R_key_anzhuOpen;	 // é•¿æŒ‰æ¾å¼€
-u8 R_key_keep;		 // é•¿æŒ‰æŒ‰ä¸‹
-u8 R_key_super_keep; // è¶…é•¿æŒ‰æŒ‰ä¸‹
-u8 R_key_1C;		 // æŒ‰é”®1æ¬¡
-u8 R_key_2C;		 // æŒ‰é”®2æ¬¡
-u8 R_key_3C;		 // æŒ‰é”®3æ¬¡
-u8 R_key_4C;		 // æŒ‰é”®4æ¬¡
-u8 R_key_5C;		 // æŒ‰é”®5æ¬¡
-u8 R_key_7C;		 // æŒ‰é”®7æ¬¡
+u8 R_key_anxia;		 // °´ÏÂ
+u8 R_key_Open;		 // ËÉ¿ª
+u8 R_key_anxiaOpen;	 // ¶Ì°´ËÉ¿ª
+u8 R_key_anzhuOpen;	 // ³¤°´ËÉ¿ª
+u8 R_key_keep;		 // ³¤°´°´ÏÂ
+u8 R_key_super_keep; // ³¬³¤°´°´ÏÂ
+u8 R_key_1C;		 // °´¼ü1´Î
+u8 R_key_2C;		 // °´¼ü2´Î
+u8 R_key_3C;		 // °´¼ü3´Î
+u8 R_key_4C;		 // °´¼ü4´Î
+u8 R_key_5C;		 // °´¼ü5´Î
+u8 R_key_7C;		 // °´¼ü7´Î
 u8 R_key_XC;
 u8 R_key_XC_Data;
-u8 R_key_anzhu; // é•¿æŒ‰æŒ‰ä½
-u8 B_Key_release;	// æ˜¯å¦è¿”å›æŒ‰é”®é”®å€¼ï¼ŒæŒ‰é”®å…¨éƒ¨é‡Šæ”¾æ‰æ¸…é›¶
-u8 B_Key_Different; // æŒ‰ä¸‹ä¸åŒçš„é”®
-u8 key_value = 0; // å½“å‰æŒ‰é”®å€¼å¯„å­˜å™¨
+u8 R_key_anzhu; // ³¤°´°´×¡
+u8 B_Key_release;	// ÊÇ·ñ·µ»Ø°´¼ü¼üÖµ£¬°´¼üÈ«²¿ÊÍ·Å²ÅÇåÁã
+u8 B_Key_Different; // °´ÏÂ²»Í¬µÄ¼ü
+u8 key_value = 0; // µ±Ç°°´¼üÖµ¼Ä´æÆ÷
 u8 B_anxiaOpen_EN = 0;
 u8 B_anxiaOpen_EN0 = 0;
 // KEY_bit	R_KEY_UP=KEY_ADD;
@@ -173,13 +173,13 @@ u8 B_anxiaOpen_EN0 = 0;
 
 void Key_scan(void) // uint8
 {
-	static u8 key_value1 = 0;		  // æŒ‰é”®é‡Šæ”¾åçš„æŒ‰é”®å€¼å¯„å­˜å™¨
-	static u8 key_value2 = 0;		  // æŒ‰é”®é‡Šæ”¾åçš„æŒ‰é”®å€¼å¯„å­˜å™¨
-	static u8 key_longtime = 0;		  // é•¿æŒ‰æ—¶é—´ç´¯ç§¯å¯„å­˜å™¨1
-	static u8 key_longtime1 = 0;	  // é•¿æŒ‰æ—¶é—´ç´¯ç§¯å¯„å­˜å™¨2
-	static u8 key_super_longtime = 0; // è¶…é•¿æŒ‰æ—¶é—´ç´¯ç§¯å¯„å­˜å™¨
-	static u8 F_longkey = 0;		  // é•¿æŒ‰
-	static u8 F_super_longkey = 0;	  // è¶…é•¿æŒ‰
+	static u8 key_value1 = 0;		  // °´¼üÊÍ·ÅºóµÄ°´¼üÖµ¼Ä´æÆ÷
+	static u8 key_value2 = 0;		  // °´¼üÊÍ·ÅºóµÄ°´¼üÖµ¼Ä´æÆ÷
+	static u8 key_longtime = 0;		  // ³¤°´Ê±¼äÀÛ»ı¼Ä´æÆ÷1
+	static u8 key_longtime1 = 0;	  // ³¤°´Ê±¼äÀÛ»ı¼Ä´æÆ÷2
+	static u8 key_super_longtime = 0; // ³¬³¤°´Ê±¼äÀÛ»ı¼Ä´æÆ÷
+	static u8 F_longkey = 0;		  // ³¤°´
+	static u8 F_super_longkey = 0;	  // ³¬³¤°´
 	static u8 f_onkey = 0;
 	static u8 Key_Hda;
 	static u8 KEY_data = 0;
@@ -212,7 +212,7 @@ void Key_scan(void) // uint8
 			key_value2 = key_value;
 		}
 		else
-		{						   // æŒ‰é”®é•¿æŒ‰
+		{						   // °´¼ü³¤°´
 			if (key_longtime < 15) // 300
 			{
 				key_longtime++;
@@ -235,7 +235,7 @@ void Key_scan(void) // uint8
 						key_longtime1 = 0; //
 
 						F_longkey = 1;
-						// é•¿æŒ‰æŒ‰é”®å¤„ç†ç¨‹åº
+						// ³¤°´°´¼ü´¦Àí³ÌĞò
 						KEY_data = 0;
 						if (!B_Key_release)
 						{
@@ -257,7 +257,7 @@ void Key_scan(void) // uint8
 						{
 							key_super_longtime = 0; //
 							F_super_longkey = 1;
-							// è¶…é•¿æŒ‰æŒ‰é”®å¤„ç†ç¨‹åº
+							// ³¬³¤°´°´¼ü´¦Àí³ÌĞò
 							if (!B_Key_release)
 								R_key_super_keep = key_value1;
 						}
@@ -292,7 +292,7 @@ void Key_scan(void) // uint8
 		key_longtime1 = 0;
 		key_super_longtime = 0;
 		if (F_longkey)
-		{ // é•¿æŒ‰æŒ‰é”®é‡Šæ”¾
+		{ // ³¤°´°´¼üÊÍ·Å
 			KEY_data = 0;
 			F_super_longkey = 0;
 			if (!B_Key_release && (!B_anxiaOpen_EN))
@@ -300,7 +300,7 @@ void Key_scan(void) // uint8
 			B_f_onkey = 0;
 		}
 		else if (f_onkey)
-		{ // çŸ­æŒ‰æŒ‰é”®é‡Šæ”¾
+		{ // ¶Ì°´°´¼üÊÍ·Å
 			B_f_onkey = 1;
 			if (!B_Key_release)
 			{
@@ -375,8 +375,8 @@ void Key_scan(void) // uint8
 }
 /*******************************************************************************/
 u8 B_USB_RinBit;
-//////////////////USBè¯»é”®å€¼//////////////////////
-////        0:æ¾å¼€     1:æ’å…¥
+//////////////////USB¶Á¼üÖµ//////////////////////
+////        0:ËÉ¿ª     1:²åÈë
 /////////////////////////////////////////////////
 u8 B_USB_Low;
 u8 B_USB_In_Flag = 0;
@@ -413,29 +413,29 @@ void USB_T_data(void)
 		IP5355_IIC_Write(0x90, 0x22);
 		IP5355_IIC_Write(0x52, 0x22);
 	}
-	else if (USB_OVP > d_USB_error_H && B_BAT_Charge) // å……ç”µæ—¶ï¼Œè¶…å‹å…³é—­å……æ”¾ç”µï¼Œä¿æŠ¤ç”µæ± ä¸€ç›´å¼ºå…³
+	else if (USB_OVP > d_USB_error_H && B_BAT_Charge) // ³äµçÊ±£¬³¬Ñ¹¹Ø±Õ³ä·Åµç£¬±£»¤µç³ØÒ»Ö±Ç¿¹Ø
 	{
 		//		B_BAT_Error_10Charge = 10;
 		IP5355_IIC_Write(0x90, 0x22);
-		IP5355_IIC_Write(0x51, 0x22); // å…³æ”¾ç”µå…³å……ç”µ
+		IP5355_IIC_Write(0x51, 0x22); // ¹Ø·Åµç¹Ø³äµç
 	}
-	//	else if ((USB_OVP < (d_USB_error_H - 50)) && B_BAT_Charge && (B_BAT_Error_10Charge == 1 || B_BAT_Error_10Charge == 2)) // å»¶æ—¶å¼€å¯,9*20ms
+	//	else if ((USB_OVP < (d_USB_error_H - 50)) && B_BAT_Charge && (B_BAT_Error_10Charge == 1 || B_BAT_Error_10Charge == 2)) // ÑÓÊ±¿ªÆô,9*20ms
 	//	{
 	//		IP6106_Init();
 	//		IP5355_IIC_Write(0x90, 0x22);
-	//		IP5355_IIC_Write(0x52, 0x22); // å…³æ”¾ç”µå¼€å……ç”µ
+	//		IP5355_IIC_Write(0x52, 0x22); // ¹Ø·Åµç¿ª³äµç
 	//	}
 	else if (R_BattL_Proportion == 0 && Read_USB_IIC_Stutas != 2)
 	{
 		Read_USB_IIC_Stutas = 2;
 		IP5355_IIC_Write(0x90, 0x22);
-		IP5355_IIC_Write(0x52, 0x22); // å…³æ”¾ç”µå¼€å……ç”µ
+		IP5355_IIC_Write(0x52, 0x22); // ¹Ø·Åµç¿ª³äµç
 	}
 	else if (R_BattL_Proportion && Read_USB_IIC_Stutas != 3)
 	{
 		Read_USB_IIC_Stutas = 3;
 		IP5355_IIC_Write(0x80, 0x22);
-		IP5355_IIC_Write(0x40, 0x22); // å¼€æ”¾ç”µå¼€å……ç”µ
+		IP5355_IIC_Write(0x40, 0x22); // ¿ª·Åµç¿ª³äµç
 	}
 
 	//	if (B_BAT_Error_10Charge)
@@ -456,14 +456,14 @@ void USB_T_data(void)
 			Read_Usb_Stutas = IP5355_IIC_Read(0x11);
 		}
 		// B_BAT_OutCharge = Read_Usb_Stutas;
-		if (B_BAT_OutCharge) // æ”¾ç”µä¸­
+		if (B_BAT_OutCharge) // ·ÅµçÖĞ
 		{
 			// USB_OVP = Read_USB_OVP_Data();
 			if (R_BattL_Proportion == 0)
 			{
 				B_BAT_OutCharge = 0;
 				IP5355_IIC_Write(0x90, 0x22);
-				IP5355_IIC_Write(0x52, 0x22); // å…³æ”¾ç”µå¼€å……ç”µ
+				IP5355_IIC_Write(0x52, 0x22); // ¹Ø·Åµç¿ª³äµç
 			}
 		}
 	}
@@ -491,14 +491,14 @@ void USB_T_data(void)
 					//					Ip6106_USB_IIC_Init();
 					IP6106_Init();
 					// GP_USB_EN();
-					IP5355_IIC_Write(0x80, 0x22); // å¼€å¯æ‰‹æœºå……ç”µ
+					IP5355_IIC_Write(0x80, 0x22); // ¿ªÆôÊÖ»ú³äµç
 					// IP5355_IIC_Write(0x42, 0x22);
 					IP5355_IIC_Write(0x40, 0x22);
 
 					Key_Lda = 0;
 
 					CHG_DISABLE();
-					B_usbOnOff = 0; // æ›´æ–°USBå……ç”µçŠ¶æ€æ ‡å¿—ä¸ºå…³é—­
+					B_usbOnOff = 0; // ¸üĞÂUSB³äµç×´Ì¬±êÖ¾Îª¹Ø±Õ
 					Decide_L = 0;
 					Full_count = 0;
 					Full_Cnt = 0;
@@ -509,8 +509,8 @@ void USB_T_data(void)
 					{
 						if (USB_OVP < 420 || USB_OVP > d_USB_error_H)
 							CHG_DISABLE();
-						B_usbOnOff = 0; // æ›´æ–°USBå……ç”µçŠ¶æ€æ ‡å¿—ä¸ºå…³é—­
-						Delay_Nms(1);	// æ¶ˆæŠ–
+						B_usbOnOff = 0; // ¸üĞÂUSB³äµç×´Ì¬±êÖ¾Îª¹Ø±Õ
+						Delay_Nms(1);	// Ïû¶¶
 						USB_OVP = Read_USB_OVP_Data();
 						if (USB_OVP < 420 || USB_OVP > d_USB_error_H)
 						{
@@ -525,18 +525,18 @@ void USB_T_data(void)
 					if (Read_Usb_Stutas & 0x10)
 					{
 						Check_bat_time = 0;
-						CHG_ENABLE();	// ä½¿èƒ½å……ç”µ
-						B_usbOnOff = 1; // æ›´æ–°USBå……ç”µçŠ¶æ€æ ‡å¿—ä¸ºå¼€å¯
+						CHG_ENABLE();	// Ê¹ÄÜ³äµç
+						B_usbOnOff = 1; // ¸üĞÂUSB³äµç×´Ì¬±êÖ¾Îª¿ªÆô
 						// CHG_DISABLE();
 						B_USB_Low = 0;
-						B_BAT_Charge = 1; // å……ç”µä¸­
+						B_BAT_Charge = 1; // ³äµçÖĞ
 						B_BAT_OutCharge = 0;
 						B_USB_In_Flag = 0;
 						R_Skinning_mode = USB_access;
 						if (Read_Data != 0xab)
 						{
-							IP5355_IIC_Write(0xab, 0x3a); // ç”µæµåŠæ¸©åº¦è®¾ç½®
-														  // IP5355_IIC_Write(0x1B, 0x3a); // ç”µæµåŠæ¸©åº¦è®¾ç½®
+							IP5355_IIC_Write(0xab, 0x3a); // µçÁ÷¼°ÎÂ¶ÈÉèÖÃ
+														  // IP5355_IIC_Write(0x1B, 0x3a); // µçÁ÷¼°ÎÂ¶ÈÉèÖÃ
 						}
 					}
 
@@ -544,7 +544,7 @@ void USB_T_data(void)
 				}
 			}
 
-			// IP5355_IIC_Write(0x03, 0x08); // å……æ»¡ï¼Œæ¸…é™¤ä¸­æ–­
+			// IP5355_IIC_Write(0x03, 0x08); // ³äÂú£¬Çå³ıÖĞ¶Ï
 		}
 		else
 		{
@@ -556,19 +556,19 @@ void USB_T_data(void)
 		}
 	}
 
-	if (B_BAT_OutCharge == 0 && (Read_Usb_Stutas & 0x20) && B_System_off != d_System_Off && !B_Out_Yes && USB_OVP > 400) // æ”¾ç”µ
+	if (B_BAT_OutCharge == 0 && (Read_Usb_Stutas & 0x20) && B_System_off != d_System_Off && !B_Out_Yes && USB_OVP > 400) // ·Åµç
 	{
 
 		if (R_BattL_Proportion)
 		{
 			B_BAT_Charge = 0;
-			B_BAT_OutCharge = 1; // ç”µæ± è¾“å‡ºå……ç”µæ ‡å¿—
+			B_BAT_OutCharge = 1; // µç³ØÊä³ö³äµç±êÖ¾
 			R_Skinning_mode = USB_access;
 		}
 		else
 		{
 			IP5355_IIC_Write(0x90, 0x22);
-			IP5355_IIC_Write(0x52, 0x22); // å…³æ”¾ç”µå¼€å……ç”µ
+			IP5355_IIC_Write(0x52, 0x22); // ¹Ø·Åµç¿ª³äµç
 		}
 		// R_Skinning_mode= USB_anomaly;
 		// Windows_Switch(Battery_BatOutput_interface);
@@ -581,7 +581,7 @@ void WakeUp_Check_USB(void)
 	if (USB_OVP > 300)
 	{
 
-		// é…ç½®ä¸ºæ¨¡æ‹Ÿå£
+		// ÅäÖÃÎªÄ£Äâ¿Ú
 		//          USB_GPIO_Set(USB_AIN);
 
 		Decide_L = 0;
@@ -592,7 +592,7 @@ void WakeUp_Check_USB(void)
 		if (USB_OVP < 420 || USB_OVP > d_USB_error_H)
 		{
 			CHG_DISABLE();
-			Delay_Nms(1); // æ¶ˆæŠ–
+			Delay_Nms(1); // Ïû¶¶
 			USB_OVP = Read_USB_OVP_Data();
 			if (USB_OVP < 420 || USB_OVP > d_USB_error_H)
 			{
@@ -624,7 +624,7 @@ void WakeUp_Check_USB(void)
 }
 
 u8 B_InterfaceGOTO = 0;
-/// æŒ‰é”®å¤„ç†
+/// °´¼ü´¦Àí
 void KEY_ALL_Task(void)
 {
 	if (B_KEY_JC)
@@ -652,7 +652,7 @@ void KEY_TFT_RESET(void)
 }
 /***********************************************************************************************/
 
-// åŠ å‡æ“ä½œ  //xh=0:åŠ å‡ä¸åšå¾ªç¯  xh=1:åŠ å‡åˆ°æœ€å¤§å†æ¬¡æŒ‰ä¸‹å¾ªç¯ xh=2ï¼šå¾ªç¯
+// ¼Ó¼õ²Ù×÷  //xh=0:¼Ó¼õ²»×öÑ­»·  xh=1:¼Ó¼õµ½×î´óÔÙ´Î°´ÏÂÑ­»· xh=2£ºÑ­»·
 u16 KEY_R_ADD_SUB(u8 *key_value, s16 R, u8 KADD, u8 KSUB, s16 max, s16 min, s8 bu, u8 xh, u8 tim)
 {
 	static u8 B;
@@ -667,7 +667,7 @@ u16 KEY_R_ADD_SUB(u8 *key_value, s16 R, u8 KADD, u8 KSUB, s16 max, s16 min, s8 b
 		B = 0;
 	}
 
-	// çŸ­æŒ‰
+	// ¶Ì°´
 	if (*key_value == KADD)
 	{
 		if (R < max)
@@ -693,7 +693,7 @@ u16 KEY_R_ADD_SUB(u8 *key_value, s16 R, u8 KADD, u8 KSUB, s16 max, s16 min, s8 b
 		}
 	}
 
-	// é•¿æŒ‰
+	// ³¤°´
 	if (R_key_anzhu == KADD)
 	{
 		if (!R_KEY_timi)

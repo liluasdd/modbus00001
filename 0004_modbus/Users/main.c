@@ -30,23 +30,21 @@ void Led_scan(void)
 {
     static uint8_t led_state_num = 0;
 
-    // led_num = !led_num; // 切换led状态位
-
     if (led_state_num == 0)
     {
         led_state_num = 1;
         if (led_num)
-            Led1_on;
+            Led1_on; // 蓝灯
         else
-            Led2_on;
+            Led2_on; // 黄灯
     }
     else
     {
         led_state_num = 0;
-        if (led_num)
-            Led1_off;
-        else
-            Led2_off;
+        // if (led_num)
+        Led1_off;
+        // else
+        Led2_off;
     }
 }
 
@@ -212,17 +210,25 @@ int main(void)
     HAL_Delay(400); //  延时400ms
     while (1)
     {
-        if (g_b_task_jtim == 1)
+        if (g_b_task_jtim == 1) // 20ms
         {
-
             g_b_task_jtim = 0;
-            key_scan();
+            TaskKey();
+            if (R_key_anxiaOpen == 1)
+            {
+                led_num = 0;
+            }
+            if (R_key_anxiaOpen == 2)
+            {
+                led_num = 1;
+            }
             if (g_b_2s_jtim == 1)
             {
                 g_b_2s_jtim = 0;
                 Led_scan();
                 ADC_DMA_scan();
             }
+            key_value1 = 0;
         }
 
         // /////* 1秒轮询一次Modbus从站，处理数据交换 */

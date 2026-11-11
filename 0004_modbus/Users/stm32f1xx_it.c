@@ -60,9 +60,11 @@ extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);
 extern void prvvTIMERExpiredISR(void);
 
-volatile u8 s_tim0_10ms = 0;
-volatile u16 s_tim0_100ms = 1;
-volatile u8 s_tim0_2s = 0;
+u8 s_tim_10ms = 0;
+u8 s_tim_20ms = 0;
+u16 s_tim_100ms = 1;
+u8 s_tim_2s = 0;
+u8 R_Task = 0;
 volatile u8 g_485_send_tim = 0;
 volatile u8 adc_done_flag = 0;
 /* Private typedef -----------------------------------------------------------*/
@@ -189,10 +191,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA×ª»»Íê³É»Øµ÷º¯Ê
 }
 
 // ÉùÃ÷ dma_handle ÊÇÔÚÆäËûÎÄ¼þ¶¨ÒåµÄÈ«¾Ö±äÁ¿
-extern DMA_HandleTypeDef hdma_adc1; 
+extern DMA_HandleTypeDef hdma_adc1;
 void DMA1_Channel1_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&hdma_adc1);   // ??:??? HAL ??????
+  HAL_DMA_IRQHandler(&hdma_adc1); // ??:??? HAL ??????
 }
 
 // /*
@@ -249,12 +251,14 @@ void TIM2_IRQHandler(void)
   if (TIM2->SR & TIM_SR_UIF)
   {
     TIM2->SR = ~TIM_SR_UIF;
-    s_tim0_10ms++;
-    s_tim0_100ms++;
-    if (s_tim0_10ms >= 100)
+
+    s_tim_20ms++; //
+    s_tim_100ms++;
+    if (s_tim_20ms >= 2)
     {
+      s_tim_20ms = 0;
+      R_Task = 0; // ÈÎÎñÑ­»·
       g_b_task_jtim = 1;
-      s_tim0_10ms = 0;
       if (g_b_485_send_tick) // 485·¢ËÍ³¬Ê±
       {
         g_485_send_tim++;
@@ -269,18 +273,19 @@ void TIM2_IRQHandler(void)
         g_485_send_tim = 0;
       }
     }
-    if (s_tim0_100ms >= 1000)
+    if (s_tim_100ms >= 10)
     {
-      s_tim0_2s++;
-      s_tim0_100ms = 0;
+      s_tim_100ms = 0;
+      s_tim_2s++;
       g_b_100ms_jtim = 1;
 
-      if (s_tim0_2s >= 20)
+      if (s_tim_2s >= 20)
       {
-        s_tim0_2s = 0;
+        s_tim_2s = 0;
         g_b_2s_jtim = 1;
       }
     }
+    KEY_Filter_processing();
   }
 }
 void TIM3_IRQHandler(void)

@@ -30,6 +30,7 @@
 #include "lcd.h"
 // #include "font.h"
 
+
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 
@@ -39,6 +40,8 @@ extern void prvvTIMERExpiredISR(void);
 
 static void SystemClock_Config(void);
 void Error_Handler(void);
+
+extern u8 led_num;
 
 /* 测试功能参数 */
 #define MB_SAMPLE_TEST_SLAVE_ADDR 1 // 从机设???地址

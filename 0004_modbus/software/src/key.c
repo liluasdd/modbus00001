@@ -1,72 +1,335 @@
 #include "main.h"
 #include "key.h"
 
-u8 g_b_screen_en = 0;
-
-u8 g_key_num = 0;
-u8 g_key_buf = 0;
-u8 g_key_tim = 0;
-u8 g_b_key_status = 0;
-u8 b_key_longpress_tim = 0;
-u8 b_key_long_press = 0;
-u8 g_dormancy_tim = 0;
-u8 R8_Set_V_Delay = 0;
+KEY_FLAG Flag_Key;
+KEY_Variable R_Key;
 
 extern u8 led_num;
+static u8 R8_Key_Tim = 0;
 
-void Key_val_clear(void)
+u8 R_key_anxiaOpen; //
+// u8 Flag_JustKey;
+// u8 Flag_PowerAdj;
+u8 key_value1 = 0; // °´¼üÖµ1
+// u8 xdata R_CloclkTim=0;
+u8 key_value = 0; // °´¼üÖµ
+
+void KEY_Filter_processing(void) // °´¼üÂË²¨´¦Àí£¬1msÒ»´Î
 {
-  if (g_key_tim < 255)
-  {
-    g_key_tim++;
-  }
+  u8 Key_LB_data = 0;
+  if (!READ_KEY1_STATE)
+    Key_LB_data |= 0x01;
+  if (!READ_KEY2_STATE)
+    Key_LB_data |= 0x02;
+  // if (!READ_KEY3_STATE) // ¼õ¼ü±»°´ÏÂ
+  //   Key_LB_data |= 0x04;
 
-  if (g_key_tim == 30)
+  if (Key_LB_data != key_value)
   {
-    led_num = !led_num; // åˆ‡æ¢ledçŠ¶æ€ä½
-    g_key_num = g_key_buf;
-  }
-}
-
-void key_scan(void)
-{
-  g_key_num = 0;
-  if (!KEY1_STATE)
-  {
-    if (g_b_key_status == 0)
+    if (R8_Key_Tim < 255)
+      R8_Key_Tim++;
+    if (R8_Key_Tim > 7 || (R8_Key_Tim > 4 && Key_LB_data >= 0x04))
     {
-      g_b_key_status = 1;
-      g_dormancy_tim = 0;
-      g_key_tim = 0;
-      g_key_buf++;
-      b_key_long_press = 0;    // æŒ‰é”®é•¿æŒ‰æ ‡å¿—ä½
-      b_key_longpress_tim = 0; // æŒ‰é”®é•¿æŒ‰æ—¶é—´è®¡æ•°å™¨
-      // g_b_screen_en = 1;       //  å±å¹•æ˜¾ç¤ºæ ‡å¿—ä½
-      R8_Set_V_Delay = 30; //  è®¾ç½®ç”µåŽ‹å»¶æ—¶æ—¶é—´ 30ms
-    }
-    else // æŒ‰é”®é•¿æŒ‰æ ‡å¿—ä½ä¸º1æ—¶
-    {
-      b_key_longpress_tim++; // æŒ‰é”®é•¿æŒ‰æ—¶é—´è®¡æ•°å™¨å¢žåŠ 
-      // æŒ‰é”®é•¿æŒ‰æ—¶é—´è¶…è¿‡å»¶æ—¶æ—¶é—´æ—¶
-      if (b_key_longpress_tim > R8_Set_V_Delay)
-      {
-        // ç”µåŽ‹å»¶æ—¶æ—¶é—´è¶…è¿‡ 10ms æ—¶ï¼Œæ¯æ¬¡å¢žåŠ  3ms
-        if (R8_Set_V_Delay > 10)
-          R8_Set_V_Delay -= 3;
-        b_key_longpress_tim = 0; // æŒ‰é”®é•¿æŒ‰æ—¶é—´è®¡æ•°å™¨é‡ç½®
-        b_key_long_press = 1;    // æŒ‰é”®é•¿æŒ‰æ ‡å¿—ä½è®¾ç½®ä¸º1ï¼Œè§¦å‘é•¿æŒ‰äº‹ä»¶
-      }
+      key_value = Key_LB_data;
     }
   }
   else
   {
-    if (g_b_key_status)
+    R8_Key_Tim = 0;
+  }
+}
+
+void JudgeKey(void) // °´¼üÒµÎñ´¦Àí£¬20msÒ»´Î
+{
+  static u8 key_realxvalue = 0; // °´¼üËÉ¿ªÊ±¼ä¼ÆÊý
+  if (key_value == 0x00)        // ËùÓÐ°´¼ü¶¼ËÉ¿ª
+  {
+    if (R_Key.RealxCT != 0xFF)
+      R_Key.RealxCT++; // °´¼üËÉ¿ªÊ±¼ä¼ÆÊý
+    R_Key.LongCT = 0;
+    if (key_realxvalue >= KEY_M)
     {
-      g_b_key_status = 0;
-      g_key_tim = 0;
-      b_key_long_press = 0;
-      b_key_longpress_tim = 0;
+      if (R_Key.PressCT > 1)
+      {
+        if (R_Key.PressCT > 15) // 0.3S³¤°´
+        {
+          R_Key.Data = 0;
+        }
+        else
+        {
+          if (R_Key.Data < 10)
+            R_Key.Data++;
+        }
+        if ((R_Key.PressCT < 15) && (!Flag_Key.LongPress)) // 0.3S¶Ì°´
+        {
+          //  if(Flag_PowerAdj)
+          {
+            if (key_realxvalue == KEY_M)
+              key_value1 = KEY_M;
+          }
+        }
+      }
+
+      if (R_Key.RealxCT == 15) //
+      {
+        // if (!Flag_PowerAdj) // 0.3S¶Ì°´
+        {
+          if (R_Key.Data == 2)
+          {
+            key_value1 = F_PRESS2C;
+          }
+        }
+      }
+    }
+    if ((R_Key.PressCT > 1) && ((R_Key.PressCT < 20) && (!Flag_Key.LongPress)))
+    {
+      key_value1 = key_realxvalue;
+    }
+
+    if ((R_Key.RealxCT > 15) || (R_Key.Data == 5))
+    {
+      R_Key.Data = 0;
+    }
+    Flag_Key.All_Invalid = 0;
+    Flag_Key.LongPress = 0;
+    Flag_Key.Press_Invalid = 0;
+    Flag_Key.Con_Invalid = 0;
+    Flag_Key.Smoking = 0;
+    R_Key.PressCT = 0;
+  }
+  else if (Flag_Key.All_Invalid) // ËùÓÐ°´¼ü¶¼ËÉ¿ª
+  {
+    R_Key.PressCT = 0;
+    R_Key.Data = 0;
+  }
+  else
+  {
+    if (key_realxvalue != key_value) // °´¼üËÉ¿ªÊ±¼ä¼ÆÊý
+    {
+      R_Key.LongCT = 0;
+      R_Key.PressCT = 0;
+      Flag_Key.Press_Invalid = 0;
+    }
+    if (R_Key.RealxCT) // °´¼üËÉ¿ªÊ±¼ä¼ÆÊý
+    {
+      // if (!Flag_SleepWake) // 0.3S¶Ì°´
+      //   R_Key.PressCT = 0;
+      // else
+        R_Key.PressCT = 7;
+      R_Key.RealxCT = 0;
+      Flag_Key.New_Value = 1;
+      R_Key.LongCT = 0;
+    }
+    if (R_Key.PressCT < 250)
+      R_Key.PressCT++;
+
+    if (((key_value >= KEY_M) || (Flag_Key.Smoking))/* && (!Flag_PowerAdj)*/)
+    {
+
+      key_value1 = KEY_M;
+      if (R_Key.PressCT == 2)
+      {
+        if (R_Key.Data == 4) // ??????
+        {
+          key_value1 = F_PRESS5C;
+        }
+      }
+      else if (R_Key.PressCT == 8)
+      {
+        // Flag_SleepWake = 0;
+        key_value1 = F_ECIGSTAR;
+      }
+
+      if ((Flag_Key.Press_Invalid) && (key_value1 != F_PRESS5C))
+      {
+        key_value1 = KEY_NOP;
+      }
+    }
+    else if (((key_value == KEY_M_SUB) || (key_value == KEY_M_ADD) || (key_value == KEY_M_ADD_SUB) || (key_value == KEY_ADD_SUB)) /*&&(!Flag_Key.Smoking)*/) // ³¤°´°´¼ü
+    {
+      Flag_Key.LongPress = 1;
+    }
+    if (!Flag_Key.LongPress) // ³¤°´°´¼ü
+    {
+      if (R_Key.LongCT < 250)
+        R_Key.LongCT++;
+      if ((R_Key.PressCT == 20) || (R_Key.PressCT == 30))
+      {
+        //  if (R_Key.LongCT > 100)
+        //  R_Key.PressCT = 24;
+        //  else
+        R_Key.PressCT = 22;
+        if (key_value == KEY_ADD)
+          key_value1 = KEY_ADD;
+        else if (key_value == KEY_SUB)
+          key_value1 = KEY_SUB;
+      }
+    }
+    key_realxvalue = key_value;
+  }
+
+  R_key_anxiaOpen = key_value1;
+}
+
+/*//xh=0: µçÑ¹µ÷ÕûÊ±¼ä  xh=1: µçÑ¹µ÷ÕûÊ±¼ä*/
+u16 KEY_R_ADD_SUB(u8 *KEY, s16 R, u8 KADD, u8 KSUB, s16 max, s16 min, s8 bu, u8 xh, u8 tim)
+{
+  if (*KEY == KADD) // ¼Ó
+  {
+    if (R < max)
+    {
+      R += bu;
+      // tick.timeout = OutTimeMain; //¸üÐÂÁÁÆÁÊ±¼ä
+    }
+    else if (xh)
+    {
+      // if ((!tim) || (tim >= 20))
+      if ((!tim) || (tim >= 30))
+      {
+        R = min;
+      }
     }
   }
-  Key_val_clear();
+  else if (*KEY == KSUB) // ¼õ
+  {
+    if (R > min)
+    {
+      R -= bu;
+      // tick.timeout = OutTimeMain;//¸üÐÂÁÁÆÁÊ±¼ä
+    }
+    else if (xh)
+    {
+      // if ((!tim) || (tim >= 20))
+      if ((!tim) || (tim >= 30))
+      {
+        R = max;
+      }
+    }
+  }
+  if (R > max)
+    R = max;
+  else if (R < min)
+    R = min;
+  return R;
 }
+
+void JudgeSetKey(void)
+{
+  // if (Flag_PowerAdj || Flag.VDDLow) // µçÔ´µ÷Õû»òµÍµçÑ¹
+  //   return;
+  // if (R_key_anxiaOpen == F_PRESS5C) // °´¼ü5C
+  // {
+  //   if (Flag_SystemONOFF) // ÏµÍ³¿ªÆô
+  //   {
+  //     InPwerOffingProcess(); // ÏµÍ³¹Ø±Õ
+  //   }
+  //   else
+  //   {
+  //     Flag_SystemONOFF = 1;     // ÏµÍ³¿ªÆô
+  //     Flag_Key.All_Invalid = 1; // ËùÓÐ°´¼üÎÞÐ§
+  //     InProcessPowerOn();       // ÏµÍ³¿ªÆô
+  //   }
+  //   Flag_Power_Off = 0; // µçÔ´¹Ø±Õ±êÖ¾
+  // }
+
+  // if (Flag_SystemONOFF) // ÏµÍ³¿ªÆô
+  // {
+  //   if (R_key_anxiaOpen == F_PRESS2C) // °´¼ü2C
+  //   {
+  //     Flag_Preheating = 1;
+  //     //  R_DisPowerAdjDuty=23;
+  //     //  Flag_PowerAdj=1;
+  //     InMainProcess(); // Ö÷´¦Àí
+
+  //     // InSetPowerProcess();// ÉèÖÃ¹¦ÂÊ
+  //   }
+
+  //   if (R_key_anxiaOpen == F_LOCKED)
+  //   {
+  //     Flag_Key.Locked = !Flag_Key.Locked;
+  //   }
+  // }
+}
+
+void TaskKey(void)
+{
+  // if (g_b_task_jtim) // 20ms
+  {
+    // g_b_task_jtim = 0;
+    // feed_watchdog();
+    JudgeKey();
+    JudgeSetKey(); // ÉèÖÃ°´¼ü
+  }
+}
+
+#if 0 // ¿ìËÙÏìÓ¦ÎüÑÌ
+void QuickEcig(void)
+{
+
+    R8_Key_Smoke = key_value;
+    if (Flag_Key.Locked) // Ëø¶¨¼ü
+    {
+        R8_Key_Smoke = R8_Key_Smoke & 0xfb; // Ëø¶¨¼üÏÂ£¬Ö»ÏìÓ¦5C¼ü
+    }
+    if (Flag_Preheating && Flag_Out.Smoking) // Ô¤ÈÈÇÒÑÌÎí
+    {
+        Flag_First_Egic = 1; // Ô¤ÈÈÇÒÑÌÎíÏÂ£¬²»ÏìÓ¦ÆäËû°´¼ü
+        return;
+    }
+    //    if(R_Status != D_ProcessMain)
+    //    {
+    //        Flag_First_Egic = 0;
+    //        return;
+    //    }
+    if ((Flag_SystemONOFF) && ((R_Status == D_ProcessMain) /*||(R_Status == D_ProcessKeyLock)*/ || (R_Status == D_ChargeProcess))) // ÏµÍ³¿ªÆôÇÒ×´Ì¬ÎªÖ÷×´Ì¬»ò³äµç×´Ì¬
+    {
+        if (R8_Key_Smoke >= KEY_M)
+        {
+            if ((Flag_Key.All_Invalid) || (Flag_Key.Press_Invalid) || (Flag_First_Egic) || Flag_PowerAdj)
+                return;
+            Flag_First_Egic = 1;
+            if ((R_Key.Data != 0x00))
+                return;
+            if (Flag.LowBat) // µÍµç³Ø
+            {
+                return;
+            }
+            else
+            {
+
+                CHARGE_EN_OFF(); // ¹Ø±Õ³äµç
+                if (R_Bat.Analog <= Bat32V)
+                {
+                    return;
+                }
+                if (R_Load > MaxLoadVol || R_Load < MinLoadVol || R_Load > 3050) //	5.0*20=100???????5.05????????????????
+                {
+                    return;
+                }
+                __delay_us(100); // ±£Ö¤µçÆ½ÎÈ¶¨
+                // if (R_Load < MinLoadVol) // 0.0.25*20=5   ShortLoad
+                // {
+                //     return;
+                // }
+                Read1C_LoadRes();
+                if ((R_Load_0 > MaxLoadVol) || (R_Load_0 < MinLoadVol))
+                {
+                    return;
+                }
+                // if (!B_Charge_Access) // ³äµç·ÃÎÊ±êÖ¾
+                if (key_value_R_Puffnum_0 == 0)
+                    Compara_Smoking();
+            }
+        }
+        else
+        {
+            // key_value_R_Puffnum_0 = 0;
+            Flag_First_Egic = 0;
+        }
+    }
+    else
+    {
+        Flag_First_Egic = 0;
+    }
+}
+#endif

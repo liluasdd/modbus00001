@@ -350,7 +350,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 
     // 配置GPIO引脚为模拟输入模式（ADC通道0-3）
     /*多通道*/
-    gpio_init_struct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3;
+    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_5;
     // /*单通道*/
     // gpio_init_struct.Pin = GPIO_PIN_1;
     gpio_init_struct.Mode = GPIO_MODE_ANALOG; // 模拟输入模式

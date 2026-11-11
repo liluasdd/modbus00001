@@ -73,7 +73,8 @@ void MX_TIM2_Init(void)
   // 2. 修改 PSC 和 ARR 实现 100us
   htim2.Init.Prescaler = 72 - 1; // 72MHz / 72 = 1MHz (1us)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 100 - 1; // 1MHz 计数 100 次 = 100us
+  htim2.Init.Period = 10000 - 1; // 1MHz 计数 100 次 = 100us  10ms
+  // htim2.Init.Period = 100 - 1; // 1MHz 计数 100 次 = 100us
   // htim2.Init.Period = 200 - 1; // 1MHz 计数 100 次 = 100us
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -147,7 +148,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM4_CLK_ENABLE();
 
     // TIM4????配置
-    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);// 最高优先级0
+    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 最高优先级0
     // TIM4????使能
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
