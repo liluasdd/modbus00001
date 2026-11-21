@@ -69,10 +69,8 @@ u8 s_tim_100ms = 1;
 u8 s_tim_500ms = 1;
 u8 s_tim_2s = 0;
 volatile u8 g_485_send_tim = 0;
-volatile u8 adc_done_flag = 0;
 
 extern ADC_HandleTypeDef adc_handle; // ADC句柄
-extern volatile u8 adc_done_flag;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -188,16 +186,7 @@ void SysTick_Handler(void)
   }
 }
 
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA转换半完成回调函数
-{
-  if (hadc->Instance == ADC1)
-    adc_done_flag = 1;
-}
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA转换完成回调函数
-{
-  if (hadc->Instance == ADC1)
-    adc_done_flag = 2;
-}
+
 
 // 声明 dma_handle 是在其他文件定义的全局变量
 extern DMA_HandleTypeDef hdma_adc1;
@@ -222,7 +211,7 @@ void TIM2_IRQHandler(void)
       if (g_b_485_send_tick) // 485发送超时
       {
         g_485_send_tim++;
-        if (g_485_send_tim >= 50)
+        if (g_485_send_tim >= 25) /* 485发送超时 500ms*/
         {
           g_485_send_tim = 0;
           g_b_485_send_Error = 1;
@@ -308,108 +297,6 @@ void TIM4_IRQHandler(void)
   }
 }
 
-/**
- * @brief This function handles USART2 global interrupt.
- */
-void USART2_IRQHandler(void)
-{
-#if freertos_modbus
-  /* USER CODE BEGIN USART2_IRQn 1 */
-
-  // 1. 处理溢出错误（不处理的话串口会卡死）
-  if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET)
-  {
-    __HAL_UART_CLEAR_OREFLAG(&huart2); // 清除 ORE 标志（先读 SR 再读 DR）
-    // 发生溢出说明丢数据了，直接丢弃当前帧，等待下一帧
-    Modbus_ResetRx(); // Modbus 复位函数
-  }
-
-  // 2. 接收中断
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET &&
-      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET)
-  {
-    if (g_b_485_send_tick)
-    {
-      (void)huart2.Instance->DR; // 发送中：读 DR 清 RXNE，数据丢弃
-    }
-    else
-    {
-      // 交给 FreeModbus 处理。
-      // 注意：内部的 xMBRTUReceiveFSM 会读走 DR（也就是调用了你的 GetByte）
-      // 并且在收完一帧后调用 xQueueSendFromISR 产生 EV_FRAME_RECEIVED 事件
-      prvvUARTRxISR();
-    }
-  }
-
-  // 3. 发送空（TXE）中断
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET &&
-      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) != RESET)
-  {
-    // 注意：通常不用手动清 TXE，因为向 DR 写数据会自动清 TXE
-    prvvUARTTxReadyISR();
-  }
-
-  // 4. 发送完成（TC）中断
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
-      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
-  {
-    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // 清 TC 标志
-    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // 关 TC 中断
-
-    RS485_DE_LOW_OFF; // 切回接收
-    g_b_485_send_Error = 0;
-    g_b_485_send_tick = 0;
-
-    /* 确保接收中断是打开的，准备接收主站下一帧 */
-    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
-  }
-
-  ///* 不能在这里调用 HAL_UART_IRQHandler(&huart2);  我已经在上面完全接管了硬件！*/
-  /* USER CODE END USART2_IRQn 1 */
-
-#else
-  /* USER CODE BEGIN USART2_IRQn 1 */
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
-  {
-    // uint8_t ch = (uint8_t)(huart2.Instance->DR);
-    if (g_b_485_send_tick) // 发送数据标准，发送数据时，不接收数据。
-    {
-      // uint8_t ch = (uint8_t)(huart2.Instance->DR);
-      (void)huart2.Instance->DR; // 发送中：读 DR 清 RXNE，数据丢弃
-    }
-    else
-    {
-      // vMBPortTimersEnable();
-      prvvUARTRxISR(); // 接收中断服务函数，用于Modbus接收数据
-    }
-  }
-  ///* 发送阶段 */
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET)
-  {
-    prvvUARTTxReadyISR(); // 发送中断服务函数，用于Modbus发送数据
-  }
-
-  ///* 发送最后一个字节 *//* 当硬件真正发完最后一个字节，触发 TC 中断 */
-  if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
-      __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
-  {
-    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // 清 TC 标志
-    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // 关 TC 中断
-
-    RS485_DE_LOW_OFF; // 现在可以安全切回接收了
-    g_b_485_send_Error = 0;
-    g_b_485_send_tick = 0; // 清除发送标志
-
-    /* 确保接收中断是打开的，准备接收主站下一帧 */
-    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
-  }
-
-  /*清 NVIC pending 位，防止中断退出后立刻又进来。但正常情况硬件会自动处理，这行是保险。*/
-  // HAL_NVIC_ClearPendingIRQ(USART2_IRQn);//不屏蔽，可能丢字节：清除了合法的新 pending 请求
-  HAL_UART_IRQHandler(&huart2);
-  /* USER CODE END USART2_IRQn 1 */
-#endif
-}
 
 /* USER CODE BEGIN 1 */
 

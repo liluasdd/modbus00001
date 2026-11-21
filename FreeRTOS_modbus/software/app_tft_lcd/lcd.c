@@ -897,16 +897,16 @@ void LCD_ShowString(u16 x, u16 y, u16 width, u16 height, u8 size, u8 *p)
 void Show_Str(u16 x, u16 y, u8 *str, u8 size, u8 mode)
 {
 	u16 x0 = x;
-	u8 bHz = 0;		  // 字符或者中文
+//	u8 bHz = 0;		  // 字符或者中文
 	while (*str != 0) // 数据未结束
 	{
-		if (!bHz) // 字符
-		{
-			if (x > (lcddev.width - size / 2) || y > (lcddev.height - size))
+		// if (!bHz) // 字符
+		// {
+			if (x > (lcddev.width - size / 2) || y > (lcddev.height - size))/*判断是否超出显示范围*/
 				return;
-			if (*str > 0x80)
-				bHz = 1; // 中文
-			else		 // 字符
+			// if (*str > 0x80)
+			// 	bHz = 1; // 中文
+			// else		 // 字符
 			{
 				if (*str == 0x0D) // 换行符号
 				{
@@ -929,22 +929,22 @@ void Show_Str(u16 x, u16 y, u8 *str, u8 size, u8 mode)
 				}
 				str++;
 			}
-		}
-		else // 中文
-		{
-			if (x > (lcddev.width - size) || y > (lcddev.height - size))
-				return;
-			bHz = 0; // 有汉字库
-			// if (size == 32)
-			// 	GUI_DrawFont32(x, y, str, mode);
-			// else if (size == 24)
-			// 	GUI_DrawFont24(x, y, str, mode);
-			// else
-			//	GUI_DrawFont16(x, y, str, mode);
+		// }
+		// else // 中文
+		// {
+		// 	if (x > (lcddev.width - size) || y > (lcddev.height - size))
+		// 		return;
+		// 	bHz = 0; // 有汉字库
+		// 	// if (size == 32)
+		// 	// 	GUI_DrawFont32(x, y, str, mode);
+		// 	// else if (size == 24)
+		// 	// 	GUI_DrawFont24(x, y, str, mode);
+		// 	// else
+		// 	//	GUI_DrawFont16(x, y, str, mode);
 
-			str += 2;
-			x += size; // 下一个汉字偏移
-		}
+		// 	str += 2;
+		// 	x += size; // 下一个汉字偏移
+		// }
 	}
 }
 

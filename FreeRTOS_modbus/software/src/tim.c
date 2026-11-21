@@ -91,7 +91,7 @@ void MX_TIM2_Init(void)
 
   // 3. 开启 TIM2 的 NVIC 中断
   //  HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
-  HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
+  HAL_NVIC_SetPriority(TIM2_IRQn, 7, 0);
 
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
   // 4.启动定时器，并开启中断
@@ -122,9 +122,8 @@ void MX_TIM3_Init(void)
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
 
-  HAL_NVIC_SetPriority(TIM3_IRQn, 6, 0);
-
-  HAL_NVIC_EnableIRQ(TIM3_IRQn);
+  // HAL_NVIC_SetPriority(TIM3_IRQn, 6, 0);
+  // HAL_NVIC_EnableIRQ(TIM3_IRQn);
 
   // TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   // TIM_MasterConfigTypeDef sMasterConfig = {0};
@@ -158,7 +157,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM4_CLK_ENABLE();
 
     // TIM4????配置
-    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 最高优先级0
+    HAL_NVIC_SetPriority(TIM4_IRQn, 6, 0); // 最高优先级0
     // TIM4????使能
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   }
@@ -168,7 +167,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM3_CLK_ENABLE();
 
     /* TIM3????配置 */
-    HAL_NVIC_SetPriority(TIM3_IRQn, 0, 2); //
+    HAL_NVIC_SetPriority(TIM3_IRQn, 6, 0); //
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   }
   else if (tim_baseHandle->Instance == TIM2)
@@ -177,7 +176,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM2_CLK_ENABLE();
 
     /* TIM2????配置 */
-    HAL_NVIC_SetPriority(TIM2_IRQn, 2, 0);
+    HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
   }
 }
@@ -203,60 +202,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
     HAL_NVIC_DisableIRQ(TIM3_IRQn);
   }
 }
-
-/* USER CODE BEGIN 1 */
-
-// u8 g_b_task_jtim = 0;
-// u8 g_b_485_send_tick = 0;
-// u8 g_b_485_send_Error = 0;
-// u8 g_b_100ms_jtim = 0;
-// u8 g_b_2s_jtim = 0;
-
-// extern void prvvTIMERExpiredISR(void);
-// /* TIM3????回调函数 - 100us定时???? */
-// void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-// {
-//   if (htim->Instance == TIM3)
-//   {
-//     s_tim0_10ms++;
-//     s_tim0_100ms++;
-//     if (s_tim0_10ms >= 100)
-//     {
-//       g_b_task_jtim = 1;
-//       s_tim0_10ms = 0;
-//       if (g_b_485_send_tick)// 485发送超时
-//       {
-//         g_485_send_tim++;
-//         if (g_485_send_tim >= 50)
-//         {
-//           g_485_send_tim = 0;
-//           g_b_485_send_Error = 1;
-//         }
-//       }
-//       else//
-//       {
-//         g_485_send_tim = 0;
-//       }
-//     }
-//     if (s_tim0_100ms >= 1000)
-//     {
-//       s_tim0_2s++;
-//       s_tim0_100ms = 0;
-//       g_b_100ms_jtim = 1;
-
-//       if (s_tim0_2s >= 20)
-//       {
-//         s_tim0_2s = 0;
-//         g_b_2s_jtim = 1;
-//       }
-//     }
-//   }
-
-//   if (htim->Instance == TIM4)
-//   {
-//     prvvTIMERExpiredISR(); // 调用定时器中??服务函数
-//   }
-// }
 
 /* USER CODE END 1 */
 

@@ -3,18 +3,26 @@
 
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal.h"
+#include "stdint.h"/* 包含标准整数类型 */
 
 #include "usertype.h"
 
+
 ///* 包含用户bus应用头文件 */
+#include "sys_monitor.h"/* 系统监控头文件 */
 #include "user_mb_app.h"
 ///*打印头文件 */
 #include <stdio.h>
+#include "semphr.h" // 提供互斥锁相关的 API
+#include <stdarg.h> // 提供 va_list, va_start, va_end
+#include <stdio.h>  // 提供 vprintf
+#include <string.h> // 提供 memset
+
+#include "uart.h"
 
 #include "sys.h"
 #include "FreeRTOS.h"
 #include "delay.h"
-#include "uart.h"
 
 #include "gpio.h"
 #include "usart.h"
@@ -25,11 +33,15 @@
 
 #include "mb.h"
 #include "mbport.h"
+#include "mbrtu.h"
 #include "user_mb_app.h"
 #include "APP_modbus.h"
 
-//////lcd
+/////* lcd，led，oled相关 */
 #include "lcd.h"
+#include "led.h"
+#include "oled.h"
+
 // #include "font.h"
 
 extern TIM_HandleTypeDef htim4;
@@ -41,10 +53,6 @@ extern void prvvUARTRxISR(void);
 extern void prvvTIMERExpiredISR(void);
 
 extern void freertos_test(void);
-extern void u16_to_4digits(char *s, uint16_t v);
-extern void ADC_DMA_scan(void);
-extern void Led_scan(void);
-
 static void SystemClock_Config(void);
 void Error_Handler(void);
 

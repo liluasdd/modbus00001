@@ -64,12 +64,4 @@ extern void usart_send_string( uint8_t *s);
 #endif
 #endif /*__ usart_H */
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

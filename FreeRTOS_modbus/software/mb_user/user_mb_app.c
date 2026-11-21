@@ -87,9 +87,6 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
     {
         eStatus = MB_ENOREG; // ¼Ä´æÆ÷µØÖ·³¬³ö·¶Î§
     }
-// #if DEBUG_UART_ENABLE
-//     printf("hello %d\r\n", pusRegInputBuf[iRegIndex - 1]); // usSRegInBuf[S_REG_INPUT_NREGS]
-// #endif
     return eStatus;
 }
 #if 1
@@ -156,10 +153,6 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
     {
         eStatus = MB_ENOREG;
     }
-
-// #if DEBUG_UART_ENABLE
-//     printf("0x03,0x06,0x10=16. %d\r\n", pusRegHoldingBuf[iRegIndex - 1]);
-// #endif
 
      return eStatus;
 }

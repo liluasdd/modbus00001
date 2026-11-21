@@ -13,7 +13,7 @@
 #define UART_EINVAL 3   /* 参数错误 */
 
 /* UART收发缓冲大小 */
-#define UART1_RX_BUF_SIZE 128
+#define UART1_RX_BUF_SIZE 256
 #define UART1_TX_BUF_SIZE 64
 
 #define debug_printf(format, args...) \
@@ -25,5 +25,7 @@
     } while (0)
 
 void uart_init(uint32_t bound); /* 串口初始化函数 */
+void Log_Init(void);
+void Log_Printf(const char *format, ...);
 
 #endif

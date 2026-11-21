@@ -208,9 +208,6 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     }
 
     EXIT_CRITICAL_SECTION(); // Modbus协议栈接收临界区退出
-// #if DEBUG_UART_ENABLE
-//     printf("RTU %d  %d  %d\r\n", ucRTUBuf[MB_SER_PDU_ADDR_OFF], ucRTUBuf[MB_SER_PDU_PDU_OFF], *pusLength);
-// #endif
     return eStatus;
 }
 
@@ -250,11 +247,6 @@ eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
 
         /* Activate the transmitter. */
         eSndState = STATE_TX_XMIT; // 发送状态机状态切换为发送状态
-        // //////发送前使能RS485发送使能，并清空发送发送定时器
-        // RS485_DE_HIGH_ON;                 // 使能RS485发送使能
-        // delay_us(6);                      // 等待收发器稳定
-        // g_b_485_send_tick = 1;            // 发送定时器初始化为1
-        // g_485_send_tim = 0;               // 发送定时器初始化为0
         vMBPortSerialEnable(FALSE, TRUE); // 启用串口发送中断
     }
     else
@@ -357,14 +349,6 @@ BOOL xMBRTUTransmitFSM(void)
         else
         {
             xNeedPoll = xMBPortEventPost(EV_FRAME_SENT); // 发送完成，发送 EV_FRAME_SENT 事件
-
-            /* Disable transmitter. This prevents another transmit buffer * empty interrupt. */
-            /* 等最后一个字节真正发完，再切回接收 */
-            // while (!(USART2->SR & USART_SR_TC));
-            // RS485_DE_LOW_OFF;                 // 使能RS485接收使能
-            // delay_us(3);                      // 等待收发器稳定
-            // g_b_485_send_Error = 0;           // 发送错误标志位初始化为0
-            // g_b_485_send_tick = 0;            // 发送定时器初始化为0
             vMBPortSerialEnable(TRUE, FALSE); // 禁用发送器
             eSndState = STATE_TX_IDLE;        // 发送状态机状态切换为空闲状态
         }

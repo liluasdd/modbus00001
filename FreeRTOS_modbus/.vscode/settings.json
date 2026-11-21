@@ -28,6 +28,8 @@
         "task.h": "c",
         "key.h": "c",
         "mb.h": "c",
-        "mbframe.h": "c"
+        "mbframe.h": "c",
+        "led.h": "c",
+        "usertype.h": "c"
     }
 }

@@ -48,12 +48,12 @@ static BOOL xEventInQueue;
 // BOOL xMBPortEventPost(eMBEventType eEvent)
 // {
 //     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-//     if (xPortIsInsideInterrupt()) 
+//     if (xPortIsInsideInterrupt())
 //     {
 //         xQueueSendFromISR(xEventQueue, &eEvent, &xHigherPriorityTaskWoken);
 //         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-//     } 
-//     else 
+//     }
+//     else
 //     {
 //         xQueueSend(xEventQueue, &eEvent, 0);
 //     }
@@ -63,7 +63,7 @@ static BOOL xEventInQueue;
 // BOOL xMBPortEventGet(eMBEventType *eEvent)
 // {
 //     /* 核心：使用 portMAX_DELAY 阻塞等待！ */
-//     if (xQueueReceive(xEventQueue, eEvent, portMAX_DELAY) == pdPASS) 
+//     if (xQueueReceive(xEventQueue, eEvent, portMAX_DELAY) == pdPASS)
 //     {
 //         return TRUE;
 //     }
@@ -80,12 +80,9 @@ BOOL xMBPortEventInit(void)
     {
         return TRUE;
     }
-    else
-    {
-        return FALSE;
-    }
+    return FALSE;
 #else
-    xEventInQueue = FALSE;
+    xEventInQueue = FALSE; /* 初始化事件队列为空 */
     return TRUE;
 #endif
 }

@@ -1,6 +1,7 @@
 #include "adc.h"
 #include "main.h"
 
+volatile u8 g_adc_done_flag = 0;
 // u8 adc_DMA_num = 0;
 uint16_t adc_ch0[adc_DMA_max];
 uint16_t adc_ch1[adc_DMA_max];
@@ -320,9 +321,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
     __HAL_RCC_ADC1_CLK_ENABLE();  // 使能ADC1时钟  (配置调用前已使能了)
     __HAL_RCC_GPIOA_CLK_ENABLE(); // 使能GPIOA时钟（GPIO已经初始化了）
     /*多通道*/
-    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_5;  //请在进入前配置ADC通道引脚为模拟输入模式
-    gpio_init_struct.Mode = GPIO_MODE_ANALOG; // 模拟输入模式
-    HAL_GPIO_Init(GPIOA, &gpio_init_struct);  // 初始化GPIOA
+    gpio_init_struct.Pin = GPIO_PIN_4 | GPIO_PIN_5; // 请在进入前配置ADC通道引脚为模拟输入模式
+    gpio_init_struct.Mode = GPIO_MODE_ANALOG;       // 模拟输入模式
+    HAL_GPIO_Init(GPIOA, &gpio_init_struct);        // 初始化GPIOA
 
     // 配置ADC时钟源
     adc_clk_init.PeriphClockSelection = RCC_PERIPHCLK_ADC; // 选择ADC外设时钟
@@ -357,9 +358,14 @@ void dma_config(void)
   __HAL_DMA_ENABLE_IT(&hdma_adc1, DMA_IT_HT); // ← 关键，别漏
   __HAL_DMA_ENABLE_IT(&hdma_adc1, DMA_IT_TC);
 
-  // NVIC 配置
+// NVIC 配置
+#if freertos_modbus
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+#else
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+#endif
 }
 
 // 配置4个ADC通道（PA0-PA3）
@@ -407,4 +413,103 @@ void stop_adc(void) // 停止ADC DMA传输
   // __HAL_RCC_TIM2_CLK_DISABLE();
   // // 彻底关掉 TIM2 的 NVIC 中断通道（它想进都进不来）
   // HAL_NVIC_DisableIRQ(TIM2_IRQn);
+}
+
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA转换半完成回调函数
+{
+  if (hadc->Instance == ADC1)
+    g_adc_done_flag = 1;
+}
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA转换完成回调函数
+{
+  if (hadc->Instance == ADC1)
+    g_adc_done_flag = 2;
+}
+
+u16 ADC_CHi_NUM1;
+u16 ADC_CHi_NUM2;
+u16 ADC_CHi_tmp1;
+u16 ADC_CHi_tmp2;
+u8 oled_ADC_CHi_num = 1;
+
+uint8_t R_Task = 0;
+uint16_t adc_dma_result_min1 = 0xFFFF;
+uint16_t adc_dma_result_max1 = 0;
+uint16_t adc_dma_result_min2 = 0xFFFF;
+uint16_t adc_dma_result_max2 = 0;
+/* 输入寄存器缓冲区（只读） */
+extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
+
+void ADC_DMA_scan(void)
+{
+  char str[5];
+  uint8_t i = 0;
+  uint16_t base, v0, v1;
+
+  // if (R_Task != D_Task2)
+  //     return;
+
+  if (oled_ADC_CHi_num)
+  {
+    ADC_CHi_NUM1 = 0;
+    ADC_CHi_NUM2 = 0;
+    ADC_CHi_tmp1 = 1;
+    ADC_CHi_tmp2 = 1;
+    oled_ADC_CHi_num = 0;
+    Show_Str(10, 10, "AD1:0000", 16, 0);
+    Show_Str(90, 10, "AD2:0000", 16, 0);
+  }
+  if (g_adc_done_flag != 1 && g_adc_done_flag != 2)
+    return;
+  base = (g_adc_done_flag == 1) ? 0 : ADC_GROUP_PER_HALF;
+
+  adc_dma_result_max1 = 0;
+  adc_dma_result_min1 = 0xFFFF;
+  adc_dma_result_max2 = 0;
+  adc_dma_result_min2 = 0xFFFF;
+  ADC_CHi_NUM1 = 0;
+  ADC_CHi_NUM2 = 0;
+
+  for (i = 0; i < ADC_GROUP_PER_HALF; i++)
+  {
+    v0 = adc_result[base + i][0];
+    v1 = adc_result[base + i][1];
+
+    ADC_CHi_NUM1 += v0;
+    ADC_CHi_NUM2 += v1;
+
+    if (v0 < adc_dma_result_min1)
+      adc_dma_result_min1 = v0;
+    if (v0 > adc_dma_result_max1)
+      adc_dma_result_max1 = v0;
+    if (v1 < adc_dma_result_min2)
+      adc_dma_result_min2 = v1;
+    if (v1 > adc_dma_result_max2)
+      adc_dma_result_max2 = v1;
+  }
+
+  ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
+  ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
+  // 打印ADC的值 ADC_CHi_NUM1和ADC_CHi_NUM2
+  // Log_Printf("ADC_CHi_NUM1:%d,\n ADC_CHi_NUM2:%d\n", ADC_CHi_NUM1, ADC_CHi_NUM2);
+
+  if (ADC_CHi_tmp1 != ADC_CHi_NUM1)
+  {
+    usSRegInBuf[0] = ADC_CHi_NUM1; // 通道1 // 直接赋值modbus寄存器
+    ADC_CHi_tmp1 = ADC_CHi_NUM1;
+    u16_to_4digits(str, ADC_CHi_NUM1);
+    // sprintf(str, "%04u", ADC_CHi_NUM1);
+    Show_Str(42, 10, (u8 *)str, 16, 0);
+    // Show_Str((base == 0 ? 58 : 168), 10, (u8 *)str, 24, 0);
+  }
+  if (ADC_CHi_tmp2 != ADC_CHi_NUM2)
+  {
+    usSRegInBuf[1] = ADC_CHi_NUM2; // 通道2 // 直接赋值modbus寄存器
+    ADC_CHi_tmp2 = ADC_CHi_NUM2;
+    u16_to_4digits(str, ADC_CHi_NUM2);
+    Show_Str(122, 10, (u8 *)str, 16, 0);
+    //        Show_Str(42, 30, (u8 *)str, 16, 0);
+    // Show_Str((base == 0 ? 58 : 168), 40, (u8 *)str, 24, 0);
+  }
+  g_adc_done_flag = 0;
 }

@@ -1,8 +1,8 @@
- // FreeRTOS 版本为 2024.06.05.  AC5 (ARMCC)版本 非 AC6 (ARMCLANG)
+ // FreeRTOS �汾Ϊ 2024.06.05.  port 2024.06.05  �汾 RVDS  ARM_CM3
  
- // 内核：CM3，编译器：AC5，堆分配：heap_4 
+ // �ںˣ�CM3����������kill5 5���ѷ��䣺heap_4 
 
- // FreeRTOSConfig.h  在inc文件内
+ // FreeRTOSConfig.h  ��inc�ļ���
 
- /* 可留可不留的文件：协程（Co-routines，对应文件 croutine.c）  已删除
- 是 FreeRTOS 提供的一种轻量级、占用内存极小的“非抢占式”多任务机制。*/
+ /* �����ɲ������ļ���Э�̣�Co-routines����Ӧ�ļ� croutine.c��  δɾ�������Ƴ�kill5������
+ �� FreeRTOS �ṩ��һ����������ռ���ڴ漫С�ġ�����ռʽ����������ơ�*/

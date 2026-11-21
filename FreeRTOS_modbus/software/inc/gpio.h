@@ -8,10 +8,10 @@ extern "C"
 
 /* USER CODE END Private defines */
 #include "main.h"
-#define ADC_DMA_OPEN 1           /* 1 ¿ªÆôADC DMAÄ£Ê½£¬0¹Ø±Õ */
-#define DEBUG_UART_ENABLE 0      // 1 ¿ªÆôµ÷ÊÔ´®¿Ú´òÓ¡£¬0¹Ø±Õ
-#define CONFIG_NEED_MESSAGESMG 0 // 1 ¿ªÆôÏûÏ¢¹ÜÀí£¬0¹Ø±Õ
-#define CONFIG_NEED_PWM 0        // 1 ¿ªÆôPWM£¬0¹Ø±Õ
+#define ADC_DMA_OPEN 1           /* 1 å¼€å¯ADC DMAæ¨¡å¼ï¼Œ0å…³é—­ */
+#define DEBUG_UART_ENABLE 0      // 1 å¼€å¯è°ƒè¯•ä¸²å£æ‰“å°ï¼Œ0å…³é—­
+#define CONFIG_NEED_MESSAGESMG 0 // 1 å¼€å¯æ¶ˆæ¯ç®¡ç†ï¼Œ0å…³é—­
+#define CONFIG_NEED_PWM 0        // 1 å¼€å¯PWMï¼Œ0å…³é—­
 #define adc_DMA_max 12
 #define freertos_modbus 1
 
@@ -20,7 +20,7 @@ extern "C"
 #define ADC_BUF_LEN (2 * ADC_GROUP_PER_HALF * ADC_CH_NUM)
     // extern volatile uint16_t adc_result[2 * ADC_GROUP_PER_HALF * ADC_CH_NUM];
     extern volatile uint16_t adc_result[2 * ADC_GROUP_PER_HALF][ADC_CH_NUM];
-    // º¯ÊıÉùÃ÷
+    // å‡½æ•°å£°æ˜
     extern void APPGPIO_INIT(void);
 
     /* USER CODE BEGIN Prototypes */
@@ -28,35 +28,35 @@ extern "C"
 
 #define Led1_pin GPIO_PIN_8
 #define Led1_port GPIOB
-// LED1 ²Ù×÷ºê¶¨Òå£¨Ö±½Ó²Ù×÷¼Ä´æÆ÷£©
-#define Led1_on Led1_port->BRR = Led1_pin      // À­µÍÒı½Å£¨µÍµçÆ½µãÁÁ£©
-#define Led1_off Led1_port->BSRR = Led1_pin    // À­¸ßÒı½Å
-#define Led1_toggle Led1_port->ODR ^= Led1_pin // ·­×ªÒı½Å×´Ì¬
-#define Led1_state (Led1_port->IDR & Led1_pin) // ¶ÁÈ¡Òı½Å×´Ì¬
-// LED1 ÉÏÀ­/ÏÂÀ­ÅäÖÃºê£¨Ö±½Ó²Ù×÷PUPDR¼Ä´æÆ÷£©
-/*led1_pin = GPIO_PIN_8, PUPDR[17:16]¿ØÖÆÒı½Å8
-µÍÎ»Îª2n,¸ßÎ»Îª2n+1
-00 ÎŞÉÏÀ­ÏÂÀ­
-01 ÉÏÀ­
-10 ÏÂÀ­
-11 ±£Áô£¨Î´Ê¹ÓÃ£©*/
+// LED1 æ“ä½œå®å®šä¹‰ï¼ˆç›´æ¥æ“ä½œå¯„å­˜å™¨ï¼‰
+#define Led1_on Led1_port->BRR = Led1_pin      // æ‹‰ä½å¼•è„šï¼ˆä½ç”µå¹³ç‚¹äº®ï¼‰
+#define Led1_off Led1_port->BSRR = Led1_pin    // æ‹‰é«˜å¼•è„š
+#define Led1_toggle Led1_port->ODR ^= Led1_pin // ç¿»è½¬å¼•è„šçŠ¶æ€
+#define Led1_state (Led1_port->IDR & Led1_pin) // è¯»å–å¼•è„šçŠ¶æ€
+// LED1 ä¸Šæ‹‰/ä¸‹æ‹‰é…ç½®å®ï¼ˆç›´æ¥æ“ä½œPUPDRå¯„å­˜å™¨ï¼‰
+/*led1_pin = GPIO_PIN_8, PUPDR[17:16]æ§åˆ¶å¼•è„š8
+ä½ä½ä¸º2n,é«˜ä½ä¸º2n+1
+00 æ— ä¸Šæ‹‰ä¸‹æ‹‰
+01 ä¸Šæ‹‰
+10 ä¸‹æ‹‰
+11 ä¿ç•™ï¼ˆæœªä½¿ç”¨ï¼‰*/
 #define LED1_PULL_UP                    \
     {                                   \
         led1_port->PUPDR &= ~(1 << 17); \
         led1_port->PUPDR |= (1 << 16);  \
-    } // ÉÏÀ­
+    } // ä¸Šæ‹‰
 #define LED1_PULL_DOWN                  \
     {                                   \
         led1_port->PUPDR |= (1 << 17);  \
         led1_port->PUPDR &= ~(1 << 16); \
-    } // ÏÂÀ­
+    } // ä¸‹æ‹‰
 #define LED1_PULL_NONE                  \
     {                                   \
         led1_port->PUPDR &= ~(1 << 17); \
         led1_port->PUPDR &= ~(1 << 16); \
-    } // ÎŞÉÏÀ­ÏÂÀ­
+    } // æ— ä¸Šæ‹‰ä¸‹æ‹‰
 
-// LED1 HAL¿âÄ£Ê½ÅäÖÃºê - ÊäÈëÄ£Ê½
+// LED1 HALåº“æ¨¡å¼é…ç½®å® - è¾“å…¥æ¨¡å¼
 #define LED1_T_Int                                  \
     {                                               \
         GPIO_InitTypeDef GPIO_InitStruct = {0};     \
@@ -65,7 +65,7 @@ extern "C"
         GPIO_InitStruct.Pull = GPIO_NOPULL;         \
         HAL_GPIO_Init(Led1_port, &GPIO_InitStruct); \
     }
-// LED1 HAL¿âÄ£Ê½ÅäÖÃºê - Ä£ÄâÄ£Ê½
+// LED1 HALåº“æ¨¡å¼é…ç½®å® - æ¨¡æ‹Ÿæ¨¡å¼
 #define LED1_T_Ang                                  \
     {                                               \
         GPIO_InitTypeDef GPIO_InitStruct = {0};     \
@@ -73,7 +73,7 @@ extern "C"
         GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;    \
         HAL_GPIO_Init(Led1_port, &GPIO_InitStruct); \
     }
-// LED1 HAL¿âÄ£Ê½ÅäÖÃºê - ÍÆÍìÊä³ö
+// LED1 HALåº“æ¨¡å¼é…ç½®å® - æ¨æŒ½è¾“å‡º
 #define LED1_T_Out                                    \
     {                                                 \
         GPIO_InitTypeDef GPIO_InitStruct = {0};       \
@@ -86,25 +86,25 @@ extern "C"
 
 #define Led2_pin GPIO_PIN_9
 #define Led2_port GPIOB
-// LED2 ²Ù×÷ºê¶¨Òå£¨Ö±½Ó²Ù×÷¼Ä´æÆ÷£©
-#define Led2_on Led2_port->BRR = Led2_pin      // À­µÍÒı½Å£¨µÍµçÆ½µãÁÁ£©
-#define Led2_off Led2_port->BSRR = Led2_pin    // À­¸ßÒı½Å
-#define Led2_toggle Led2_port->ODR ^= Led2_pin // ·­×ªÒı½Å×´Ì¬
-#define Led2_state (Led2_port->IDR & Led2_pin) // ¶ÁÈ¡Òı½Å×´Ì¬
-    // LED2 ÉÏÀ­/ÏÂÀ­ÅäÖÃºê£¨Ö±½Ó²Ù×÷PUPDR¼Ä´æÆ÷£©
-    // Led2_pin = GPIO_PIN_9, PUPDR[19:18]¿ØÖÆÒı½Å9   µÍÎ»Îª2n,¸ßÎ»Îª2n+1
+// LED2 æ“ä½œå®å®šä¹‰ï¼ˆç›´æ¥æ“ä½œå¯„å­˜å™¨ï¼‰
+#define Led2_on Led2_port->BRR = Led2_pin      // æ‹‰ä½å¼•è„šï¼ˆä½ç”µå¹³ç‚¹äº®ï¼‰
+#define Led2_off Led2_port->BSRR = Led2_pin    // æ‹‰é«˜å¼•è„š
+#define Led2_toggle Led2_port->ODR ^= Led2_pin // ç¿»è½¬å¼•è„šçŠ¶æ€
+#define Led2_state (Led2_port->IDR & Led2_pin) // è¯»å–å¼•è„šçŠ¶æ€
+    // LED2 ä¸Šæ‹‰/ä¸‹æ‹‰é…ç½®å®ï¼ˆç›´æ¥æ“ä½œPUPDRå¯„å­˜å™¨ï¼‰
+    // Led2_pin = GPIO_PIN_9, PUPDR[19:18]æ§åˆ¶å¼•è„š9   ä½ä½ä¸º2n,é«˜ä½ä¸º2n+1
 
 #define key1_pin GPIO_PIN_0
 #define key1_port GPIOA
-// KEY1 ¶ÁÈ¡ºê
+// KEY1 è¯»å–å®
 #define READ_KEY1_STATE (key1_port->IDR & key1_pin)
-#define KEY1_PRESSED (!READ_KEY1_STATE) // ¼ÙÉè°´¼ü°´ÏÂÎªµÍµçÆ½
+#define KEY1_PRESSED (!READ_KEY1_STATE) // å‡è®¾æŒ‰é”®æŒ‰ä¸‹ä¸ºä½ç”µå¹³
 
 #define key2_pin GPIO_PIN_1
 #define key2_port GPIOA
-// KEY2 ¶ÁÈ¡ºê
+// KEY2 è¯»å–å®
 #define READ_KEY2_STATE (key2_port->IDR & key2_pin)
-#define KEY2_PRESSED (!READ_KEY2_STATE) // ¼ÙÉè°´¼ü°´ÏÂÎªµÍµçÆ½
+#define KEY2_PRESSED (!READ_KEY2_STATE) // å‡è®¾æŒ‰é”®æŒ‰ä¸‹ä¸ºä½ç”µå¹³
 
 #define USART1_TX_pin GPIO_PIN_9
 #define USART1_TX_port GPIOA
@@ -116,10 +116,11 @@ extern "C"
 #define USART2_RX_pin GPIO_PIN_3
 #define USART2_RX_port GPIOA
 
-#define RS485_DE_pin GPIO_PIN_4 // Modbus 485ÊÕ·¢¿ØÖÆ½Å
+#define RS485_DE_pin GPIO_PIN_4 // Modbus 485æ”¶å‘æ§åˆ¶è„š
 #define RS485_DE_port GPIOA
-#define RS485_DE_HIGH_ON RS485_DE_port->BSRR = RS485_DE_pin // ·¢ËÍÄ£Ê½ (DE/RE ¸ßµçÆ½Ê¹ÄÜ·¢ËÍ)
-#define RS485_DE_LOW_OFF RS485_DE_port->BRR = RS485_DE_pin  // ½ÓÊÕÄ£Ê½ (DE/RE µÍµçÆ½Ê¹ÄÜ½ÓÊÕ)
+#define RS485_DE_HIGH_ON RS485_DE_port->BSRR = RS485_DE_pin // å‘é€æ¨¡å¼ (DE/RE é«˜ç”µå¹³ä½¿èƒ½å‘é€)
+#define RS485_DE_LOW_OFF RS485_DE_port->BRR = RS485_DE_pin  // æ¥æ”¶æ¨¡å¼ (DE/RE ä½ç”µå¹³ä½¿èƒ½æ¥æ”¶)
+#define RS485_DE_state (RS485_DE_port->IDR & RS485_DE_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 
 #define PT100_ADC_pin GPIO_PIN_5
 #define PT100_ADC_port GPIOA
@@ -139,112 +140,112 @@ extern "C"
 #define IIC_sda_pin GPIO_PIN_7
 #define IIC_sda_port GPIOB
 
-#if 1 //////ÆÁÄ» µçÈİÆÁ
-////////////*ÆÁÄ» µçÈİÆÁ 13½Å ²»½Ó *///en
-// #define SPI_cs_pin GPIO_PIN_12 // ½Å1  CS
+#if 1 //////å±å¹• ç”µå®¹å±
+////////////*å±å¹• ç”µå®¹å± 13è„š ä¸æ¥ *///en
+// #define SPI_cs_pin GPIO_PIN_12 // è„š1  CS
 // #define SPI_cs_port GPIOB
-#define SPI_cs_pin GPIO_PIN_8 // ½Å1  CS
+#define SPI_cs_pin GPIO_PIN_8 // è„š1  CS
 #define SPI_cs_port GPIOA
 #define SPI_cs_HIGH_ON SPI_cs_port->BSRR = SPI_cs_pin //
 #define SPI_cs_LOW_OFF SPI_cs_port->BRR = SPI_cs_pin  //
 
-// #define SPI_reset_pin GPIO_PIN_13 // ½Å2  RESET
+// #define SPI_reset_pin GPIO_PIN_13 // è„š2  RESET
 // #define SPI_reset_port GPIOB
-#define SPI_reset_pin GPIO_PIN_11 // ½Å2  RESET
+#define SPI_reset_pin GPIO_PIN_11 // è„š2  RESET
 #define SPI_reset_port GPIOA
 #define SPI_reset_HIGH_ON SPI_reset_port->BSRR = SPI_reset_pin //
 #define SPI_reset_LOW_OFF SPI_reset_port->BRR = SPI_reset_pin  //
 
-// #define SPI_dc_pin GPIO_PIN_4 // ½Å3  DC
-#define SPI_dc_pin GPIO_PIN_12 // ½Å3  DC
+// #define SPI_dc_pin GPIO_PIN_4 // è„š3  DC
+#define SPI_dc_pin GPIO_PIN_12 // è„š3  DC
 #define SPI_dc_port GPIOA
 #define SPI_dc_HIGH_ON SPI_dc_port->BSRR = SPI_dc_pin //
 #define SPI_dc_LOW_OFF SPI_dc_port->BRR = SPI_dc_pin  //
 
-#define SPI_sdi_pin GPIO_PIN_7 // A7 ½Å4 SDI_MOSI
+#define SPI_sdi_pin GPIO_PIN_7 // A7 è„š4 SDI_MOSI
 #define SPI_sdi_port GPIOA
 #define SPI_sdi_HIGH_ON SPI_sdi_port->BSRR = SPI_sdi_pin //
 #define SPI_sdi_LOW_OFF SPI_sdi_port->BRR = SPI_sdi_pin  //
-#define SPI_sdi_state (SPI_sdi_port->IDR & SPI_sdi_pin)  // ¶ÁÈ¡Òı½Å×´Ì¬
+#define SPI_sdi_state (SPI_sdi_port->IDR & SPI_sdi_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 
-// #define SPI_scK_pin GPIO_PIN_5 // ½Å5  SCK
+// #define SPI_scK_pin GPIO_PIN_5 // è„š5  SCK
 // #define SPI_scK_port GPIOA
-#define SPI_scK_pin GPIO_PIN_0 // ½Å5  SCK
+#define SPI_scK_pin GPIO_PIN_0 // è„š5  SCK
 #define SPI_scK_port GPIOB
 #define SPI_scK_HIGH_ON SPI_scK_port->BSRR = SPI_scK_pin //
 #define SPI_scK_LOW_OFF SPI_scK_port->BRR = SPI_scK_pin  //
 
-// #define SPI_led_pin GPIO_PIN_0 // B0 ½Å6  LED ±³¹â
-#define SPI_led_pin GPIO_PIN_1 // B1 ½Å6  LED ±³¹â
+// #define SPI_led_pin GPIO_PIN_0 // B0 è„š6  LED èƒŒå…‰
+#define SPI_led_pin GPIO_PIN_1 // B1 è„š6  LED èƒŒå…‰
 #define SPI_led_port GPIOB
-#define SPI_led_HIGH_ON SPI_led_port->BSRR = SPI_led_pin // ÁÁ±³¹â
-#define SPI_led_LOW_OFF SPI_led_port->BRR = SPI_led_pin  // Ï¨±³¹â
+#define SPI_led_HIGH_ON SPI_led_port->BSRR = SPI_led_pin // äº®èƒŒå…‰
+#define SPI_led_LOW_OFF SPI_led_port->BRR = SPI_led_pin  // ç†„èƒŒå…‰
 
-// #define SPI_sdo_pin GPIO_PIN_6 // A6 ½Å7  SDO_MISO
+// #define SPI_sdo_pin GPIO_PIN_6 // A6 è„š7  SDO_MISO
 // #define SPI_sdo_port GPIOA
-#define SPI_sdo_pin GPIO_PIN_10 // B10 ½Å7  SDO_MISO
+#define SPI_sdo_pin GPIO_PIN_10 // B10 è„š7  SDO_MISO
 #define SPI_sdo_port GPIOB
-#define SPI_sdo_HIGH_ON SPI_sdo_port->BSRR = SPI_sdo_pin // ·¢ËÍÄ£Ê½ (DE/RE ¸ßµçÆ½Ê¹ÄÜ·¢ËÍ)
-#define SPI_sdo_LOW_OFF SPI_sdo_port->BRR = SPI_sdo_pin  // ½ÓÊÕÄ£Ê½ (DE/RE µÍµçÆ½Ê¹ÄÜ½ÓÊÕ)
-#define SPI_sdo_state (SPI_sdo_port->IDR & SPI_sdo_pin)  // ¶ÁÈ¡Òı½Å×´Ì¬
+#define SPI_sdo_HIGH_ON SPI_sdo_port->BSRR = SPI_sdo_pin // å‘é€æ¨¡å¼ (DE/RE é«˜ç”µå¹³ä½¿èƒ½å‘é€)
+#define SPI_sdo_LOW_OFF SPI_sdo_port->BRR = SPI_sdo_pin  // æ¥æ”¶æ¨¡å¼ (DE/RE ä½ç”µå¹³ä½¿èƒ½æ¥æ”¶)
+#define SPI_sdo_state (SPI_sdo_port->IDR & SPI_sdo_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 
-////////µçÈİÆÁµçÈİ´¥Ãş²¿·Ö
-// #define T_CLK_pin GPIO_PIN_10 // ½Å8  T_CLK
-#define T_CLK_pin GPIO_PIN_11 // ½Å8  T_CLK
+////////ç”µå®¹å±ç”µå®¹è§¦æ‘¸éƒ¨åˆ†
+// #define T_CLK_pin GPIO_PIN_10 // è„š8  T_CLK
+#define T_CLK_pin GPIO_PIN_11 // è„š8  T_CLK
 #define T_CLK_port GPIOB
 #define T_CLK_HIGH_ON T_CLK_port->BSRR = T_CLK_pin //
 #define T_CLK_LOW_OFF T_CLK_port->BRR = T_CLK_pin  //
 
-// #define T_CS_pin GPIO_PIN_1 // ½Å9  T_CS
-#define T_CS_pin GPIO_PIN_12 // ½Å9  T_CS
+// #define T_CS_pin GPIO_PIN_1 // è„š9  T_CS
+#define T_CS_pin GPIO_PIN_12 // è„š9  T_CS
 #define T_CS_port GPIOB
 #define T_CS_HIGH_ON T_CS_port->BSRR = T_CS_pin //
 #define T_CS_LOW_OFF T_CS_port->BRR = T_CS_pin  //
 
-// #define T_SDI_pin GPIO_PIN_11 // ½Å10  T_SDI_MOSI
-#define T_SDI_pin GPIO_PIN_13 // ½Å10  T_SDI_MOSI
+// #define T_SDI_pin GPIO_PIN_11 // è„š10  T_SDI_MOSI
+#define T_SDI_pin GPIO_PIN_13 // è„š10  T_SDI_MOSI
 #define T_SDI_port GPIOB
 #define T_SDI_HIGH_ON T_SDI_port->BSRR = T_SDI_pin //
 #define T_SDI_LOW_OFF T_SDI_port->BRR = T_SDI_pin  //
-#define T_SDI_state (T_SDI_port->IDR & T_SDI_pin)  // ¶ÁÈ¡Òı½Å×´Ì¬
+#define T_SDI_state (T_SDI_port->IDR & T_SDI_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 #define T_SDA_IN()                                       \
     {                                                    \
         GPIO_InitTypeDef GPIO_InitStruct = {0};          \
         GPIO_InitStruct.Pin = T_SDI_pin;                 \
         GPIO_InitStruct.Mode = GPIO_MODE_INPUT;          \
-        GPIO_InitStruct.Pull = GPIO_NOPULL; /*¸¡¿ÕÊäÈë*/ \
+        GPIO_InitStruct.Pull = GPIO_NOPULL; /*æµ®ç©ºè¾“å…¥*/ \
         HAL_GPIO_Init(T_SDI_port, &GPIO_InitStruct);     \
     }
 #define T_SDA_OUT()                                              \
     {                                                            \
         GPIO_InitTypeDef GPIO_InitStruct = {0};                  \
         GPIO_InitStruct.Pin = T_SDI_pin;                         \
-        GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; /*ÍÆÍìÊä³ö*/ \
+        GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; /*æ¨æŒ½è¾“å‡º*/ \
         GPIO_InitStruct.Pull = GPIO_NOPULL;                      \
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;             \
         HAL_GPIO_Init(T_SDI_port, &GPIO_InitStruct);             \
     }
 
-#define T_SDO_pin GPIO_PIN_13 // ½Å11  //µçÈİÆÁ£¬²»½Ó´Ë½Å
+#define T_SDO_pin GPIO_PIN_13 // è„š11  //ç”µå®¹å±ï¼Œä¸æ¥æ­¤è„š
 #define T_SDO_port GPIOB
 #define T_SDO_HIGH_ON T_SDO_port->BSRR = T_SDO_pin //
 #define T_SDO_LOW_OFF T_SDO_port->BRR = T_SDO_pin  //
-#define T_SDO_state (T_SDO_port->IDR & T_SDO_pin)  // ¶ÁÈ¡Òı½Å×´Ì¬
+#define T_SDO_state (T_SDO_port->IDR & T_SDO_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 
-#define T_IRQ_pin GPIO_PIN_14 // ½Å12  T_IRQ
+#define T_IRQ_pin GPIO_PIN_14 // è„š12  T_IRQ
 #define T_IRQ_port GPIOB
 #define T_IRQ_HIGH_ON T_IRQ_port->BSRR = T_IRQ_pin //
 #define T_IRQ_LOW_OFF T_IRQ_port->BRR = T_IRQ_pin  //
-#define T_IRQ_state (T_IRQ_port->IDR & T_IRQ_pin)  // ¶ÁÈ¡Òı½Å×´Ì¬
+#define T_IRQ_state (T_IRQ_port->IDR & T_IRQ_pin)  // è¯»å–å¼•è„šçŠ¶æ€
 
 #endif
 
-// // Modbus 485ÊÕ·¢¿ØÖÆ½Å
+// // Modbus 485æ”¶å‘æ§åˆ¶è„š
 // #define RS485_EN_PIN GPIO_PIN_4
 // #define RS485_EN_PORT GPIOA
 // #define RS485_TX_EN RS485_EN_PORT->BSRR = RS485_EN_PIN
 // #define RS485_RX_EN RS485_EN_PORT->BRR = RS485_EN_PIN
-// // 485ÍÆÍìÊä³ö³õÊ¼»¯ºê
+// // 485æ¨æŒ½è¾“å‡ºåˆå§‹åŒ–å®
 // #define RS485_EN_OUT_INIT                               \
 //     {                                                   \
 //         GPIO_InitTypeDef GPIO_InitStruct = {0};         \
@@ -255,19 +256,19 @@ extern "C"
 //         HAL_GPIO_Init(RS485_EN_PORT, &GPIO_InitStruct); \
 //     }
 
-// ADCÍ¨µÀ¶¨Òå£¨HAL¿â·ç¸ñ£©- STM32F103C8T6
-#define AP_CHN_VBAT ADC_CHANNEL_VREFINT    // ÄÚ²¿²Î¿¼µçÑ¹Í¨µÀ
-#define AP_CHN_TEMP ADC_CHANNEL_TEMPSENSOR // ÄÚ²¿ÎÂ¶È´«¸ĞÆ÷Í¨µÀ
+// ADCé€šé“å®šä¹‰ï¼ˆHALåº“é£æ ¼ï¼‰- STM32F103C8T6
+#define AP_CHN_VBAT ADC_CHANNEL_VREFINT    // å†…éƒ¨å‚è€ƒç”µå‹é€šé“
+#define AP_CHN_TEMP ADC_CHANNEL_TEMPSENSOR // å†…éƒ¨æ¸©åº¦ä¼ æ„Ÿå™¨é€šé“
 #define USB_ADC ADC_CHANNEL_5              // PA5
 #define PT100_ADC ADC_CHANNEL_5            // PA5
 #define PT10_ADC ADC_CHANNEL_4             // PA4
 #define AP_CIRCUIT ADC_CHANNEL_3           // PA3
 #define AP_CIRCUIT2 ADC_CHANNEL_7          // PA7
 
-// // ±ê×¼¿âÍêÕûÅäÖÃ
+// // æ ‡å‡†åº“å®Œæ•´é…ç½®
 // #define led1_pin GPIO_Pin_8
 // #define led1_port GPIOB
-// //// Ä£Ê½ÅäÖÃºê
+// //// æ¨¡å¼é…ç½®å®
 // // #def ine  LED1_T_Int                                            \
 // //    {                                                         \
 // //        GPIO_InitTypeDef GPIO_InitStructure;                  \
@@ -283,7 +284,7 @@ extern "C"
 // //        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; \
 // //        GPIO_Init(led1_port, &GPIO_InitStructure);        \
 // //    }
-// //  ²Ù×÷ºê
+// //  æ“ä½œå®
 // #define LED1_ON GPIO_ResetBits(led1_port, led1_pin)
 // #define LED1_OFF GPIO_SetBits(led1_port, led1_pin)
 // #define LED1_TOGGLE GPIO_WriteBit(led1_port, led1_pin, \

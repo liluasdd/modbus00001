@@ -26,133 +26,6 @@ extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
 extern USHORT usSRegHoldBuf[S_REG_HOLDING_NREGS];
 int16_t adc_value = 0;
 
-u8 led_num = 0;
-void Led_scan(void)
-{
-    static uint8_t led_state_num = 0;
-
-    // led_num = !led_num; // 切换led状态位
-
-    if (led_state_num == 0)
-    {
-        led_state_num = 1;
-        if (led_num)
-            Led1_on; // 蓝灯
-        else
-            Led2_on; // 黄灯
-    }
-    else
-    {
-        led_state_num = 0;
-        // if (led_num)
-        Led1_off;
-        // else
-        Led2_off;
-    }
-}
-
-/*
-//索引对应真实波特率
-const uint32_t baud_table[] = {2400,4800,9600,19200,38400,115200};
-
-// g_dev_baud_idx 就是Flash读出来的uint8_t索引
-if(g_dev_baud_idx < sizeof(baud_table)/sizeof(uint32_t))
-{
-    BAUD_num = baud_table[g_dev_baud_idx];
-}
-else
-{
-    BAUD_num = 9600; //索引非法，恢复默认
-}
- */
-
-uint8_t R_Task = 0;
-uint16_t adc_dma_result_min1 = 0xFFFF;
-uint16_t adc_dma_result_max1 = 0;
-uint16_t adc_dma_result_min2 = 0xFFFF;
-uint16_t adc_dma_result_max2 = 0;
-
-extern volatile u8 adc_done_flag;
-u16 ADC_CHi_NUM1 = 100;
-u16 ADC_CHi_NUM2 = 200;
-u16 ADC_CHi_tmp1 = 0;
-u16 ADC_CHi_tmp2 = 0;
-u8 oled_ADC_CHi_num = 1;
-
-void u16_to_4digits(char *s, uint16_t v)
-{
-    s[0] = '0' + (v / 1000) % 10;
-    s[1] = '0' + (v / 100) % 10;
-    s[2] = '0' + (v / 10) % 10;
-    s[3] = '0' + v % 10;
-    s[4] = '\0';
-}
-
-void ADC_DMA_scan(void)
-{
-    char str[5];
-    uint8_t i = 0;
-    uint16_t base, v0, v1;
-
-    // if (R_Task != D_Task2)
-    //     return;
-
-    if (oled_ADC_CHi_num)
-    {
-        oled_ADC_CHi_num = 0;
-        Show_Str(10, 10, "AD1:0000", 16, 0);
-        Show_Str(90, 10, "AD2:0000", 16, 0);
-    }
-    if (adc_done_flag != 1 && adc_done_flag != 2)
-        return;
-    base = (adc_done_flag == 1) ? 0 : ADC_GROUP_PER_HALF;
-
-    adc_dma_result_max1 = 0;
-    adc_dma_result_min1 = 0xFFFF;
-    adc_dma_result_max2 = 0;
-    adc_dma_result_min2 = 0xFFFF;
-    ADC_CHi_NUM1 = 0;
-    ADC_CHi_NUM2 = 0;
-
-    for (i = 0; i < ADC_GROUP_PER_HALF; i++)
-    {
-        v0 = adc_result[base + i][0];
-        v1 = adc_result[base + i][1];
-
-        ADC_CHi_NUM1 += v0;
-        ADC_CHi_NUM2 += v1;
-
-        if (v0 < adc_dma_result_min1)
-            adc_dma_result_min1 = v0;
-        if (v0 > adc_dma_result_max1)
-            adc_dma_result_max1 = v0;
-        if (v1 < adc_dma_result_min2)
-            adc_dma_result_min2 = v1;
-        if (v1 > adc_dma_result_max2)
-            adc_dma_result_max2 = v1;
-    }
-
-    ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
-    ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
-
-    if (ADC_CHi_tmp1 != ADC_CHi_NUM1)
-    {
-        ADC_CHi_tmp1 = ADC_CHi_NUM1;
-        u16_to_4digits(str, ADC_CHi_NUM1);
-        // sprintf(str, "%04u", ADC_CHi_NUM1);
-        Show_Str(42, 10, (u8 *)str, 16, 0);
-        // Show_Str((base == 0 ? 58 : 168), 10, (u8 *)str, 24, 0);
-    }
-    if (ADC_CHi_tmp2 != ADC_CHi_NUM2)
-    {
-        ADC_CHi_tmp2 = ADC_CHi_NUM2;
-        u16_to_4digits(str, ADC_CHi_NUM2);
-        Show_Str(122, 10, (u8 *)str, 16, 0);
-        //        Show_Str(42, 30, (u8 *)str, 16, 0);
-        // Show_Str((base == 0 ? 58 : 168), 40, (u8 *)str, 24, 0);
-    }
-}
-
 int main(void)
 {
     // uint8_t num = 0;
@@ -165,10 +38,13 @@ int main(void)
 
     /* 初始化GPIO */
     APPGPIO_INIT();
-    /* ADC初始化 */
-    MX_ADC1_Init();
+
+    uart_init(115200); // 初始化串口1
+    Log_Init();        // 创建互斥锁
 #if ADC_DMA_OPEN
     adc_dma_init((uint16_t *)&adc_result); // 初始化ADC DMA模式
+#else
+    MX_ADC1_Init();//ADC初始化
 #endif
 
     /* 定时器4初始化 */
@@ -199,7 +75,7 @@ int main(void)
 #endif
     HAL_Delay(200); //  延时200ms    // delay_ms(3000);
     /* Init scheduler */
-    freertos_test(); // 测试FreeRTOS
+    freertos_test(); // 初始化FreeRTOS
 
     vTaskStartScheduler(); // 启动任务调度器
     while (1)
@@ -222,6 +98,20 @@ void Error_Handler(void)
     {
         // 闪烁LED闪烁错误信息
     }
+}
+
+/* 声明为 weak，防止和其他库冲突 */
+__weak void vAssertCalled(const char *pcFile, int line)
+{
+    // 1. 如果你有调试串口，可以把错误打印出来
+    // printf("FreeRTOS Assert Failed! File: %s, Line: %d\r\n", pcFile, line);
+
+    // 2. 关闭中断
+    taskDISABLE_INTERRUPTS();
+
+    // 3. 死循环，等待调试器接管
+    for (;;)
+        ;
 }
 
 #ifdef USE_FULL_ASSERT

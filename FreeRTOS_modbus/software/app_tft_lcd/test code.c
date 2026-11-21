@@ -7,39 +7,39 @@
 //#include "w25qx.h"
 #include "test code.h"
 
-u16 ColorTab[5]={RED,GREEN,BLUE,YELLOW,BRED};//¶¨ÒåÑÕÉ«Êý×é
+u16 ColorTab[5]={RED,GREEN,BLUE,YELLOW,BRED};//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
 u16 ColornTab[8]={RED,MAGENTA,GREEN,DARKBLUE,BLUE,BLACK,LIGHTGREEN};
 
 								 
-//µç×è´¥ÃþÆÁ²âÊÔº¯Êý
+//ï¿½ï¿½ï¿½è´¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½
 void rtp_test(void)
 { 
 	while(1)
 	{
 		tp_dev.scan(0); 		 
-		if(tp_dev.sta&TP_PRES_DOWN)			//´¥ÃþÆÁ±»°´ÏÂ
+		if(tp_dev.sta&TP_PRES_DOWN)			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{	
 		 	if(tp_dev.x[0]<lcddev.width&&tp_dev.y[0]<lcddev.height)
 			{	
-				if(tp_dev.x[0]>(lcddev.width-24)&&tp_dev.y[0]<16)Load_Drow_Dialog();//Çå³ý
-				else TP_Draw_Big_Point(tp_dev.x[0],tp_dev.y[0],RED);		//»­Í¼	  			   
+				if(tp_dev.x[0]>(lcddev.width-24)&&tp_dev.y[0]<16)Load_Drow_Dialog();//ï¿½ï¿½ï¿½
+				else TP_Draw_Big_Point(tp_dev.x[0],tp_dev.y[0],RED);		//ï¿½ï¿½Í¼	  			   
 			}
-		}else delay_ms(10);	//Ã»ÓÐ°´¼ü°´ÏÂµÄÊ±ºò 	    
+		}else delay_ms(10);	//Ã»ï¿½Ð°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ê±ï¿½ï¿½ 	    
 	}
 }
 const u16 POINT_COLOR_TBL[CT_MAX_TOUCH]={RED,GREEN,BLUE,BROWN,GRED};  
 
-// extern volatile u8 adc_done_flag;
+// extern volatile u8 g_adc_done_flag;
 // u16 ADC_CHi_NUM = 100;
 // u16 ADC_CHi_NUM2 = 200;
-//µçÈÝ´¥ÃþÆÁ²âÊÔº¯Êý
+//ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½
 void ctp_test(void)
 {
 	u8 t=0; 	    
- 	u16 lastpos[5][2];		//×îºóÒ»´ÎµÄÊý¾Ý
+ 	u16 lastpos[5][2];		//ï¿½ï¿½ï¿½Ò»ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½
 	while(1)
 	{
-		// if (adc_done_flag == 1)
+		// if (g_adc_done_flag == 1)
 		// {
 		// 	for (size_t i = 0; i < ADC_GROUP_PER_HALF; i++)
 		// 	{
@@ -48,29 +48,29 @@ void ctp_test(void)
 		// 	}
 		// 	ADC_CHi_NUM /= ADC_GROUP_PER_HALF;
 		// 	ADC_CHi_NUM2 /= ADC_GROUP_PER_HALF;
-		// 	adc_done_flag = 0;
+		// 	g_adc_done_flag = 0;
 		// 	// Show_Str(10,100,"ADC_CHi_NUM:%d",ADC_CHi_NUM,0);
 		// 	// Show_Str(10,200,"ADC_CHi_NUM2:%d",ADC_CHi_NUM2,0);
 		// }
 		
-		tp_dev.scan(0);//É¨Ãè´¥ÃþÆÁ
-		for(t=0;t<CT_MAX_TOUCH;t++)//×î¶à5µã´¥Ãþ
+		tp_dev.scan(0);//É¨ï¿½è´¥ï¿½ï¿½ï¿½ï¿½
+		for(t=0;t<CT_MAX_TOUCH;t++)//ï¿½ï¿½ï¿½5ï¿½ã´¥ï¿½ï¿½
 		{
-			if((tp_dev.sta)&(1<<t))//ÅÐ¶ÏÊÇ·ñÓÐµã´¥Ãþ
+			if((tp_dev.sta)&(1<<t))//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ðµã´¥ï¿½ï¿½
 			{
-				if(tp_dev.x[t]<lcddev.width&&tp_dev.y[t]<lcddev.height)//ÔÚLCD·¶Î§ÄÚ
+				if(tp_dev.x[t]<lcddev.width&&tp_dev.y[t]<lcddev.height)//ï¿½ï¿½LCDï¿½ï¿½Î§ï¿½ï¿½
 				{
 					if(lastpos[t][0]==0XFFFF)
 					{
 						lastpos[t][0] = tp_dev.x[t];
 						lastpos[t][1] = tp_dev.y[t];
 					}
-					lcd_draw_bline(lastpos[t][0],lastpos[t][1],tp_dev.x[t],tp_dev.y[t],2,POINT_COLOR_TBL[t]);//»­Ïß
+					lcd_draw_bline(lastpos[t][0],lastpos[t][1],tp_dev.x[t],tp_dev.y[t],2,POINT_COLOR_TBL[t]);//ï¿½ï¿½ï¿½ï¿½
 					lastpos[t][0]=tp_dev.x[t];
 					lastpos[t][1]=tp_dev.y[t];
 					if(tp_dev.x[t]>(lcddev.width-24)&&tp_dev.y[t]<16)
 					{
-						Load_Drow_Dialog();//Çå³ý
+						Load_Drow_Dialog();//ï¿½ï¿½ï¿½
 					}								
 				}
 			}else lastpos[t][0]=0XFFFF;
@@ -80,10 +80,10 @@ void ctp_test(void)
 }
 
 
-//Ö÷¹Ì¶¨À¸
+//ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½
 void DrawTestPage(u8 *str)
 {
-	//»æÖÆ¹Ì¶¨À¸up
+	//ï¿½ï¿½ï¿½Æ¹Ì¶ï¿½ï¿½ï¿½up
 	LCD_Clear(WHITE);
 	LCD_Fill(0,0,lcddev.width,20,BLUE);
 	POINT_COLOR=GREEN;
@@ -92,7 +92,7 @@ void DrawTestPage(u8 *str)
 	LCD_DrawLine(0,21,lcddev.width,21);
 	POINT_COLOR=BRRED;
 	LCD_DrawLine(0,22,lcddev.width,22);
-	//»æÖÆ¹Ì¶¨À¸down
+	//ï¿½ï¿½ï¿½Æ¹Ì¶ï¿½ï¿½ï¿½down
 	LCD_Fill(0,lcddev.height-20,lcddev.width,lcddev.height,BLUE);
 	POINT_COLOR=GREEN;
 	LCD_DrawLine(0,lcddev.height-20,lcddev.width,lcddev.height-20);
@@ -101,34 +101,34 @@ void DrawTestPage(u8 *str)
 	POINT_COLOR=BRRED;            
 	LCD_DrawLine(0,lcddev.height-22,lcddev.width,lcddev.height-22);	
 	POINT_COLOR=WHITE;
-	Gui_StrCenter(0,2,str,16,1);//¾ÓÖÐÏÔÊ¾
-	Gui_StrCenter(0,lcddev.height-18, "ÉîÛÚÊÐºèÑ¶µç×ÓÓÐÏÞ¹«Ë¾" ,16,1);//¾ÓÖÐÏÔÊ¾
+	Gui_StrCenter(0,2,str,16,1);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+	Gui_StrCenter(0,lcddev.height-18, "ï¿½ï¿½ï¿½ï¿½ï¿½Ðºï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾" ,16,1);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 }
 
 
-//ÖÐÎÄ²âÊÔ
+//ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
 void Chinese_Font_test(void)
 {	
-	DrawTestPage("ÖÐÎÄÏÔÊ¾²âÊÔ");
+	DrawTestPage("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½");
 	
-		POINT_COLOR=RED;	//»­±ÊÑÕÉ«
-		BACK_COLOR=BLACK;  //±³¾°É« 
+		POINT_COLOR=RED;	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
+		BACK_COLOR=BLACK;  //ï¿½ï¿½ï¿½ï¿½É« 
 	
-		Show_Str(10,30,"16X16:ºèÑ¶µç×Ó",16,1);
-		Show_Str(10,50,"16X16:TFTÒº¾§ÏÔÊ¾ÆÁ",16,1);
-		Show_Str(10,70,"24X24:ÖÐÎÄÏÔÊ¾",24,1);
-		Show_Str(10,100,"32X32:²âÊÔÀý³Ì",32,1);
+		Show_Str(10,30,"16X16:ï¿½ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½",16,1);
+		Show_Str(10,50,"16X16:TFTÒºï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½",16,1);
+		Show_Str(10,70,"24X24:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾",24,1);
+		Show_Str(10,100,"32X32:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",32,1);
 		delay_ms(1500);
 }
 
-//²âÊÔÖ÷Ò³
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 void main_test(u8 *id)
 {
-	DrawTestPage("ÏÔÊ¾ÆÁ²âÊÔ³ÌÐò");
+	DrawTestPage("ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½ï¿½ï¿½");
 	POINT_COLOR=RED;
-	Gui_StrCenter(0,100,"ÏÔÊ¾ÆÁ",32,1);
+	Gui_StrCenter(0,100,"ï¿½ï¿½Ê¾ï¿½ï¿½",32,1);
 	POINT_COLOR=GREEN;
-	Gui_StrCenter(0,135,"²âÊÔ³ÌÐò",32,1);
+	Gui_StrCenter(0,135,"ï¿½ï¿½ï¿½Ô³ï¿½ï¿½ï¿½",32,1);
 	POINT_COLOR=BLUE;
 	Gui_StrCenter(0,170,id,24,1);
 	POINT_COLOR=BLACK;
@@ -138,11 +138,11 @@ void main_test(u8 *id)
 	delay_ms(1800);			
 }
 
-//Í¼ÐÎ²âÊÔ
+//Í¼ï¿½Î²ï¿½ï¿½ï¿½
 void FillRec_Test(void)
 {
 	u8 i=0;
-	DrawTestPage("Í¼ÐÎ²âÊÔ");
+	DrawTestPage("Í¼ï¿½Î²ï¿½ï¿½ï¿½");
 	LCD_Fill(0,24,lcddev.width,lcddev.height-24,WHITE);
 	for (i=0; i<5; i++) 
 	{
@@ -174,10 +174,10 @@ void FillRec_Test(void)
 	delay_ms(1500);
 }
 
-//Ó¢ÎÄ²âÊÔ
+//Ó¢ï¿½Ä²ï¿½ï¿½ï¿½
 void English_Font_test(void)
 {
-	DrawTestPage("Ó¢ÎÄÏÔÊ¾²âÊÔ");
+	DrawTestPage("Ó¢ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½");
 	POINT_COLOR=RED;
 	BACK_COLOR=WHITE;
 	LCD_ShowString(10,30,200,12,12,"6X12:abcdefghijklmnopqrstuvwxyz");
@@ -191,18 +191,18 @@ void English_Font_test(void)
 	delay_ms(1500);
 }
 
-//Í¼Æ¬²âÊÔ
+//Í¼Æ¬ï¿½ï¿½ï¿½ï¿½
 void Pic_test(void)
 {
-	DrawTestPage("Í¼Æ¬ÏÔÊ¾²âÊÔ");
+	DrawTestPage("Í¼Æ¬ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½");
 	POINT_COLOR=BLUE;
 	//LCD_Fill(0,20,lcddev.width,lcddev.height-20,WHITE);
-	// Gui_Drawbmp16(60,100,gImage_1);  //gImage_1ÊÇÍ¼Æ¬
+	// Gui_Drawbmp16(60,100,gImage_1);  //gImage_1ï¿½ï¿½Í¼Æ¬
 	// Gui_Drawbmp16(130,100,gImage_1);
 	delay_ms(1500);
 }
 
-//Ðý×ª²âÊÔ
+//ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
 void Rotate_Test(void)
 {
 	u8 num=0;
@@ -211,7 +211,7 @@ void Rotate_Test(void)
 		for(num=0;num<4;num++)
 		{		
 			LCD_Display_Dir(num);
-			DrawTestPage("Ðý×ª²âÊÔ");
+			DrawTestPage("ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½");
 			POINT_COLOR=BLUE;
 			Show_Str(20,30,Direction[num],16,1);
 			// Gui_Drawbmp16(30,50,gImage_1);
@@ -224,14 +224,14 @@ void Rotate_Test(void)
 
 
 
-//²ÊÌõÏÔÉ«
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
 void DispBand(void)	 
 {
 	unsigned int i,j,k;
 	//unsigned int color[8]={RED,RED,GREEN,GREEN,BLUE,BLUE,WHITE,WHITE};
 	unsigned int color[8]={BLUE,GREEN,RED,GBLUE,BRED,YELLOW,BLACK,WHITE};
 	LCD_Set_Window(0,0,lcddev.width,lcddev.height);
-	LCD_WriteRAM_Prepare();     		//¿ªÊ¼Ð´ÈëGRAM	
+	LCD_WriteRAM_Prepare();     		//ï¿½ï¿½Ê¼Ð´ï¿½ï¿½GRAM	
     	
 																								  
 	for(i=0;i<8;i++)
@@ -260,7 +260,7 @@ void DispBand(void)
 	delay_ms(1000);
 }
 
-//´¿É«²âÊÔ
+//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
 void Color_Test(void)
 {
 	DispBand();               
@@ -277,7 +277,7 @@ void Color_Test(void)
 	
 }
 
-//ÏÔÊ¾¿ª¹Ø²âÊÔ
+//ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½
 void Switch_test(void)
 {
 	u8 num=3;
@@ -291,13 +291,13 @@ void Switch_test(void)
 	
 }
 
-//¶ÁÑÕÉ« ²âÊÔ
+//ï¿½ï¿½ï¿½ï¿½É« ï¿½ï¿½ï¿½ï¿½
 void Read_Test(void)
 {
 	u16 color;
 	u8 cbuf[20] = {0},i;
 
-	DrawTestPage("¶ÁÑÕÉ«Öµ²âÊÔ");
+	DrawTestPage("ï¿½ï¿½ï¿½ï¿½É«Öµï¿½ï¿½ï¿½ï¿½");
 	LCD_Fill(0,23,lcddev.width,lcddev.height-23,WHITE);	
 	for (i=0; i<7; i++) 
 	{

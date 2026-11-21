@@ -415,7 +415,7 @@ eMBPoll(void)
                     ucMBFrame[usLength++] = (UCHAR)(ucFunctionCode | MB_FUNC_ERROR);
                     ucMBFrame[usLength++] = eException; // 第二个字节：错误码（比如 0x01
                 }
-#ifdef defined(MB_ASCII_ENABLED)
+#ifdef MB_ASCII_ENABLED
                 if ((eMBCurrentMode == MB_ASCII) && MB_ASCII_TIMEOUT_WAIT_BEFORE_SEND_MS) // ASCII模式发送超时时间
                 {
                     vMBPortTimersDelay(MB_ASCII_TIMEOUT_WAIT_BEFORE_SEND_MS); // 等待ASCII模式发送超时时间
@@ -452,7 +452,7 @@ void eMBsend_Error(void)
         // 3.恢复接收能力
         __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // ← 新增！准备接收下一帧
 
-        // 4.Modbus协议状态复位，丢弃半帧
+        // 4.Modbus协议状态复位
         Modbus_ResetRx();
         // 5发送标志位清零
         g_b_485_send_tick = 0;

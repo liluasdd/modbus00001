@@ -69,14 +69,14 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	if (xTxEnable)
 	{
 		RS485_DE_HIGH_ON; /* 485 切到发送态 */
-		g_b_485_send_tick = 1;
-		g_485_send_tim = 0;
 		// delay_us(6);// 等待收发器稳定
 		/* 等 GPIO 写完成 + 收发器切换，约 0.5~1us @72MHz */
 		for (volatile uint8_t i = 0; i < 20; i++)
 		{
 			__NOP();
 		}
+		g_b_485_send_tick = 1;/* 485发送超时标志位 */
+		g_485_send_tim = 0;
 		/* 确保新一次发送启动时 TC 是关的，避免残留 TC 标志误触发 */
 		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
 

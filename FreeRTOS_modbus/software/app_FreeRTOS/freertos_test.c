@@ -14,20 +14,21 @@ QueueHandle_t queue;
 
 char str_stack_high[15] = {0};
 extern u8 s_tim_500ms;
-// ÔÚÎÄ¼ş¶¥²¿¶¨ÒåÒ»¸öÈ«¾Ö±äÁ¿£¬·½±ãÔÚ Watch ´°¿Ú¼àÊÓ
+// åœ¨æ–‡ä»¶é¡¶éƒ¨å®šä¹‰ä¸€ä¸ªå…¨å±€å˜é‡ï¼Œæ–¹ä¾¿åœ¨ Watch çª—å£ç›‘è§†
 uint32_t debug_state = 0;
 uint8_t debug_state2 = 0;
-// ÒÔ1000msÆµÂÊÉÁË¸LED1
+uint32_t stack_hightask = 0;
+uint32_t stack_high_min = 0xFFFFFFFF;
+// ä»¥1000msé¢‘ç‡é—ªçƒLED1
 void task1(void *pvParams)
 {
-    /* Modbus´ÓÕ¾³õÊ¼»¯ */
-    //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONEÎŞĞ£Ñé MB_PAR_ODDÆæĞ£Ñé MB_PAR_EVENÅ¼Ğ£Ñé
+    /* Modbusä»ç«™åˆå§‹åŒ– */
+    //    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 9600, MB_PAR_NONE); // MB_PAR_NONEæ— æ ¡éªŒ MB_PAR_ODDå¥‡æ ¡éªŒ MB_PAR_EVENå¶æ ¡éªŒ
 
-    //    eMBEnable(); // /* ÆôÓÃModbus´ÓÕ¾ */
-    //    debug_printf("[task1] ÔËĞĞÖĞ...\r\n");
-    uint32_t stack_hightask1 = 0;
-    uint32_t stack_high_min1 = 0xFFFFFFFF;
+    //    eMBEnable(); // /* å¯ç”¨Modbusä»ç«™ */
+    //    debug_printf("[task1] è¿è¡Œä¸­...\r\n");
     debug_state2++;
+    // TickType_t xLastWakeTime = xTaskGetTickCount(); // è·å–å½“å‰æ—¶é—´ç‚¹
     while (1)
     {
         if (debug_state2 < 255)
@@ -35,60 +36,44 @@ void task1(void *pvParams)
             debug_state2++;
         }
         else
-        debug_state2 = 1;
+            debug_state2 = 1;
 
-        // // ÔÚ task2 µÄ while(1) Ñ­»·Àï¼ÓÉÏ£º
-        // if (task1_handle != NULL)
-        // {
-        //     debug_state = eTaskGetState(task1_handle);
-        // }
-        // /* ·¢ËÍ³¬Ê±¹ÊÕÏ´¦Àí */
-        // eMBsend_Error();
-        /* ÂÖÑ¯Modbus´ÓÕ¾ */
+        /* å‘é€è¶…æ—¶æ•…éšœå¤„ç† */
+        eMBsend_Error();
+        /* è½®è¯¢Modbusä»ç«™ */
         eMBPoll();
 
-        // stack_hightask1 = uxTaskGetStackHighWaterMark(NULL);
-        // if (stack_hightask1 < stack_high_min1)
-        // {
-        //     stack_high_min1 = stack_hightask1;
-        // }
-        // if (s_tim_500ms >= 5)
-        // {
-        //     s_tim_500ms = 0;
-        //     sprintf(str_stack_high, "task1:%luB", stack_high_min1);
-        //     // u16_to_4digits(str_stack_high, stack_high_min1);
-        //     Show_Str(10, 80, (u8 *)str_stack_high, 16, 0);
-        // }
-        vTaskDelay(pdMS_TO_TICKS(9)); // ÓÀÔ¶µÈÓÚ 500ms£¬²»¹Ü tick ÆµÂÊÔõÃ´¸Ä
-        // vTaskDelay(500);                // 500ºÁÃëÂÖÑ¯Ò»´ÎModbus´ÓÕ¾£¬´¦ÀíÊı¾İ½»»»
-
+        vTaskDelay(pdMS_TO_TICKS(9)); // 9msï¼Œè½®è¯¢ä¸€æ¬¡Modbusä»ç«™ï¼Œå¤„ç†æ•°æ®äº¤æ¢
+        // // /*å‘¨æœŸå»¶æ—¶ï¼šä¿è¯ä» xLastWakeTime å¼€å§‹ï¼Œæ¯éš” 1000ms å”¤é†’ä¸€æ¬¡*/
         // vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000));
     }
 }
 
 extern u8 led_num;
 char task_info_buffer[30];
-// ÒÔ500msÆµÂÊÉÁË¸LED2
+// ä»¥500msé¢‘ç‡é—ªçƒLED2
 void task2(void *pvParams)
 {
-    BaseType_t ret = 0;
-    uint8_t num = 0;
-    uint32_t stack_hightask2 = 0;
-    uint32_t stack_high_min = 0xFFFFFFFF;
-    uint32_t heap_min_free = 0xFFFFFFFF; // ¼ÇÂ¼ÀúÊ·×îĞ¡Ê£Óà£¨×îÎ£ÏÕÖµ£©
-    LCD_Clear(BLACK);                    // ÇåÆÁ
+    // BaseType_t ret = 0;
+    // uint8_t num = 0;
+    LCD_Clear(BLACK); // æ¸…å±
+    ADC_DMA_scan();
     while (1)
     {
         //    ret = xQueueReceive(queue, &num, portMAX_DELAY);
         //    if(ret == pdPASS)
-        //        debug_printf("ÏûÏ¢¶ÓÁĞqueue¶ÁÈ¡³É¹¦£¬¶ÁÈ¡ÖµÎª£º%d\r\n", num);
+        //        debug_printf("æ¶ˆæ¯é˜Ÿåˆ—queueè¯»å–æˆåŠŸï¼Œè¯»å–å€¼ä¸ºï¼š%d\r\n", num);
         //    else
-        //        debug_printf("ÏûÏ¢¶ÓÁĞqueue¶ÁÈ¡Ê§°Ü\r\n");
+        //        debug_printf("æ¶ˆæ¯é˜Ÿåˆ—queueè¯»å–å¤±è´¥\r\n");
 
         if (g_b_task_jtim == 1)
         {
             g_b_task_jtim = 0;
-            TaskKey();
+            // if (R_Task == 0)
+            {
+                TaskKey();
+            }
+
             // a = KEY_R_ADD_SUB(&R_key_anxiaOpen, R_SetPower.ints, KEY_ADD, KEY_SUB, MaxPower, MinPower, bujin, 0, R_Key.LongCT);
             // if (a != R_SetPower.ints)
             // {
@@ -96,15 +81,18 @@ void task2(void *pvParams)
             // }
             if (g_b_2s_jtim == 1)
             {
-                xMBPortEventPost(EV_READY); // ÈûÈëÒ»¸ö¼ÙÊÂ¼ş
+                xMBPortEventPost(EV_READY); // å¡å…¥ä¸€ä¸ªå‡äº‹ä»¶
                 g_b_2s_jtim = 0;
-                // if (R_Task != D_Task2)
-                //     return;
-                Led_scan();
-                ADC_DMA_scan();
-                // vTaskList(task_info_buffer); // »ñÈ¡ËùÓĞÈÎÎñĞÅÏ¢
-                // sprintf(str_stack_high, "task1:%luB", task_info_buffer);
-                // Show_Str(10, 110, (u8 *)str_stack_high, 16, 0);
+                // if (R_Task == 1)
+                {
+                    Led_scan();
+                    ADC_DMA_scan();
+                }
+                // if (R_Task == 2)
+                {
+                    u16_to_4digits(str_stack_high, debug_state2);
+                    Show_Str(10, 30, (u8 *)str_stack_high, 16, 0);
+                }
             }
 
             if (R_key_anxiaOpen == 1)
@@ -116,107 +104,73 @@ void task2(void *pvParams)
                 led_num = 1;
             }
 
-            // // ¼ÇÂ¼ÀúÊ·ÈÎÎñÔËĞĞ×îĞ¡Ê£ÓàÁ¿,NULLµ±Ç°ÈÎÎñ
-            // stack_hightask2 = uxTaskGetStackHighWaterMark(NULL);
-            // if (stack_hightask2 < stack_high_min)
-            // {
-            //     stack_high_min = stack_hightask2;
-            // }
-            // // ¼ÇÂ¼ÀúÊ·ÏµÍ³ÔËĞĞ×îĞ¡Ê£ÓàÁ¿
-            // stack_hightask2 = xPortGetFreeHeapSize();
-            // if (stack_hightask2 < heap_min_free)
-            // {
-            //     heap_min_free = stack_hightask2;
-            // }
-            // if (g_b_500ms_jtim == 1)
-            // {
-            //     // stack_high = uxTaskGetStackHighWaterMark(task2_handle);
-            //     // sprintf(str_stack_high, "task2:%luB", stack_high_min);
-                u16_to_4digits(str_stack_high, debug_state2);
-                Show_Str(10, 30, (u8 *)str_stack_high, 16, 0);
-            // }
-            if (R_Task < 0xF0) // ÈÎÎñÑ­»·// if (R_Task < 0xC0) // ÈÎÎñÑ­»·
+            if (R_Task < 0xF0) // ä»»åŠ¡å¾ªç¯
                 R_Task++;
         }
 
         key_value1 = 0;
-        vTaskDelay(pdMS_TO_TICKS(10)); // ÊÍ·Å CPU ¿ØÖÆÈ¨
+        vTaskDelay(pdMS_TO_TICKS(10));
         // vTaskDelay(2);
     }
 }
 
-// ¼ì²â°´¼ü1
+#if SYS_MONITOR_ENABLE
+
 void task3(void *pvParams)
 {
-    // debug_printf("[task3] ÔËĞĞÖĞ...\r\n");
-    BaseType_t ret = 0;
-    uint8_t key = 0;
-    uint8_t num = 0;
-    BaseType_t space;
+
+    TaskStatus_t info;
+    TickType_t lastWakeTime = xTaskGetTickCount(); /* è®°å½•èµ·ç‚¹ */
+    const TickType_t period = pdMS_TO_TICKS(500);  /* å‘¨æœŸ500ms */
+
     while (1)
     {
-        //    key = key_scan();
-        // if (key != g_key_num)
-        // {
-        //     key = g_key_num;
-        // }
+        vTaskDelay(period);/* 500msï¼ŒæŸ¥ä¸€ä¸‹Modbusä»»åŠ¡çš„çŠ¶æ€å’Œæ ˆæ°´ä½ */
 
-        if (key == 1) // ¼ì²âµ½KEY°´ÏÂ
-        {
-            ret = xQueueSend(queue, &key, 10); // ·¢ËÍÏûÏ¢µ½¶ÓÁĞ
-            if (ret == pdTRUE)
-            {
-                // debug_printf("ÏûÏ¢¶ÓÁĞqueue·¢ËÍ³É¹¦£¬·¢ËÍÖµÎª£º%d\r\n", key);
-                space = uxQueueSpacesAvailable(queue);
-                // debug_printf("¶ÓÁĞÊ£ÓàÈİÁ¿Îª£º%ld\r\n", space);
-                if (space == 0)
-                {
-                    // debug_printf("Çå¿Õ¶ÓÁĞ£¡\r\n");
-                    xQueueReset(queue);
-                }
-            }
-            // else
-            //     debug_printf("ÏûÏ¢¶ÓÁĞqueue·¢ËÍÊ§°Ü\r\n");
-        }
-        else if (key == 2)
-        {
-            ret = xQueueReceive(queue, &num, 10);
-            // if (ret == pdPASS)
-            //     debug_printf("ÏûÏ¢¶ÓÁĞqueue¶ÁÈ¡³É¹¦£¬¶ÁÈ¡ÖµÎª£º%d, Ê£ÓàÏûÏ¢ÊıÎª£º%ld\r\n", num, uxQueueMessagesWaiting(queue));
-            // else
-            //     debug_printf("ÏûÏ¢¶ÓÁĞqueue¶ÁÈ¡Ê§°Ü\r\n");
-        }
-        // vTaskDelay(10);
-        vTaskDelay(500);
+        /* æŸ¥ Modbus ä»»åŠ¡çš„çŠ¶æ€å’Œæ ˆæ°´ä½ */
+        vTaskGetInfo(task1_handle, &info, pdTRUE, eInvalid);
+
+        Log_Printf("[DBG] Modbus: state=%s prio=%lu words\r\n",
+               task_state_str(info.eCurrentState),
+               (unsigned long)info.uxCurrentPriority);
+
+
+
+        /* æŸ¥ç³»ç»Ÿå‰©ä½™å †ï¼Œä»ªè¡¨è·‘ä¹…äº†æœ€æ€•å †æ³„æ¼ */
+        Log_Printf("[DBG] free_heap=%u bytes\r\n",
+               (unsigned)xPortGetFreeHeapSize());
+
+        // vTaskDelayUntil(&lastWakeTime, period);
     }
 }
+#endif
 
 void freertos_test(void)
 {
-    //    queue = xQueueCreate(3, sizeof(uint8_t)); // ´´½¨ÏûÏ¢¶ÓÁĞqueue
+    //    queue = xQueueCreate(3, sizeof(uint8_t)); // åˆ›å»ºæ¶ˆæ¯é˜Ÿåˆ—queue
     // if (queue != NULL)
-    //     debug_printf("ÏûÏ¢¶ÓÁĞqueue´´½¨³É¹¦£¡\r\n");
+    //     debug_printf("æ¶ˆæ¯é˜Ÿåˆ—queueåˆ›å»ºæˆåŠŸï¼\r\n");
     // else
-    //     debug_printf("ÏûÏ¢¶ÓÁĞqueue´´½¨Ê§°Ü£¡\r\n");
+    //     debug_printf("æ¶ˆæ¯é˜Ÿåˆ—queueåˆ›å»ºå¤±è´¥ï¼\r\n");
 
-    xTaskCreate(task1,          // ÈÎÎñº¯ÊıÖ¸Õë
-                "task1",        // ÈÎÎñÃû³Æ
-                128 * 10,       // ÈÎÎñ¶ÑÕ»´óĞ¡
-                NULL,           // ´«ÈëÈÎÎñº¯ÊıµÄ²ÎÊı
-                3,              // ÈÎÎñÓÅÏÈ¼¶
-                &task1_handle); // ÈÎÎñ¾ä±ú
+    xTaskCreate(task1,          // ä»»åŠ¡å‡½æ•°æŒ‡é’ˆ
+                "task1",        // ä»»åŠ¡åç§°
+                128 * 10,       // ä»»åŠ¡å †æ ˆå¤§å°
+                NULL,           // ä¼ å…¥ä»»åŠ¡å‡½æ•°çš„å‚æ•°
+                4,              // ä»»åŠ¡ä¼˜å…ˆçº§
+                &task1_handle); // ä»»åŠ¡å¥æŸ„
 
-    xTaskCreate(task2,          // ÈÎÎñº¯ÊıÖ¸Õë
-                "task2",        // ÈÎÎñÃû³Æ
-                128 * 4,        // ÈÎÎñ¶ÑÕ»´óĞ¡
-                NULL,           // ´«ÈëÈÎÎñº¯ÊıµÄ²ÎÊı
-                2,              // ÈÎÎñÓÅÏÈ¼¶
-                &task2_handle); // ÈÎÎñ¾ä±ú
+    xTaskCreate(task2,          // ä»»åŠ¡å‡½æ•°æŒ‡é’ˆ
+                "task2",        // ä»»åŠ¡åç§°
+                128 * 4,        // ä»»åŠ¡å †æ ˆå¤§å°
+                NULL,           // ä¼ å…¥ä»»åŠ¡å‡½æ•°çš„å‚æ•°
+                3,              // ä»»åŠ¡ä¼˜å…ˆçº§
+                &task2_handle); // ä»»åŠ¡å¥æŸ„
 
-    // xTaskCreate(task3,          // ÈÎÎñº¯ÊıÖ¸Õë
-    //             "task3",        // ÈÎÎñÃû³Æ
-    //             128,            // ÈÎÎñ¶ÑÕ»´óĞ¡
-    //             NULL,           // ´«ÈëÈÎÎñº¯ÊıµÄ²ÎÊı
-    //             1,              // ÈÎÎñÓÅÏÈ¼¶
-    //             &task3_handle); // ÈÎÎñ¾ä±ú
+    xTaskCreate(task3,          // ä»»åŠ¡å‡½æ•°æŒ‡é’ˆ
+                "task3",        // ä»»åŠ¡åç§°
+                128 * 4,        // ä»»åŠ¡å †æ ˆå¤§å°
+                NULL,           // ä¼ å…¥ä»»åŠ¡å‡½æ•°çš„å‚æ•°
+                2,              // ä»»åŠ¡ä¼˜å…ˆçº§
+                &task3_handle); // ä»»åŠ¡å¥æŸ„
 }
