@@ -33,95 +33,114 @@
 
 /* ----------------------- Start implementation -----------------------------*/
 /*
- * ³õÊ¼»¯¶¨Ê±Æ÷
- * @param usTim1Timerout50us ¶¨Ê±Æ÷1µÄ³¬Ê±Ê±¼ä£¬µ¥Î»50us
+ * åˆå§‹åŒ–å®šæ—¶å™¨
+ * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
  */
-BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // ³õÊ¼»¯¶¨Ê±Æ÷1
+BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) // åˆå§‹åŒ–å®šæ—¶å™¨1
 {
-	// ÏÈ¹Ø±Õ¶¨Ê±Æ÷£¬ÐÞ¸ÄPSC
+	// // 1. å¿…é¡»å…ˆè°ƒç”¨ CubeMX åˆå§‹åŒ–ï¼
+	// // è¿™ä¸€æ­¥ä¼šé…ç½®æ—¶é’Ÿã€ä½¿èƒ½ TIM4 çš„ RCC æ—¶é’Ÿã€é…ç½® NVIC ä¼˜å…ˆçº§å¹¶å¼€å¯ NVIC ä¸­æ–­
+	// MX_TIM4_Init();
+
+#if 1
+	// å…ˆå…³é—­å®šæ—¶å™¨ï¼Œä¿®æ”¹PSC
 	__HAL_TIM_DISABLE(&htim4);
-
-	__HAL_TIM_SET_PRESCALER(&htim4, 3599);
-
-	// ¸üÐÂÔ¤·ÖÆµÓ°×Ó¼Ä´æÆ÷£¬ÈÃPSCÁ¢¿ÌÉúÐ§
-	htim4.Instance->EGR |= TIM_EGR_UG;
+	__HAL_TIM_SET_PRESCALER(&htim4, 3599); // 72MHz/3600 = 20k = 50us
 	//    __HAL_TIM_UPDATE_PRESCALER(&htim4);
-
-	// ÉèÖÃARR
+	// è®¾ç½®ARR
 	__HAL_TIM_SET_AUTORELOAD(&htim4, usTim1Timerout50us - 1);
-	// ´ò¿ª¸üÐÂÖÐ¶Ï
-	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
-	// Çå³ý¿ÉÄÜ´æÔÚµÄ³õÊ¼¹ÒÆð±êÖ¾
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
 
+	// æ›´æ–°é¢„åˆ†é¢‘å½±å­å¯„å­˜å™¨ï¼Œè®©PSCç«‹åˆ»ç”Ÿæ•ˆ
+	htim4.Instance->EGR |= TIM_EGR_UG;
+
+	// 5. æ¸…é™¤ EGR_UG äº§ç”Ÿçš„ä¼ªä¸­æ–­æ ‡å¿—ä½ï¼Œé˜²æ­¢åˆšä½¿èƒ½ä¸­æ–­å°±è¿›ä¸­æ–­
+	__HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE);
+	// æ‰“å¼€æ›´æ–°ä¸­æ–­
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
+	// æ¸…é™¤å¯èƒ½å­˜åœ¨çš„åˆå§‹æŒ‚èµ·æ ‡å¿—
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);
 	return TRUE;
+#else
+	RCC->APB1ENR |= (1 << 2);			// åˆå§‹åŒ–å®šæ—¶å™¨4ä½¿èƒ½ä½  //RCC->APB1ENR |= 0x04;
+	TIM4->ARR = usTim1Timerout50us - 1; // åˆå§‹åŒ–å®šæ—¶å™¨4è‡ªåŠ¨é‡è£…è½½å¯„å­˜å™¨
+	TIM4->PSC = 3599;					// 72MHz/3600 = 20k = 50us
+	TIM4->DIER |= 1 << 0;				// TIM4->DIER |= TIM_DIER_UIE; // åˆå§‹åŒ–å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­ä½¿èƒ½ä½
+#endif
 }
 // BOOL xMBPortT15Init(USHORT usT15Tick)
 // {
-// 	// ÏÈ¹Ø±Õ¶¨Ê±Æ÷£¬ÐÞ¸ÄPSC
+// 	// å…ˆå…³é—­å®šæ—¶å™¨ï¼Œä¿®æ”¹PSC
 // 	__HAL_TIM_DISABLE(&htim2);
 // 	__HAL_TIM_SET_PRESCALER(&htim2, 3599);
-// 	// ¸üÐÂÔ¤·ÖÆµÓ°×Ó¼Ä´æÆ÷£¬ÈÃPSCÁ¢¿ÌÉúÐ§
+// 	// æ›´æ–°é¢„åˆ†é¢‘å½±å­å¯„å­˜å™¨ï¼Œè®©PSCç«‹åˆ»ç”Ÿæ•ˆ
 // 	htim2.Instance->EGR |= TIM_EGR_UG;
 // 	//    __HAL_TIM_UPDATE_PRESCALER(&htim2);
-// 	// ÉèÖÃARR
+// 	// è®¾ç½®ARR
 // 	__HAL_TIM_SET_AUTORELOAD(&htim2, usT15Tick - 1);
-// 	// ´ò¿ª¸üÐÂÖÐ¶Ï
+// 	// æ‰“å¼€æ›´æ–°ä¸­æ–­
 // 	__HAL_TIM_ENABLE_IT(&htim2, TIM_IT_UPDATE);
 // 	return TRUE;
 // }
 /*
- * ÆôÓÃ¶¨Ê±Æ÷
- * @param usTim1Timerout50us ¶¨Ê±Æ÷1µÄ³¬Ê±Ê±¼ä£¬µ¥Î»50us
+ * å¯ç”¨å®šæ—¶å™¨
+ * @param usTim1Timerout50us å®šæ—¶å™¨1çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½50us
  */
 inline void
-vMBPortTimersEnable() // ÆôÓÃ¶¨Ê±Æ÷1
+vMBPortTimersEnable() // å¯ç”¨å®šæ—¶å™¨1
 {
-#if freertos_modbus
-	/* ½øÈëÁÙ½çÇø£¬·ÀÖ¹±» UART ÖÐ¶Ï´ò¶Ï */
+#if freertos_modbus == 0
+	/* è¿›å…¥ä¸´ç•ŒåŒºï¼Œé˜²æ­¢è¢« UART ä¸­æ–­æ‰“æ–­ */
 	taskENTER_CRITICAL();
 
-	/* ´¿¼Ä´æÆ÷²Ù×÷£¬ËÙ¶È×î¿ì */
-	__HAL_TIM_SET_COUNTER(&htim4, 0);			// ÇåÁã¼ÆÊýÆ÷
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// Çå³ý¸üÐÂÖÐ¶Ï±êÖ¾
-	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // Ê¹ÄÜ¸üÐÂÖÐ¶Ï
-	__HAL_TIM_ENABLE(&htim4);					// Æô¶¯¶¨Ê±Æ÷
+	/* çº¯å¯„å­˜å™¨æ“ä½œï¼Œé€Ÿåº¦æœ€å¿« */
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			// æ¸…é›¶è®¡æ•°å™¨
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// æ¸…é™¤æ›´æ–°ä¸­æ–­æ ‡å¿—
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // ä½¿èƒ½æ›´æ–°ä¸­æ–­
+	__HAL_TIM_ENABLE(&htim4);					// å¯åŠ¨å®šæ—¶å™¨
 
-	/* ÍË³öÁÙ½çÇø */
+	/* é€€å‡ºä¸´ç•ŒåŒº */
 	taskEXIT_CRITICAL();
 #else
-	/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// Çå³ý¶¨Ê±Æ÷4¸üÐÂÖÐ¶Ï¹ÒÆð±êÖ¾ ¡ª¡ª Çå³ýÖÐ¶Ï±êÖ¾Î»£¬·ÀÖ¹²ÐÁôÖÐ¶Ï´¥·¢
-	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // Ê¹ÄÜ¶¨Ê±Æ÷4¸üÐÂÖÐ¶Ï ¡ª¡ª ¿ªÆôÒç³ö/¸üÐÂÖÐ¶ÏÊ¹ÄÜ
-	__HAL_TIM_SET_COUNTER(&htim4, 0);			// ½«¶¨Ê±Æ÷4¼ÆÊýÆ÷ÖµÇåÁã ¡ª¡ª ÖØÖÃ¼ÆÊýÖµÎª0
-	__HAL_TIM_ENABLE(&htim4);					// Ê¹ÄÜ¶¨Ê±Æ÷4 ¡ª¡ª Æô¶¯¶¨Ê±Æ÷ÔËÐÐ
-	HAL_TIM_Base_Start_IT(&htim4);
+	TIM4->SR = 0;				// æ¸…æ‰€æœ‰æ ‡å¿—
+	TIM4->CNT = 0;				// è®¡æ•°å™¨æ¸…é›¶
+	TIM4->DIER |= TIM_DIER_UIE; // å¼€æ›´æ–°ä¸­æ–­
+	TIM4->CR1 |= TIM_CR1_CEN;	// å¯åŠ¨è®¡æ•°å™¨ â˜…å…³é”®
+
+	// /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
+	// __HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	// æ¸…é™¤å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­æŒ‚èµ·æ ‡å¿— â€”â€” æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½ï¼Œé˜²æ­¢æ®‹ç•™ä¸­æ–­è§¦å‘
+	// __HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE); // ä½¿èƒ½å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­ â€”â€” å¼€å¯æº¢å‡º/æ›´æ–°ä¸­æ–­ä½¿èƒ½
+	// __HAL_TIM_SET_COUNTER(&htim4, 0);			// å°†å®šæ—¶å™¨4è®¡æ•°å™¨å€¼æ¸…é›¶ â€”â€” é‡ç½®è®¡æ•°å€¼ä¸º0
+	// __HAL_TIM_ENABLE(&htim4);					// ä½¿èƒ½å®šæ—¶å™¨4 â€”â€” å¯åŠ¨å®šæ—¶å™¨è¿è¡Œ
+	// HAL_TIM_Base_Start_IT(&htim4);				// å¯åŠ¨å®šæ—¶å™¨4ä¸­æ–­æœåŠ¡å‡½æ•°
 #endif
 }
 
 /*
- * ½ûÓÃ¶¨Ê±Æ÷1
+ * ç¦ç”¨å®šæ—¶å™¨1
  */
 inline void
-vMBPortTimersDisable() // ½ûÓÃ¶¨Ê±Æ÷1
+vMBPortTimersDisable() // ç¦ç”¨å®šæ—¶å™¨1
 {
-#if freertos_modbus
-	/* ½øÈëÁÙ½çÇø */
+#if freertos_modbus == 0
+	/* è¿›å…¥ä¸´ç•ŒåŒº */
 	taskENTER_CRITICAL();
 
-	__HAL_TIM_DISABLE(&htim4);					 // Í£Ö¹¶¨Ê±Æ÷
-	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // ½ûÓÃ¸üÐÂÖÐ¶Ï
-	__HAL_TIM_SET_COUNTER(&htim4, 0);			 // ÇåÁã¼ÆÊýÆ÷
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // Çå³ý±êÖ¾
+	__HAL_TIM_DISABLE(&htim4);					 // åœæ­¢å®šæ—¶å™¨
+	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // ç¦ç”¨æ›´æ–°ä¸­æ–­
+	__HAL_TIM_SET_COUNTER(&htim4, 0);			 // æ¸…é›¶è®¡æ•°å™¨
+	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // æ¸…é™¤æ ‡å¿—
 
-	/* ÍË³öÁÙ½çÇø */
+	/* é€€å‡ºä¸´ç•ŒåŒº */
 	taskEXIT_CRITICAL();
 #else
-	/* Disable any pending timers. */
-	__HAL_TIM_DISABLE(&htim4);					 // ½ûÓÃ¶¨Ê±Æ÷4 ¡ª¡ª Í£Ö¹¶¨Ê±Æ÷ÔËÐÐ
-	__HAL_TIM_SET_COUNTER(&htim4, 0);			 // ½«¶¨Ê±Æ÷4¼ÆÊýÆ÷ÖµÇåÁã ¡ª¡ª ÖØÖÃ¼ÆÊýÖµÎª0
-	__HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // ½ûÓÃ¶¨Ê±Æ÷4¸üÐÂÖÐ¶Ï ¡ª¡ª ¹Ø±ÕÒç³ö/¸üÐÂÖÐ¶ÏÊ¹ÄÜ
-	__HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // Çå³ý¶¨Ê±Æ÷4¸üÐÂÖÐ¶Ï¹ÒÆð±êÖ¾ ¡ª¡ª Çå³ýÖÐ¶Ï±êÖ¾Î»£¬·ÀÖ¹²ÐÁôÖÐ¶Ï´¥·¢
+	TIM4->CR1 &= ~TIM_CR1_CEN; // åœè®¡æ•°å™¨
+	TIM4->DIER &= ~TIM_DIER_UIE;
+	TIM4->SR = 0;
+	// /* Disable any pending timers. */
+	// __HAL_TIM_DISABLE(&htim4);					 // ç¦ç”¨å®šæ—¶å™¨4 â€”â€” åœæ­¢å®šæ—¶å™¨è¿è¡Œ
+	// __HAL_TIM_SET_COUNTER(&htim4, 0);			 // å°†å®šæ—¶å™¨4è®¡æ•°å™¨å€¼æ¸…é›¶ â€”â€” é‡ç½®è®¡æ•°å€¼ä¸º0
+	// __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // ç¦ç”¨å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­ â€”â€” å…³é—­æº¢å‡º/æ›´æ–°ä¸­æ–­ä½¿èƒ½
+	// __HAL_TIM_CLEAR_IT(&htim4, TIM_IT_UPDATE);	 // æ¸…é™¤å®šæ—¶å™¨4æ›´æ–°ä¸­æ–­æŒ‚èµ·æ ‡å¿— â€”â€” æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½ï¼Œé˜²æ­¢æ®‹ç•™ä¸­æ–­è§¦å‘
 #endif
 }
 
@@ -130,24 +149,24 @@ vMBPortTimersDisable() // ½ûÓÃ¶¨Ê±Æ÷1
  * the timer has expired.
  */
 /*
- * ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯Êý
+ * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
  */
-void prvvTIMERExpiredISR(void) // ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯Êý
+void prvvTIMERExpiredISR(void) // å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°
 {
 
 	(void)pxMBPortCBTimerExpired();
 }
 
 /*
- * ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯ÊýÊµÏÖ
+ * å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
  */
 // void TIM4_IRQHandler(void)
 // {
 // 	if (TIM4->SR & (1 << 0))
 // 	{
-// 		// ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯ÊýÊµÏÖ
+// 		// å®šæ—¶å™¨1ä¸­æ–­æœåŠ¡å‡½æ•°å®žçŽ°
 // 		prvvTIMERExpiredISR();
-// 		TIM4->SR &= ~(1 << 0); // Çå³ý¶¨Ê±Æ÷1ÖÐ¶Ï±êÖ¾Î»
+// 		TIM4->SR &= ~(1 << 0); // æ¸…é™¤å®šæ—¶å™¨1ä¸­æ–­æ ‡å¿—ä½
 // 	}
 // 	// prvvTIMERExpiredISR();
 // }

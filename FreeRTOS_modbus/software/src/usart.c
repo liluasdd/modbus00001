@@ -27,7 +27,7 @@ void MX_USART2_UART_Init(uint8_t ucPORT, uint32_t ulBaudRate, uint8_t eParity)
     while (1)
       ;
   }
-  HAL_NVIC_SetPriority(USART2_IRQn, 5, 0); // 同样要 >= 6
+  HAL_NVIC_SetPriority(USART2_IRQn, 6, 0); // 同样要 >= 6
   HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 /**
@@ -63,10 +63,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 
   if (uartHandle->Instance == USART2)
   {
-    /* USER CODE BEGIN USART2_MspInit 0 */
-
-    /* USER CODE END USART2_MspInit 0 */
-    /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
 
     __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -115,7 +111,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     HAL_GPIO_Init(USART3_RX_port, &GPIO_InitStruct);
 
     /* USART3 interrupt Init */
-    HAL_NVIC_SetPriority(USART3_IRQn, 7, 0); // 抢占优先级6，子优先级2
+    HAL_NVIC_SetPriority(USART3_IRQn, 8, 0); // 抢占优先级6，子优先级2
     HAL_NVIC_EnableIRQ(USART3_IRQn);         // 使能USART3中断通道
 
     __HAL_UART_ENABLE_IT(uartHandle, UART_IT_RXNE); /* 使能UART3接收中断 */
@@ -123,6 +119,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
   }
 }
 
+/**
+ * @brief UART MSP 反初始化
+ * @param huart: UART handle
+ * @retval 无
+ */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 {
 
@@ -162,7 +163,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 //   HAL_GPIO_Init(MODBUS_MASTER_GPIO_PORT, &GPIO_InitStruct);
 // }
 
-
 /**
  * @brief This function handles USART2 global interrupt.
  */
@@ -170,7 +170,6 @@ void USART2_IRQHandler(void)
 {
 #if freertos_modbus
   /* USER CODE BEGIN USART2_IRQn 1 */
-
   // 1. 处理溢出错误（不处理的话串口会卡死）
   if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET)
   {
@@ -190,9 +189,6 @@ void USART2_IRQHandler(void)
     }
     else
     {
-      // 交给 FreeModbus 处理。
-      // 注意：内部的 xMBRTUReceiveFSM 会读走 DR（也就是调用了你的 GetByte）
-      // 并且在收完一帧后调用 xQueueSendFromISR 产生 EV_FRAME_RECEIVED 事件
       prvvUARTRxISR();
     }
   }
@@ -201,28 +197,44 @@ void USART2_IRQHandler(void)
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TXE) != RESET &&
       __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TXE) != RESET)
   {
-    // 注意：通常不用手动清 TXE，因为向 DR 写数据会自动清 TXE
-    prvvUARTTxReadyISR();
+    // prvvUARTTxReadyISR();
+    if (g_b_485_send_tick) // ← 只有在发送状态下才处理
+    {
+      prvvUARTTxReadyISR(); // 交给 FreeModbus 填充下一个字节
+      // 发送完成后，使能 TC 中断，准备接收主站下一帧
+      if (!g_b_485_send_tick && !(__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC)))
+      {
+        // 发送完成后，使能 TC 中断，准备接收主站下一帧
+        __HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
+      }
+    }
+    else
+    {
+      // 不在发送状态却触发了 TXE，说明状态机不同步，强制关闭 TXE
+      __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE);
+    }
   }
 
   // 4. 发送完成（TC）中断
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_TC) != RESET &&
       __HAL_UART_GET_FLAG(&huart2, UART_FLAG_TC) != RESET)
   {
-    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // 清 TC 标志
-    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // 关 TC 中断
+
+    __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC);
+    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
+    __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // 必须关 TXE！防止死循环触发
 
     RS485_DE_LOW_OFF; // 切回接收
     g_b_485_send_Error = 0;
     g_b_485_send_tick = 0;
 
+    // prvvUARTTxReadyISR(); // 发送中断服务函数，用于Modbus发送数据
     /* 确保接收中断是打开的，准备接收主站下一帧 */
     __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   }
 
-  ///* 不能在这里调用 HAL_UART_IRQHandler(&huart2);  我已经在上面完全接管了硬件！*/
-  /* USER CODE END USART2_IRQn 1 */
-
+///* 不能在这里调用 HAL_UART_IRQHandler(&huart2);  我已经在上面完全接管了硬件！*/
+/* USER CODE END USART2_IRQn 1 */
 #else
   /* USER CODE BEGIN USART2_IRQn 1 */
   if (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_RXNE) != RESET)
@@ -252,7 +264,7 @@ void USART2_IRQHandler(void)
     __HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC); // 清 TC 标志
     __HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);   // 关 TC 中断
 
-    RS485_DE_LOW_OFF; // 现在可以安全切回接收了
+    // RS485_DE_LOW_OFF; // 现在可以安全切回接收了
     g_b_485_send_Error = 0;
     g_b_485_send_tick = 0; // 清除发送标志
 
@@ -267,6 +279,4 @@ void USART2_IRQHandler(void)
 #endif
 }
 
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

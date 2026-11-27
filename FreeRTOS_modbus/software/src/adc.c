@@ -2,6 +2,7 @@
 #include "main.h"
 
 volatile u8 g_adc_done_flag = 0;
+u16 g_bat_v = 0;
 // u8 adc_DMA_num = 0;
 uint16_t adc_ch0[adc_DMA_max];
 uint16_t adc_ch1[adc_DMA_max];
@@ -277,7 +278,7 @@ void adc_config(void)
   adc_handle.Init.ContinuousConvMode = DISABLE;    // ¹ØÁ¬Ðø×ª»»
   adc_handle.Init.DiscontinuousConvMode = DISABLE; // ¹Ø¼ä¶Ï×ª»»
   // adc_handle.Init.NbrOfConversion = 4; // 4¸öÍ¨µÀ
-  adc_handle.Init.NbrOfConversion = 2; // 2¸öÍ¨µÀ
+  adc_handle.Init.NbrOfConversion = 3; // 3¸öÍ¨µÀ
   // adc_handle.Init.ExternalTrigConv = ADC_SOFTWARE_START; // Èí¼þ´¥·¢
   adc_handle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T3_TRGO; // ÒÔ TIM3 ÎªÀý
   // adc_handle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T2_CC2; // ÒÔ TIM2 ÎªÀý
@@ -285,8 +286,9 @@ void adc_config(void)
   HAL_ADC_Init(&adc_handle);
   HAL_ADCEx_Calibration_Start(&adc_handle);
   // ÅäÖÃ2¸öÍ¨µÀ
-  adc_channel_config(&adc_handle, PT10_ADC, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_239CYCLES_5);
-  adc_channel_config(&adc_handle, PT100_ADC, ADC_REGULAR_RANK_2, ADC_SAMPLETIME_239CYCLES_5);
+  adc_channel_config(&adc_handle, PT10_ADC, ADC_REGULAR_RANK_1, ADC_SAMPLETIME_41CYCLES_5);
+  adc_channel_config(&adc_handle, PT100_ADC, ADC_REGULAR_RANK_2, ADC_SAMPLETIME_41CYCLES_5);
+  adc_channel_config(&adc_handle, ADC_CHANNEL_BATT, ADC_REGULAR_RANK_3, ADC_SAMPLETIME_239CYCLES_5);
 
   // /*ÅäÖÃADC1·½°¸¶þ*/
   // adc_handle.Instance = ADC1;                      // Ñ¡ÔñADC1ÍâÉè
@@ -336,19 +338,19 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 void dma_config(void)
 {
   __HAL_RCC_DMA1_CLK_ENABLE();
-  hdma_adc1.Instance = DMA1_Channel1;
-  hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  hdma_adc1.Instance = DMA1_Channel1;              // Ñ¡ÔñDMA1Í¨µÀ1ÍâÉè
+  hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY; // DMA·½Ïò£¨ÍâÉèµ½ÄÚ´æ£©
 
   // ÄÚ´æÏà¹ØÅäÖÃ
-  hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-  hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD; // ÄÚ´æÊý¾Ý¶ÔÆë·½Ê½£¨°ë×Ö¶ÔÆë£©
+  hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;                   // ÄÚ´æµØÖ·×Ô¶¯µÝÔö£¨Ã¿¸ö´«ÊäºóÄÚ´æµØÖ·Ôö¼Ó1£©
 
   // ÍâÉèÏà¹ØÅäÖÃ
-  hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-  hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD; // ÍâÉèÊý¾Ý¶ÔÆë·½Ê½£¨°ë×Ö¶ÔÆë£©
+  hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;                  // ÍâÉèµØÖ·²»×Ô¶¯µÝÔö£¨Ã¿¸ö´«ÊäºóÍâÉèµØÖ·²»±ä£©
 
-  hdma_adc1.Init.Priority = DMA_PRIORITY_MEDIUM;
-  hdma_adc1.Init.Mode = DMA_CIRCULAR;
+  hdma_adc1.Init.Priority = DMA_PRIORITY_MEDIUM;     // DMAÓÅÏÈ¼¶£¨ÖÐ£©
+  hdma_adc1.Init.Mode = DMA_CIRCULAR;                // DMAÄ£Ê½£¨Ñ­»·Ä£Ê½£©
   HAL_DMA_Init(&hdma_adc1);                          // ³õÊ¼»¯DMA1Í¨µÀ1
   __HAL_LINKDMA(&adc_handle, DMA_Handle, hdma_adc1); // ½«DMAÓëADC¹ØÁª£¨ADCµÄDMA_HandleÖ¸Ïòhdma_adc1£©
 
@@ -360,7 +362,7 @@ void dma_config(void)
 
 // NVIC ÅäÖÃ
 #if freertos_modbus
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 6, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 #else
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
@@ -428,37 +430,38 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) // ADC+DMA×ª»»Íê³É»Øµ÷º¯Ê
 
 u16 ADC_CHi_NUM1;
 u16 ADC_CHi_NUM2;
+u16 ADC_CHi_NUM3;
+
 u16 ADC_CHi_tmp1;
 u16 ADC_CHi_tmp2;
-u8 oled_ADC_CHi_num = 1;
+u16 ADC_CHi_tmp3;
+
+uint8_t R_DisDuty;
+uint8_t OLED_DisDuty;
 
 uint8_t R_Task = 0;
 uint16_t adc_dma_result_min1 = 0xFFFF;
 uint16_t adc_dma_result_max1 = 0;
 uint16_t adc_dma_result_min2 = 0xFFFF;
 uint16_t adc_dma_result_max2 = 0;
+uint16_t adc_dma_result_min3 = 0xFFFF;
+uint16_t adc_dma_result_max3 = 0;
 /* ÊäÈë¼Ä´æÆ÷»º³åÇø£¨Ö»¶Á£© */
 extern USHORT usSRegInBuf[S_REG_INPUT_NREGS];
 
-void ADC_DMA_scan(void)
+// typedef struct
+// {
+//   uint16_t ch1;
+//   uint16_t ch2;
+//   // uint32_t tick;
+// } ADC_Msg_t;
+// ADC_Msg_t msg;
+
+void ADC_DMA_ProcessChannels(void) // ´¦ÀíADCÍ¨µÀÊý¾Ý
 {
-  char str[5];
   uint8_t i = 0;
-  uint16_t base, v0, v1;
-
-  // if (R_Task != D_Task2)
-  //     return;
-
-  if (oled_ADC_CHi_num)
-  {
-    ADC_CHi_NUM1 = 0;
-    ADC_CHi_NUM2 = 0;
-    ADC_CHi_tmp1 = 1;
-    ADC_CHi_tmp2 = 1;
-    oled_ADC_CHi_num = 0;
-    Show_Str(10, 10, "AD1:0000", 16, 0);
-    Show_Str(90, 10, "AD2:0000", 16, 0);
-  }
+  uint16_t base, v0, v1, v2;
+  OLED_DisDuty = 0;
   if (g_adc_done_flag != 1 && g_adc_done_flag != 2)
     return;
   base = (g_adc_done_flag == 1) ? 0 : ADC_GROUP_PER_HALF;
@@ -467,16 +470,20 @@ void ADC_DMA_scan(void)
   adc_dma_result_min1 = 0xFFFF;
   adc_dma_result_max2 = 0;
   adc_dma_result_min2 = 0xFFFF;
+  adc_dma_result_max3 = 0;
+  adc_dma_result_min3 = 0xFFFF;
   ADC_CHi_NUM1 = 0;
   ADC_CHi_NUM2 = 0;
-
+  ADC_CHi_NUM3 = 0;
   for (i = 0; i < ADC_GROUP_PER_HALF; i++)
   {
     v0 = adc_result[base + i][0];
     v1 = adc_result[base + i][1];
+    v2 = adc_result[base + i][2];
 
     ADC_CHi_NUM1 += v0;
     ADC_CHi_NUM2 += v1;
+    ADC_CHi_NUM3 += v2;
 
     if (v0 < adc_dma_result_min1)
       adc_dma_result_min1 = v0;
@@ -486,30 +493,106 @@ void ADC_DMA_scan(void)
       adc_dma_result_min2 = v1;
     if (v1 > adc_dma_result_max2)
       adc_dma_result_max2 = v1;
+    if (v2 < adc_dma_result_min3)
+      adc_dma_result_min3 = v2;
+    if (v2 > adc_dma_result_max3)
+      adc_dma_result_max3 = v2;
   }
 
   ADC_CHi_NUM1 = (ADC_CHi_NUM1 - adc_dma_result_max1 - adc_dma_result_min1) / (ADC_GROUP_PER_HALF - 2);
   ADC_CHi_NUM2 = (ADC_CHi_NUM2 - adc_dma_result_max2 - adc_dma_result_min2) / (ADC_GROUP_PER_HALF - 2);
-  // ´òÓ¡ADCµÄÖµ ADC_CHi_NUM1ºÍADC_CHi_NUM2
-  // Log_Printf("ADC_CHi_NUM1:%d,\n ADC_CHi_NUM2:%d\n", ADC_CHi_NUM1, ADC_CHi_NUM2);
+  ADC_CHi_NUM3 = (ADC_CHi_NUM3 - adc_dma_result_max3 - adc_dma_result_min3) / (ADC_GROUP_PER_HALF - 2);
 
   if (ADC_CHi_tmp1 != ADC_CHi_NUM1)
   {
+    OLED_DisDuty |= 0x01;
+    // msg.ch1 = ADC_CHi_NUM1;
     usSRegInBuf[0] = ADC_CHi_NUM1; // Í¨µÀ1 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
     ADC_CHi_tmp1 = ADC_CHi_NUM1;
-    u16_to_4digits(str, ADC_CHi_NUM1);
-    // sprintf(str, "%04u", ADC_CHi_NUM1);
-    Show_Str(42, 10, (u8 *)str, 16, 0);
-    // Show_Str((base == 0 ? 58 : 168), 10, (u8 *)str, 24, 0);
   }
   if (ADC_CHi_tmp2 != ADC_CHi_NUM2)
   {
+    OLED_DisDuty |= 0x02;
+    // msg.ch2 = ADC_CHi_NUM2;
     usSRegInBuf[1] = ADC_CHi_NUM2; // Í¨µÀ2 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
     ADC_CHi_tmp2 = ADC_CHi_NUM2;
-    u16_to_4digits(str, ADC_CHi_NUM2);
-    Show_Str(122, 10, (u8 *)str, 16, 0);
-    //        Show_Str(42, 30, (u8 *)str, 16, 0);
-    // Show_Str((base == 0 ? 58 : 168), 40, (u8 *)str, 24, 0);
   }
+  if (ADC_CHi_tmp3 != ADC_CHi_NUM3)
+  {
+    OLED_DisDuty |= 0x04;
+    // msg.ch3 = ADC_CHi_NUM3;
+    usSRegInBuf[2] = ADC_CHi_NUM3; // Í¨µÀ3 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
+    ADC_CHi_tmp3 = ADC_CHi_NUM3;
+  }
+  // xQueueSend(queue, &msg, 0);
   g_adc_done_flag = 0;
+}
+
+u16 read_bat_vol(void)
+{
+  return JS_BATZ(ADC_CHi_NUM3);
+}
+
+void Get_BatActaul(void)
+{
+  // if (g_b_Bat_Check == 1)
+  {
+    g_b_Bat_Check = 0;
+    // R_Bat.Actual = read_bat_vol(); // »ñÈ¡µç³ØÊµ¼ÊµçÑ¹
+    // g_bat_v = R_Bat.Actual;   // µç³ØÊµ¼ÊµçÑ¹
+    g_bat_v = read_bat_vol(); // »ñÈ¡µç³ØÊµ¼ÊµçÑ¹
+  }
+}
+
+void ADC_DMA_scan(void)
+{
+  char str[6];
+
+  // if (R_Task != D_Task2)
+  //     return;
+  if (R_DisDuty == 0)
+  {
+		R_DisDuty++;
+    ADC_CHi_tmp1 = 0xffff;
+    ADC_CHi_tmp2 = 0xffff;
+		ADC_CHi_tmp3 = 0xffff;
+    Show_Str(5, 5, "AD1:0000", 16, 0);
+    Show_Str(80, 5, "AD2:0000", 16, 0);
+    Show_Str(155, 5, "AD3:0000", 16, 0);
+    Show_Str(155, 25, "BAT:0000", 16, 0);
+  }
+
+  ADC_DMA_ProcessChannels();
+  Get_BatActaul();
+
+  // if (ADC_CHi_tmp1 != ADC_CHi_NUM1) //
+  if (OLED_DisDuty & 0x01)
+  {
+    usSRegInBuf[0] = ADC_CHi_NUM1; // Í¨µÀ1 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
+    ADC_CHi_tmp1 = ADC_CHi_NUM1;
+    u16_to_4digits(str, ADC_CHi_NUM1, 0);
+    Show_Str(37, 5, (u8 *)str, 16, 0);
+  }
+  // if (ADC_CHi_tmp2 != ADC_CHi_NUM2)
+  if (OLED_DisDuty & 0x02)
+  {
+    usSRegInBuf[1] = ADC_CHi_NUM2; // Í¨µÀ2 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
+    ADC_CHi_tmp2 = ADC_CHi_NUM2;
+    u16_to_4digits(str, ADC_CHi_NUM2, 0);
+    Show_Str(112, 5, (u8 *)str, 16, 0);
+		Log_Send(LOG_INFO, "ADC2:%d", ADC_CHi_NUM2);
+  }
+	
+  // if (ADC_CHi_tmp3 != ADC_CHi_NUM3)
+  if (OLED_DisDuty & 0x04)
+  {
+    usSRegInBuf[2] = ADC_CHi_NUM3; // Í¨µÀ3 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
+    ADC_CHi_tmp3 = ADC_CHi_NUM3;
+    u16_to_4digits(str, ADC_CHi_NUM3, 0);
+    Show_Str(187, 5, (u8 *)str, 16, 0);
+    u16_to_4digits(str, g_bat_v, 1);
+    usSRegInBuf[3] = g_bat_v; // Í¨µÀ3 // Ö±½Ó¸³Öµmodbus¼Ä´æÆ÷
+    Show_Str(187, 25, (u8 *)str, 16, 0);
+    g_adc_done_flag = 0;
+  }
 }

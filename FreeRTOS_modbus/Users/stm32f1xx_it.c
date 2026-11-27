@@ -58,9 +58,6 @@
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
-extern void prvvUARTTxReadyISR(void);
-extern void prvvUARTRxISR(void);
-extern void prvvTIMERExpiredISR(void);
 
 // volatile u8 s_tim0_10ms = 0;
 u8 s_tim_20ms = 0;
@@ -186,8 +183,6 @@ void SysTick_Handler(void)
   }
 }
 
-
-
 // 声明 dma_handle 是在其他文件定义的全局变量
 extern DMA_HandleTypeDef hdma_adc1;
 void DMA1_Channel1_IRQHandler(void)
@@ -251,52 +246,98 @@ void TIM3_IRQHandler(void)
 }
 
 extern void vMBRTUReceiveBufferFlush(void);
-ULONG eCurrentTimerState = 0;
+// volatile ULONG eCurrentTimerState = 0;
+// ULONG usTimerT15_50us_tmp = 0;
 extern ULONG usTimerT15_50us;
 extern ULONG usTimerT35_50us;
+// uint8_t g_b_485_35num = 0;
 /**
  * @brief This function handles TIM4 global interrupt.
  */
 void TIM4_IRQHandler(void)
 {
+#if freertos_modbus == 0
   if (TIM4->SR & TIM_SR_UIF) // 用宏，别用 (1<<0)
   {
     TIM4->SR = (uint16_t)~TIM_SR_UIF; // 清标志
-    // __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE); // 清除更新标志位
 
-    if (eCurrentTimerState == usTimerT15_50us)
+    // // __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE); // 清除更新标志位
+    // prvvTIMERExpiredISR(); // ← 关键：T3.5 到期，通知协议栈
+    if (eCurrentTimerState > 0)
     {
-      /* ================= 第一阶段：T1.5 超时 ================= */
-      /* 说明：两个字符之间间隔超过了 1.5 个字符，当前帧作废 */
 
-      eCurrentTimerState = usTimerT35_50us; // 状态机切换到 T3.5
+      if (usTimerT35_50us == 0)
+      {
+        usTimerT15_50us = 15;
+        usTimerT35_50us = 35;
+      }
 
-      // /* 1. 清空接收缓冲区，把 Modbus 状态机拉回 IDLE */
-      vMBRTUReceiveBufferFlush();
+      if (eCurrentTimerState == usTimerT15_50us)
+      {
+        /* ================= 第一阶段：T1.5 超时 ================= */
+        eCurrentTimerState = usTimerT35_50us; // 状态机切换到 T3.5
 
-      /* 2. 变轨：重新装载剩余时间 (T3.5 - T1.5) */
-      // HAL_TIM_Base_Stop_IT(&htim4);
-      __HAL_TIM_SET_COUNTER(&htim4, 0);
-      __HAL_TIM_SET_AUTORELOAD(&htim4, (usTimerT35_50us - usTimerT15_50us) - 1);
-      __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE);
-      // 5. 重新启动
-      __HAL_TIM_ENABLE(&htim4);
-    }
-    else if (eCurrentTimerState == usTimerT35_50us)
-    {
-      /* ================= 第二阶段：T3.5 超时 ================= */
-      /* 说明：总线彻底安静了，一帧接收完毕 */
-      eCurrentTimerState = usTimerT15_50us; // 状态机切换到 T1.5
+        // /* 1. 清空接收缓冲区，把 Modbus 状态机拉回 IDLE */
+        vMBRTUReceiveBufferFlush();
 
-      __HAL_TIM_DISABLE(&htim4);                   // 直接写 CR1 寄存器，关闭计数器
-      __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // 直接写 DIER 寄存器，关闭中断
+        /* 2. 变轨：重新装载剩余时间 (T3.5 - T1.5) */
+        // HAL_TIM_Base_Stop_IT(&htim4);
+        __HAL_TIM_SET_COUNTER(&htim4, 0);
+        __HAL_TIM_SET_AUTORELOAD(&htim4, (usTimerT35_50us - usTimerT15_50us) - 1);
+        __HAL_TIM_CLEAR_FLAG(&htim4, TIM_FLAG_UPDATE);
+        // 5. 重新启动
+        __HAL_TIM_ENABLE(&htim4);
+      }
+      else // if (eCurrentTimerState == usTimerT35_50us)
+      {
+        /* ================= 第二阶段：T3.5 超时 ================= */
+        /* 说明：总线彻底安静了，一帧接收完毕 */
+        eCurrentTimerState = usTimerT15_50us;        // 状态机切换到 T1.5
+        __HAL_TIM_DISABLE(&htim4);                   // 直接写 CR1 寄存器，关闭计数器
+        __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_UPDATE); // 直接写 DIER 寄存器，关闭中断
 
-      /* 通知 FreeModbus 协议栈：产生 EV_FRAME_RECEIVED 事件 */
-      prvvTIMERExpiredISR();
+        /* 通知 FreeModbus 协议栈：产生 EV_FRAME_RECEIVED 事件 */
+        prvvTIMERExpiredISR();
+      }
     }
   }
+#else
+  /* 判断更新中断标志 */
+  if (TIM4->SR & TIM_SR_UIF)
+  {
+    TIM4->SR &= (uint16_t)~TIM_SR_UIF; // 清除更新标志
+    // if (g_b_485_35num < 235)
+    // {
+    //   g_b_485_35num++;
+    // }
+    // else
+    // {
+    //   g_b_485_35num = 0;
+    // }
+
+    prvvTIMERExpiredISR(); // 通知 FreeModbus 超时
+  }
+  /* 清除所有残留的 CC 标志，防止误触发死循环 */
+  TIM4->SR &= ~(TIM_SR_CC1IF | TIM_SR_CC2IF | TIM_SR_CC3IF | TIM_SR_CC4IF);
+#endif
 }
 
+// void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+// {
+//   if (htim->Instance == TIM4)
+//   {
+//     prvvTIMERExpiredISR();
+//      HAL_TIM_IRQHandler(&htim4);
+//   }
+//   if (htim->Instance == TIM3)
+//   {
+//     /* code */
+//   }
+//   if (htim->Instance == TIM2)
+//   {
+//     /* code */
+//   }
+// }
 
 /* USER CODE BEGIN 1 */
 

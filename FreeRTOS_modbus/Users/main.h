@@ -37,16 +37,24 @@
 #include "user_mb_app.h"
 #include "APP_modbus.h"
 
+#include "bsp_watchdog.h" /* 包含看门狗头文件*/
+
 /////* lcd，led，oled相关 */
 #include "lcd.h"
 #include "led.h"
 #include "oled.h"
+
+#include "log_queue.h"
 
 // #include "font.h"
 
 extern TIM_HandleTypeDef htim4;
 extern UART_HandleTypeDef huart2;
 extern uint8_t R_Task;
+extern uint8_t R_DisDuty;
+extern QueueHandle_t queue;
+
+extern u16 g_bat_v;
 
 extern void prvvUARTTxReadyISR(void);
 extern void prvvUARTRxISR(void);

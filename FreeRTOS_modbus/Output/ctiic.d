@@ -93,6 +93,8 @@
 ..\..\output\ctiic.o: ..\..\software\inc\tim.h
 ..\..\output\ctiic.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\ctiic.o: ..\..\software\inc\APP_modbus.h
+..\..\output\ctiic.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\ctiic.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\ctiic.o: ..\..\software\inc\led.h
 ..\..\output\ctiic.o: ..\..\software\inc\oled.h
+..\..\output\ctiic.o: ..\..\software\inc\log_queue.h

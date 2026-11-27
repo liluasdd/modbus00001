@@ -145,14 +145,14 @@ void Log_Printf(const char *format, ...)
 {
     va_list args;
 
-    // 1. 拿锁（阻塞等待，保证一条日志完整打印完，不被打断）
+    /* 1. 拿锁（阻塞等待，保证一条日志完整打印完，不被打断） */
     if (xSemaphoreTake(xLogMutex, portMAX_DELAY) == pdPASS)
     {
         va_start(args, format);
         vprintf(format, args); // 会连续调用多次 fputc
         va_end(args);
 
-        // 2. 放锁
+        /* 2. 放锁 */
         xSemaphoreGive(xLogMutex);
     }
 }

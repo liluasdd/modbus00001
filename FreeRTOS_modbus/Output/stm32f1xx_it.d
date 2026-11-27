@@ -92,7 +92,9 @@
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\tim.h
 ..\..\output\stm32f1xx_it.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\APP_modbus.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\led.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\oled.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\log_queue.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\stm32f1xx_it.h

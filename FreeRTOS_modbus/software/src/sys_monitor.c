@@ -98,7 +98,7 @@ void sys_monitor_show_heap(void)
 // ── 记录指定任务栈余量 ──
 void sys_monitor_record_stack(TaskHandle_t handle)
 {
-    uint32_t water = uxTaskGetStackHighWaterMark(handle);
+    uint32_t water = uxTaskGetStackHighWaterMark(handle);// 获取任务栈高水位线，单位为字节
 
     if (handle == task1_handle)
     {

@@ -55,9 +55,8 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBPari
  */
 void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
-	// 方案二，更佳
 	/* 1. 只管接收中断的开关 */
-	if (xRxEnable)
+	if (xRxEnable == TRUE)
 	{
 		__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // /* 使能接收中断服务函数 */
 	}
@@ -66,40 +65,30 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 		__HAL_UART_DISABLE_IT(&huart2, UART_IT_RXNE); // /* 禁用接收中断服务函数 */
 	}
 	/* 2. 只管发送中断的开关和 485 发送方向的开启 */
-	if (xTxEnable)
+	if (xTxEnable == TRUE)
 	{
-		RS485_DE_HIGH_ON; /* 485 切到发送态 */
-		// delay_us(6);// 等待收发器稳定
-		/* 等 GPIO 写完成 + 收发器切换，约 0.5~1us @72MHz */
-		for (volatile uint8_t i = 0; i < 20; i++)
-		{
-			__NOP();
-		}
-		g_b_485_send_tick = 1;/* 485发送超时标志位 */
 		g_485_send_tim = 0;
+		g_b_485_send_tick = 1; /* 485发送超时标志位 */
+		RS485_DE_HIGH_ON;	   /* 485 切到发送态 */
+		// // delay_us(6);///* 等待收发器稳定*/
+		// for (uint8_t i = 0; i < 20; i++)
+		// {
+		// 	__NOP();
+		// }
 		/* 确保新一次发送启动时 TC 是关的，避免残留 TC 标志误触发 */
 		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TC);
 
 		/* 准备发送：打开 TXE 中断 */
 		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
-
-		//  //  /* 准备发送：打开 TXE 中断 */
-		//  //  __HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE);
-		//  //  /* 485 切到发送态 */
-		//  //  RS485_DE_HIGH_ON;
-		//  //  g_b_485_send_tick = 1;
-		//  //  g_485_send_tim = 0;
-		//  //  /* 等待收发器切换稳定（放在拉高之后） */
-		//  //  delay_us(6);
 	}
 	else
 	{
 		/* 发送结束：关 TXE 中断 */
-		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE);
+		__HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // 关闭TXE中断
 
-		/* 【极其重要】绝对不要在这里拉低 DE，也不要清标志！ */
+		__HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_TC);// 清除TC标志位，避免TC中断被触发，导致发送失败
 		/* 打开 TC 中断，让硬件告诉你什么时候发完了 */
-		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
+		__HAL_UART_ENABLE_IT(&huart2, UART_IT_TC); // 打开TC中断，让硬件告诉你什么时候发完了
 	}
 
 #if 0 // 方案一 暂时保留

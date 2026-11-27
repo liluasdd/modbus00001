@@ -191,7 +191,7 @@ eMBInit(eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMB
 
         if (eStatus == MB_ENOERR) /* 初始化成功 */
         {
-            if (!xMBPortEventInit())
+            if (!xMBPortEventInit()) // 初始化Modbus端口事件模块，队列初始化
             {
                 /* port dependent event module initalization failed. */
                 eStatus = MB_EPORTERR; // 初始化Modbus端口事件模块失败
@@ -341,7 +341,6 @@ eMBDisable(void)
     }
     return eStatus;
 }
-
 //     eMBRTUReceive()
 eMBErrorCode
 eMBPoll(void)
@@ -442,8 +441,8 @@ void eMBsend_Error(void)
     //============485发送超时故障处理============
     if (g_b_485_send_Error == 1)
     {
-        // 1.强制释放485总线
-        RS485_DE_LOW_OFF;
+        // // 1.强制释放485总线
+        // RS485_DE_LOW_OFF;
         // g_485_tx_busy = 0;// 485总线释放
         // 2.关闭所有发送相关中断（超时可能发生在发送中途）
         __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); // ← 新增！防止TXE还在触发
@@ -463,8 +462,8 @@ void eMBsend_Error(void)
     }
     else if (g_b_485_receive_Error == 1) //============485接收错误处理============
     {
-        // 1.强制释放485总线
-        RS485_DE_LOW_OFF;
+        // // 1.强制释放485总线
+        // RS485_DE_LOW_OFF;
 
         // 2.接收出错时也要确保发送中断关闭
         __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE); //
@@ -479,4 +478,9 @@ void eMBsend_Error(void)
         // 4.??必须把错误标记清零，否则会一直重复进这个分支
         g_b_485_receive_Error = 0;
     }
+    // if (g_485_send_Error_num > 0 && g_485_receive_Error_num > 0)
+    // {
+    //     Log_Printf(" send_Error_num:%d | receive_Error_num:%d\r\n",
+    //                g_485_send_Error_num, g_485_receive_Error_num);
+    // }
 }

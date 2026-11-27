@@ -8,15 +8,17 @@ extern "C"
 
 /* USER CODE END Private defines */
 #include "main.h"
-#define ADC_DMA_OPEN 1           /* 1 开启ADC DMA模式，0关闭 */
-#define DEBUG_UART_ENABLE 0      // 1 开启调试串口打印，0关闭
-#define CONFIG_NEED_MESSAGESMG 0 // 1 开启消息管理，0关闭
-#define CONFIG_NEED_PWM 0        // 1 开启PWM，0关闭
+#define ADC_DMA_OPEN 1                  /* 1 开启ADC DMA模式，0关闭 */
+#define DEBUG_UART_ENABLE 0             // 1 开启调试串口打印，0关闭
+#define DEBUG_UART_TaskGetTick_ENABLE 0 // 时间戳
+#define DEBUG_UART_LOG_ENABLE 1         // 串口日志
+#define CONFIG_NEED_MESSAGESMG 0        // 1 开启消息管理，0关闭
+#define CONFIG_NEED_PWM 0               // 1 开启PWM，0关闭
 #define adc_DMA_max 12
 #define freertos_modbus 1
 
 #define ADC_GROUP_PER_HALF 8
-#define ADC_CH_NUM 2
+#define ADC_CH_NUM 3
 #define ADC_BUF_LEN (2 * ADC_GROUP_PER_HALF * ADC_CH_NUM)
     // extern volatile uint16_t adc_result[2 * ADC_GROUP_PER_HALF * ADC_CH_NUM];
     extern volatile uint16_t adc_result[2 * ADC_GROUP_PER_HALF][ADC_CH_NUM];
@@ -116,8 +118,8 @@ extern "C"
 #define USART2_RX_pin GPIO_PIN_3
 #define USART2_RX_port GPIOA
 
-#define RS485_DE_pin GPIO_PIN_4 // Modbus 485收发控制脚
-#define RS485_DE_port GPIOA
+#define RS485_DE_pin GPIO_PIN_7 // Modbus 485收发控制脚
+#define RS485_DE_port GPIOB
 #define RS485_DE_HIGH_ON RS485_DE_port->BSRR = RS485_DE_pin // 发送模式 (DE/RE 高电平使能发送)
 #define RS485_DE_LOW_OFF RS485_DE_port->BRR = RS485_DE_pin  // 接收模式 (DE/RE 低电平使能接收)
 #define RS485_DE_state (RS485_DE_port->IDR & RS485_DE_pin)  // 读取引脚状态
@@ -136,9 +138,9 @@ extern "C"
 #define SWCLK_port GPIOA
 
 #define IIC_scl_pin GPIO_PIN_6
-#define IIC_scl_port GPIOB
+#define IIC_scl_port GPIOA
 #define IIC_sda_pin GPIO_PIN_7
-#define IIC_sda_port GPIOB
+#define IIC_sda_port GPIOA
 
 #if 1 //////屏幕 电容屏
 ////////////*屏幕 电容屏 13脚 不接 *///en
@@ -264,6 +266,7 @@ extern "C"
 #define PT10_ADC ADC_CHANNEL_4             // PA4
 #define AP_CIRCUIT ADC_CHANNEL_3           // PA3
 #define AP_CIRCUIT2 ADC_CHANNEL_7          // PA7
+#define ADC_CHANNEL_BATT ADC_CHANNEL_VREFINT
 
 // // 标准库完整配置
 // #define led1_pin GPIO_Pin_8

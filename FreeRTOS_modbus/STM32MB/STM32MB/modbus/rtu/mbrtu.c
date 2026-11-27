@@ -52,6 +52,7 @@ extern u8 g_485_receive_Error_num;
 #define MB_SER_PDU_PDU_OFF 1 /*!< Offset of Modbus-PDU in Ser-PDU. */     /* Modbus数据偏移量 */
 ULONG usTimerT15_50us;
 ULONG usTimerT35_50us;
+// extern ULONG eCurrentTimerState;
 
 /* ----------------------- Type definitions ---------------------------------*/
 typedef enum
@@ -99,41 +100,42 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
     }
     else
     {
-        /* If baudrate > 19200 then we should use the fixed timer values
-         * t35 = 1750us. Otherwise t35 must be 3.5 times the character time.
-         */
+/* If baudrate > 19200 then we should use the fixed timer values
+ * t35 = 1750us. Otherwise t35 must be 3.5 times the character time.
+ */
+#if freertos_modbus == 0
         if (ulBaudRate > 19200)
         {
-            // /*FreeModbus 公式*/
-            // usTimerT35_50us = 35; /* 1800us. */
-            /*裸机 公式*/
-            // usTimerT15_50us = 15; // 750us
-            // usTimerT35_50us = 35; // 1750us
             usTimerT15_50us = 15; // 750us
             usTimerT35_50us = 35; // 1750us
         }
         else
         {
-            /* The timer reload value for a character is given by:
-             *
-             * ChTimeValue = Ticks_per_1s / ( Baudrate / 11 )
-             *             = 11 * Ticks_per_1s / Baudrate
-             *             = 220000 / Baudrate
-             * The reload for t3.5 is 1.5 times this value and similary
-             * for t3.5.
-             */
-            // /*FreeModbus 公式*/
-            // usTimerT35_50us = (7UL * 220000UL) / (2UL * ulBaudRate);
-            // usTimerT15_50us = (3UL * 220000UL) / (2UL * ulBaudRate);
-            /*裸机 公式*/
+            // /* 公式 */
             usTimerT35_50us = (7UL * 10000000UL) / (2UL * ulBaudRate);
             usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);
         }
 
+        eCurrentTimerState = usTimerT15_50us;
+        if (xMBPortTimersInit((USHORT)eCurrentTimerState) != TRUE) // 初始化定时器
+        {
+            eStatus = MB_EPORTERR;
+        }
+#else
+        if (ulBaudRate > 19200)
+        {
+            usTimerT35_50us = 35; // 1750us
+        }
+        else
+        {
+          /*  usTimerT15_50us = (3UL * 10000000UL) / (2UL * ulBaudRate);*/
+            usTimerT35_50us = (7UL * 10000000UL) / (2UL * ulBaudRate);
+        }
         if (xMBPortTimersInit((USHORT)usTimerT35_50us) != TRUE) // 初始化定时器
         {
             eStatus = MB_EPORTERR;
         }
+#endif
         // if (xMBPortT15Init((USHORT)usTimerT15_50us) != TRUE) // 初始化定时器
         // {
         //     eStatus = MB_EPORTERR;
@@ -144,7 +146,7 @@ eMBRTUInit(UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity ePari
     return eStatus;
 }
 
-// Modbus RTU ????
+// Modbus RTU 启动
 void eMBRTUStart(void)
 {
     ENTER_CRITICAL_SECTION(); // Modbus协议栈启动临界区
@@ -181,7 +183,7 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     BOOL xFrameReceived = FALSE;
     eMBErrorCode eStatus = MB_ENOERR;
 
-    ENTER_CRITICAL_SECTION();
+    ENTER_CRITICAL_SECTION();                     // Modbus协议栈接收临界区
     assert(usRcvBufferPos < MB_SER_PDU_SIZE_MAX); // 检查接收缓冲区是否已满
 
     /* Length and CRC check */ // 检查接收缓冲区位置是否大于最小长度且CRC校验是否通过
@@ -208,6 +210,9 @@ eMBRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame, USHORT *pusLength)
     }
 
     EXIT_CRITICAL_SECTION(); // Modbus协议栈接收临界区退出
+    // Log_Printf("eStatus:%d\r\n",
+    //            eStatus);
+
     return eStatus;
 }
 
@@ -246,7 +251,7 @@ eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
         ucRTUBuf[usSndBufferCount++] = (UCHAR)(usCRC16 >> 8);            // 发送缓冲区计数器增加，将高字节写入缓冲区
 
         /* Activate the transmitter. */
-        eSndState = STATE_TX_XMIT; // 发送状态机状态切换为发送状态
+        eSndState = STATE_TX_XMIT;        // 发送状态机状态切换为发送状态
         vMBPortSerialEnable(FALSE, TRUE); // 启用串口发送中断
     }
     else
@@ -254,6 +259,8 @@ eMBRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame, USHORT usLength)
         eStatus = MB_EIO; // 发送状态机状态切换为错误状态
     }
     EXIT_CRITICAL_SECTION(); // Modbus协议栈发送临界区退出
+                             // Log_Printf("usCRC16:%d\r\n",
+                             //        usCRC16);
     return eStatus;
 }
 
@@ -349,8 +356,8 @@ BOOL xMBRTUTransmitFSM(void)
         else
         {
             xNeedPoll = xMBPortEventPost(EV_FRAME_SENT); // 发送完成，发送 EV_FRAME_SENT 事件
-            vMBPortSerialEnable(TRUE, FALSE); // 禁用发送器
-            eSndState = STATE_TX_IDLE;        // 发送状态机状态切换为空闲状态
+            vMBPortSerialEnable(TRUE, FALSE);            // 禁用发送器
+            eSndState = STATE_TX_IDLE;                   // 发送状态机状态切换为空闲状态
         }
         break;
     }
@@ -379,7 +386,7 @@ BOOL xMBRTUTimerT35Expired(void)
         /* An error occured while receiving the frame. */
     case STATE_RX_ERROR:
         g_b_485_receive_Error = 0; // 超时结束此针，立即清除，不让标志残留到下一帧
-        if (g_485_receive_Error_num < 253)
+        if (g_485_receive_Error_num < 255)
             g_485_receive_Error_num++;
         break;
 
@@ -397,8 +404,8 @@ BOOL xMBRTUTimerT35Expired(void)
 
 void Modbus_ResetRx(void) // 重置接收状态机
 {
-    ENTER_CRITICAL_SECTION();                   // 进入临界区
-    RS485_DE_LOW_OFF;                           // 二次强制拉低DE，避免一直占用主线
+    ENTER_CRITICAL_SECTION(); // 进入临界区
+    // RS485_DE_LOW_OFF;                           // 二次强制拉低DE，避免一直占用主线
     eRcvState = STATE_RX_IDLE;                  // ① 接收状态机复位
     usRcvBufferPos = 0;                         // ② 接收缓冲区清零
     vMBPortTimersDisable();                     // ③ 关定时器
@@ -414,7 +421,24 @@ void vMBRTUReceiveBufferFlush(void)
 {
     /* 1. 接收字节计数器清零：下次新数据从下标 0 开始存 */
     usRcvBufferPos = 0;
-    
+
     /* 2. 接收状态机强制切回空闲状态：告诉协议栈，之前的半截帧我不要了 */
     eRcvState = STATE_RX_IDLE;
 }
+
+// extern uint8_t mb_box_idx;
+// extern uint8_t mb_blackbox[10][3];
+// void eMBBlackbox2(void)
+// {
+//     // 默默记录，耗时不到 1 微秒，完全不影响 T3.5
+//     if (mb_box_idx < 20)
+//     {
+//         mb_blackbox[mb_box_idx][1] = (uint8_t)eRcvState; // 接收状态
+//         mb_blackbox[mb_box_idx][2] = (uint8_t)eSndState; // 发送状态
+
+//         Log_Printf("RcvState:%d | SndState:%d\r\n",
+//                    eRcvState, eSndState);
+
+//         mb_box_idx++;
+//     }
+// }

@@ -93,8 +93,10 @@
 ..\..\output\mb.o: ..\..\software\inc\tim.h
 ..\..\output\mb.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\mb.o: ..\..\software\inc\APP_modbus.h
+..\..\output\mb.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\mb.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\mb.o: ..\..\software\inc\led.h
 ..\..\output\mb.o: ..\..\software\inc\oled.h
+..\..\output\mb.o: ..\..\software\inc\log_queue.h
 ..\..\output\mb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\..\output\mb.o: ..\..\STM32MB\STM32MB\modbus\include\mbfunc.h

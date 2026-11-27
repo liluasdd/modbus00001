@@ -3,6 +3,6 @@
 
 #include "main.h"
 
-extern void u16_to_4digits(char *s, uint16_t v);
+extern void u16_to_4digits(char *s, uint16_t v, uint8_t dot);
 
 #endif

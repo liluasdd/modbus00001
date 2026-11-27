@@ -28,8 +28,6 @@ int16_t adc_value = 0;
 
 int main(void)
 {
-    // uint8_t num = 0;
-
     HAL_Init();                     /* 初始化HAL */
     stm32_clock_init(RCC_PLL_MUL9); /* 初始化时钟为72Mhz */
 
@@ -39,12 +37,12 @@ int main(void)
     /* 初始化GPIO */
     APPGPIO_INIT();
 
-    uart_init(115200); // 初始化串口1
+    uart_init(194000); // 初始化串口1
     Log_Init();        // 创建互斥锁
 #if ADC_DMA_OPEN
     adc_dma_init((uint16_t *)&adc_result); // 初始化ADC DMA模式
 #else
-    MX_ADC1_Init();//ADC初始化
+    MX_ADC1_Init(); // ADC初始化
 #endif
 
     /* 定时器4初始化 */
@@ -58,7 +56,7 @@ int main(void)
     /*  Modbus_RTU从站初始化
     MB_SAMPLE_TEST_SLAVE_ADDR 从站地址为0x01    MB_MASTER_USARTx 串口2   MB_MASTER_USART_BAUDRATE 波特率
     MB_PAR_NONE 校验选择    MB_PAR_NONE 无校验 MB_PAR_ODD奇校验 MB_PAR_EVEN偶校验 */
-    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, MB_MASTER_USART_BAUDRATE, MB_PAR_NONE);
+    eMBInit(MB_RTU, MB_SAMPLE_TEST_SLAVE_ADDR, MB_MASTER_USARTx, 115200, MB_PAR_NONE);
     eMBEnable();                     /* 启用Modbus_RTU从站 */
     LCD_Init();                      // 初始化LCD
     tp_dev.touchtype |= USE_TP_TYPE; //// 电屏容触摸&电阻触摸
@@ -68,10 +66,11 @@ int main(void)
     BACK_COLOR = BLACK;  // 背景色
     LCD_Clear(BLACK);    // 清屏
 
+    bsp_iwdgconfig(); // 初始化看门狗
+    feed_watchdog();  // 刷新看门狗
+
 #if DEBUG_UART_ENABLE
-    uart_init(115200);               // 初始化串口1
-    printf("hello world 66666\r\n"); //  串口1  打印 hello world 66666
-    HAL_Delay(400);                  //  延时400ms
+    printf("hello world 小路\r\n"); //  打印 hello world
 #endif
     HAL_Delay(200); //  延时200ms    // delay_ms(3000);
     /* Init scheduler */
@@ -80,6 +79,7 @@ int main(void)
     vTaskStartScheduler(); // 启动任务调度器
     while (1)
     {
+
     }
 }
 

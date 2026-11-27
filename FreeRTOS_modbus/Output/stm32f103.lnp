@@ -27,6 +27,8 @@
 "..\..\output\oled.o"
 "..\..\output\led.o"
 "..\..\output\sys_monitor.o"
+"..\..\output\bsp_watchdog.o"
+"..\..\output\log_queue.o"
 "..\..\output\ctiic.o"
 "..\..\output\ctp.o"
 "..\..\output\lcd.o"

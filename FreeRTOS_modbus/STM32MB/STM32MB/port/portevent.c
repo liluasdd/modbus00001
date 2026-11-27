@@ -74,8 +74,8 @@ static BOOL xEventInQueue;
 BOOL xMBPortEventInit(void)
 {
 #if freertos_modbus
-    // 创建深度为 4 的事件队列，大小为 eMBEventType 的大小
-    xEventQueue = xQueueCreate(4, sizeof(eMBEventType));
+    // 创建深度为 6 的事件队列，大小为 eMBEventType 的大小
+    xEventQueue = xQueueCreate(6, sizeof(eMBEventType));
     if (xEventQueue != NULL)
     {
         return TRUE;
@@ -136,6 +136,8 @@ BOOL xMBPortEventGet(eMBEventType *eEvent)
     // portMAX_DELAY 表示无限等待，直到有事件到来
     if (xQueueReceive(xEventQueue, eEvent, portMAX_DELAY) == pdTRUE)
     {
+        // Log_Printf("eEvent:%d\r\n",
+        //    *eEvent);
         return TRUE;
     }
 

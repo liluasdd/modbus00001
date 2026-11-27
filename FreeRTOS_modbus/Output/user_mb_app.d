@@ -92,6 +92,8 @@
 ..\..\output\user_mb_app.o: ..\..\software\inc\tim.h
 ..\..\output\user_mb_app.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\APP_modbus.h
+..\..\output\user_mb_app.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\user_mb_app.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\led.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\oled.h
+..\..\output\user_mb_app.o: ..\..\software\inc\log_queue.h

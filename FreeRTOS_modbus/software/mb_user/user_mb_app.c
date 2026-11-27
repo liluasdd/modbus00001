@@ -99,9 +99,9 @@ eMBRegInputCB(UCHAR *pucRegBuffer, USHORT usAddress, USHORT usNRegs)
  * @return result
  */
 /* Modbus保持寄存器回调函数  原版
-0x03 读取保持寄存器值      MB_REG_READ   MB_FUNC_READ_HOLDING_ENABLED
-0x06 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_SINGLE_HOLDING
-0x10 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_MULTIPLE_HOLDING
+0x03 3 读取保持寄存器值      MB_REG_READ   MB_FUNC_READ_HOLDING_ENABLED
+0x06 6 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_SINGLE_HOLDING
+0x10 16 写入保持寄存器值  MB_REG_WRITE  MB_FUNC_WRITE_MULTIPLE_HOLDING
  1. 保持寄存器地址usAddress
  2. 保持寄存器数量usNRegs
  3. 操作模式eMode
@@ -120,6 +120,45 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
     REG_HOLDING_START = S_REG_HOLDING_START;
     REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
     usRegHoldStart = usSRegHoldStart;
+#if 1  // 新版有 0 基
+    /* ===== 边界检查：满足任一错误条件就返回异常 ===== */
+    if ((usAddress + usNRegs < usAddress) ||                           // 溢出回绕
+        (usAddress < REG_HOLDING_START) ||                             // 起始地址越界
+        (usAddress + usNRegs > REG_HOLDING_START + REG_HOLDING_NREGS)) // 结束地址越界
+    {
+        return MB_ENOREG;
+    }
+
+    /* ===== 地址合法，执行读写 ===== */
+    iRegIndex = usAddress - usRegHoldStart; // 映射到数组下标
+
+    switch (eMode)
+    {
+    case MB_REG_READ:
+        while (usNRegs > 0)
+        {
+            *pucRegBuffer++ = (UCHAR)(pusRegHoldingBuf[iRegIndex] >> 8);
+            *pucRegBuffer++ = (UCHAR)(pusRegHoldingBuf[iRegIndex] & 0xFF);
+            iRegIndex++;
+            usNRegs--;
+        }
+        break;
+
+    case MB_REG_WRITE:
+        while (usNRegs > 0)
+        {
+            pusRegHoldingBuf[iRegIndex] = (USHORT)(*pucRegBuffer++ << 8);
+            pusRegHoldingBuf[iRegIndex] |= (USHORT)(*pucRegBuffer++);
+            iRegIndex++;
+            usNRegs--;
+        }
+        break;
+
+    default:
+        eStatus = MB_EINVAL;
+        break;
+    }
+#else // 旧版从 1 基开始
     /* it already plus one in modbus function method. */
     usAddress--;
     if ((usAddress >= REG_HOLDING_START) && (usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS))
@@ -153,8 +192,8 @@ eMBErrorCode eMBRegHoldingCB(UCHAR *pucRegBuffer, USHORT usAddress,
     {
         eStatus = MB_ENOREG;
     }
-
-     return eStatus;
+#endif
+    return eStatus;
 }
 #endif
 

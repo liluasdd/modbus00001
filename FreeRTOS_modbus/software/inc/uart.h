@@ -4,15 +4,15 @@
 #include "stdio.h"
 #include "sys.h"
 
-#include <stdint.h> // Ìá¹©±ê×¼ÕûĞÍ uint8\_t/uint32\_t
+#include <stdint.h> // æä¾›æ ‡å‡†æ•´å‹ uint8\_t/uint32\_t
 
-/* ´íÎó´úÂë */
-#define UART_EOK 0      /* Ã»ÓĞ´íÎó */
-#define UART_ERROR 1    /* Í¨ÓÃ´íÎó */
-#define UART_ETIMEOUT 2 /* ³¬Ê±´íÎó */
-#define UART_EINVAL 3   /* ²ÎÊı´íÎó */
+/* é”™è¯¯ä»£ç  */
+#define UART_EOK 0      /* æ²¡æœ‰é”™è¯¯ */
+#define UART_ERROR 1    /* é€šç”¨é”™è¯¯ */
+#define UART_ETIMEOUT 2 /* è¶…æ—¶é”™è¯¯ */
+#define UART_EINVAL 3   /* å‚æ•°é”™è¯¯ */
 
-/* UARTÊÕ·¢»º³å´óĞ¡ */
+/* UARTæ”¶å‘ç¼“å†²å¤§å° */
 #define UART1_RX_BUF_SIZE 256
 #define UART1_TX_BUF_SIZE 64
 
@@ -24,7 +24,7 @@
         taskEXIT_CRITICAL();          \
     } while (0)
 
-void uart_init(uint32_t bound); /* ´®¿Ú³õÊ¼»¯º¯Êı */
+void uart_init(uint32_t bound); /* ä¸²å£åˆå§‹åŒ–å‡½æ•° */
 void Log_Init(void);
 void Log_Printf(const char *format, ...);
 

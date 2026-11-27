@@ -40,6 +40,13 @@ void APPGPIO_INIT(void)
 
     /////*=====复用推挽输出=====*/
     /* PA9: USART1_TX */
+    gpio_initstruct.Pin = RS485_DE_pin;
+    gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? 复用推挽
+    gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(RS485_DE_port, &gpio_initstruct);
+    RS485_DE_LOW_OFF;
+
+    /* PA9: USART1_TX */
     gpio_initstruct.Pin = USART1_TX_pin;
     gpio_initstruct.Mode = GPIO_MODE_AF_PP; // ? 复用推挽
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -82,10 +89,10 @@ void APPGPIO_INIT(void)
     HAL_GPIO_Init(USART3_RX_port, &gpio_initstruct); // GPIOB
 
     // gpio_initstruct.Pull = GPIO_NOPULL; // 无拉
-    gpio_initstruct.Pin = key1_pin; // PA 0 
+    gpio_initstruct.Pin = key1_pin; // PA 0
     HAL_GPIO_Init(key1_port, &gpio_initstruct);
 
-    gpio_initstruct.Pin = key2_pin; // PA 1 
+    gpio_initstruct.Pin = key2_pin; // PA 1
     HAL_GPIO_Init(key2_port, &gpio_initstruct);
 
     /* ADC 模拟输入 */

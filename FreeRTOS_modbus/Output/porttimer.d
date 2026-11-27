@@ -93,6 +93,8 @@
 ..\..\output\porttimer.o: ..\..\software\inc\tim.h
 ..\..\output\porttimer.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\porttimer.o: ..\..\software\inc\APP_modbus.h
+..\..\output\porttimer.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\porttimer.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\porttimer.o: ..\..\software\inc\led.h
 ..\..\output\porttimer.o: ..\..\software\inc\oled.h
+..\..\output\porttimer.o: ..\..\software\inc\log_queue.h

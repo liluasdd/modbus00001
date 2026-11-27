@@ -53,6 +53,7 @@ extern volatile bit_flag flag1, flag2, flag3, flag4, flag5, flag6, flag7, flag8,
 #define g_b_485_send_tick flag1.bits.bit3
 #define g_b_485_send_Error flag1.bits.bit4
 #define g_b_485_receive_Error flag1.bits.bit5
+#define g_b_Bat_Check flag1.bits.bit6
 
 #define g_b_power_onoff flag2.bits.bit0       /*电源开关*/
 #define g_b_lock_machine flag2.bits.bit1      /*锁机*/

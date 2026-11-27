@@ -93,6 +93,8 @@
 ..\..\output\oled.o: ..\..\software\inc\tim.h
 ..\..\output\oled.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\oled.o: ..\..\software\inc\APP_modbus.h
+..\..\output\oled.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\oled.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\oled.o: ..\..\software\inc\led.h
 ..\..\output\oled.o: ..\..\software\inc\oled.h
+..\..\output\oled.o: ..\..\software\inc\log_queue.h

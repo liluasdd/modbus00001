@@ -30,6 +30,11 @@
         "mb.h": "c",
         "mbframe.h": "c",
         "led.h": "c",
-        "usertype.h": "c"
+        "usertype.h": "c",
+        "bsp_watchdog.h": "c",
+        "queue.h": "c",
+        "log_queue.h": "c",
+        "oled.h": "c",
+        "mbfunc.h": "c"
     }
 }

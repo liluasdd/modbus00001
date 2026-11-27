@@ -93,6 +93,8 @@
 ..\..\output\portserial.o: ..\..\software\inc\tim.h
 ..\..\output\portserial.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\portserial.o: ..\..\software\inc\APP_modbus.h
+..\..\output\portserial.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\portserial.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\portserial.o: ..\..\software\inc\led.h
 ..\..\output\portserial.o: ..\..\software\inc\oled.h
+..\..\output\portserial.o: ..\..\software\inc\log_queue.h

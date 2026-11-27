@@ -32,11 +32,12 @@ void MX_TIM4_Init(void)
   //				=> TIMxCLK=HCLK/2=SystemCoreClock/2=90MHz
   //  锟借定锟斤拷时锟斤拷???锟斤拷??=TIMxCLK/(TIM_Prescaler+1)=20000Hz
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 1800 - 1; // 20KHZ
+  // htim4.Init.Prescaler = 1800 - 1; // 20KHZ 
+  htim4.Init.Prescaler = 3599 - 1; // 3599us = 36ms
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 35;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;// 禁用自动重载预加载
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
   {
     while (1)
@@ -57,7 +58,7 @@ void MX_TIM4_Init(void)
   }
 #if freertos_modbus
   HAL_NVIC_SetPriority(TIM4_IRQn, 6, 0); // 必须 >= 5
-  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+  HAL_NVIC_EnableIRQ(TIM4_IRQn);         // 使能TIM4中断
 #else
   ///* 3. 开启 TIM4 的 NVIC 中断*/
   HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0); // 优先级0
@@ -167,7 +168,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM3_CLK_ENABLE();
 
     /* TIM3????配置 */
-    HAL_NVIC_SetPriority(TIM3_IRQn, 6, 0); //
+    HAL_NVIC_SetPriority(TIM3_IRQn, 7, 0); //
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   }
   else if (tim_baseHandle->Instance == TIM2)
@@ -176,7 +177,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
     __HAL_RCC_TIM2_CLK_ENABLE();
 
     /* TIM2????配置 */
-    HAL_NVIC_SetPriority(TIM2_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(TIM2_IRQn, 7, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
   }
 }

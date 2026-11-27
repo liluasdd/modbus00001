@@ -92,6 +92,8 @@
 ..\..\output\uart.o: ..\..\software\inc\tim.h
 ..\..\output\uart.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\uart.o: ..\..\software\inc\APP_modbus.h
+..\..\output\uart.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\uart.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\uart.o: ..\..\software\inc\led.h
 ..\..\output\uart.o: ..\..\software\inc\oled.h
+..\..\output\uart.o: ..\..\software\inc\log_queue.h

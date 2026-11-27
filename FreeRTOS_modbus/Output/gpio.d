@@ -93,6 +93,8 @@
 ..\..\output\gpio.o: ..\..\software\inc\tim.h
 ..\..\output\gpio.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbrtu.h
 ..\..\output\gpio.o: ..\..\software\inc\APP_modbus.h
+..\..\output\gpio.o: ..\..\software\inc\bsp_watchdog.h
 ..\..\output\gpio.o: ..\..\software\app_tft_lcd\lcd.h
 ..\..\output\gpio.o: ..\..\software\inc\led.h
 ..\..\output\gpio.o: ..\..\software\inc\oled.h
+..\..\output\gpio.o: ..\..\software\inc\log_queue.h
