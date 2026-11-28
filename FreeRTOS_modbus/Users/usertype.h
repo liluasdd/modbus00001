@@ -59,5 +59,4 @@ extern volatile bit_flag flag1, flag2, flag3, flag4, flag5, flag6, flag7, flag8,
 #define g_b_lock_machine flag2.bits.bit1      /*锁机*/
 #define g_b_machine_tim_error flag2.bits.bit2 /*机器输超时错误*/
 #define g_b_machine_outputtim_error flag2.bits.bit3 /*机器输出超时错误*/
-/**/
 #endif

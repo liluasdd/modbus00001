@@ -45,6 +45,7 @@
 #include "oled.h"
 
 #include "log_queue.h"
+#include "bkp_storage.h"
 
 // #include "font.h"
 

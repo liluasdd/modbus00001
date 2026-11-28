@@ -98,4 +98,5 @@
 ..\..\output\mbrtu.o: ..\..\software\inc\led.h
 ..\..\output\mbrtu.o: ..\..\software\inc\oled.h
 ..\..\output\mbrtu.o: ..\..\software\inc\log_queue.h
+..\..\output\mbrtu.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\mbrtu.o: ..\..\STM32MB\STM32MB\modbus\rtu\mbcrc.h

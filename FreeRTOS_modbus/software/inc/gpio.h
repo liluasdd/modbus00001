@@ -16,6 +16,7 @@ extern "C"
 #define CONFIG_NEED_PWM 0               // 1 开启PWM，0关闭
 #define adc_DMA_max 12
 #define freertos_modbus 1
+#define BKP_Unlock_ONOFF 1
 
 #define ADC_GROUP_PER_HALF 8
 #define ADC_CH_NUM 3
@@ -137,10 +138,18 @@ extern "C"
 #define SWCLK_pin GPIO_PIN_14
 #define SWCLK_port GPIOA
 
-#define IIC_scl_pin GPIO_PIN_6
-#define IIC_scl_port GPIOA
-#define IIC_sda_pin GPIO_PIN_7
-#define IIC_sda_port GPIOA
+#if 1
+#define I2C_SCL_PORT GPIOA
+#define I2C_SCL_PIN GPIO_PIN_6
+#define scl_high I2C_SCL_PORT->BSRR = I2C_SCL_PIN // 高电平
+#define scl_low I2C_SCL_PORT->BRR = I2C_SCL_PIN  // 低电平
+#define I2C_SDA_PORT GPIOA
+#define I2C_SDA_PIN GPIO_PIN_7
+#define sda_high I2C_SDA_PORT->BSRR = I2C_SDA_PIN // 高电平
+#define sda_low I2C_SDA_PORT->BRR = I2C_SDA_PIN  // 低电平
+#define sda_state (I2C_SDA_PORT->IDR & I2C_SDA_PIN)  // 读取引脚状态
+
+#endif
 
 #if 1 //////屏幕 电容屏
 ////////////*屏幕 电容屏 13脚 不接 *///en
@@ -164,34 +173,32 @@ extern "C"
 #define SPI_dc_HIGH_ON SPI_dc_port->BSRR = SPI_dc_pin //
 #define SPI_dc_LOW_OFF SPI_dc_port->BRR = SPI_dc_pin  //
 
-#define SPI_sdi_pin GPIO_PIN_7 // A7 脚4 SDI_MOSI
-#define SPI_sdi_port GPIOA
+#define SPI_sdi_pin GPIO_PIN_1 // B1 脚4 SDI_MOSI
+#define SPI_sdi_port GPIOB
 #define SPI_sdi_HIGH_ON SPI_sdi_port->BSRR = SPI_sdi_pin //
 #define SPI_sdi_LOW_OFF SPI_sdi_port->BRR = SPI_sdi_pin  //
 #define SPI_sdi_state (SPI_sdi_port->IDR & SPI_sdi_pin)  // 读取引脚状态
 
 // #define SPI_scK_pin GPIO_PIN_5 // 脚5  SCK
 // #define SPI_scK_port GPIOA
-#define SPI_scK_pin GPIO_PIN_0 // 脚5  SCK
+#define SPI_scK_pin GPIO_PIN_12 // 脚5  SCK
 #define SPI_scK_port GPIOB
 #define SPI_scK_HIGH_ON SPI_scK_port->BSRR = SPI_scK_pin //
 #define SPI_scK_LOW_OFF SPI_scK_port->BRR = SPI_scK_pin  //
 
 // #define SPI_led_pin GPIO_PIN_0 // B0 脚6  LED 背光
-#define SPI_led_pin GPIO_PIN_1 // B1 脚6  LED 背光
+#define SPI_led_pin GPIO_PIN_13 // B13 脚6  LED 背光
 #define SPI_led_port GPIOB
 #define SPI_led_HIGH_ON SPI_led_port->BSRR = SPI_led_pin // 亮背光
 #define SPI_led_LOW_OFF SPI_led_port->BRR = SPI_led_pin  // 熄背光
 
-// #define SPI_sdo_pin GPIO_PIN_6 // A6 脚7  SDO_MISO
-// #define SPI_sdo_port GPIOA
-#define SPI_sdo_pin GPIO_PIN_10 // B10 脚7  SDO_MISO
+#define SPI_sdo_pin GPIO_PIN_14 // B14 脚7  SDO_MISO
 #define SPI_sdo_port GPIOB
 #define SPI_sdo_HIGH_ON SPI_sdo_port->BSRR = SPI_sdo_pin // 发送模式 (DE/RE 高电平使能发送)
 #define SPI_sdo_LOW_OFF SPI_sdo_port->BRR = SPI_sdo_pin  // 接收模式 (DE/RE 低电平使能接收)
 #define SPI_sdo_state (SPI_sdo_port->IDR & SPI_sdo_pin)  // 读取引脚状态
 
-////////电容屏电容触摸部分
+////////电容屏电容触摸部分  目前不用
 // #define T_CLK_pin GPIO_PIN_10 // 脚8  T_CLK
 #define T_CLK_pin GPIO_PIN_11 // 脚8  T_CLK
 #define T_CLK_port GPIOB

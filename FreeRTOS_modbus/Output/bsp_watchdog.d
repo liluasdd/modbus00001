@@ -98,3 +98,4 @@
 ..\..\output\bsp_watchdog.o: ..\..\software\inc\led.h
 ..\..\output\bsp_watchdog.o: ..\..\software\inc\oled.h
 ..\..\output\bsp_watchdog.o: ..\..\software\inc\log_queue.h
+..\..\output\bsp_watchdog.o: ..\..\software\inc\bkp_storage.h

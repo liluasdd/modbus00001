@@ -99,6 +99,7 @@
 ..\..\output\touch.o: ..\..\software\inc\led.h
 ..\..\output\touch.o: ..\..\software\inc\oled.h
 ..\..\output\touch.o: ..\..\software\inc\log_queue.h
+..\..\output\touch.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\touch.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\..\output\touch.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\..\output\touch.o: ..\..\software\app_tft_lcd\w25qx.h

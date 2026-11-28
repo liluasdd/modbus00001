@@ -98,6 +98,7 @@
 ..\..\output\test code.o: ..\..\software\inc\led.h
 ..\..\output\test code.o: ..\..\software\inc\oled.h
 ..\..\output\test code.o: ..\..\software\inc\log_queue.h
+..\..\output\test code.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\test code.o: ..\..\software\app_tft_lcd\touch.h
 ..\..\output\test code.o: ..\..\software\app_tft_lcd\CTP.h
 ..\..\output\test code.o: ..\..\software\app_tft_lcd\test code.h

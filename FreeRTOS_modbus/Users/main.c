@@ -37,6 +37,10 @@ int main(void)
     /* 初始化GPIO */
     APPGPIO_INIT();
 
+#if BKP_Unlock_ONOFF
+    BKP_Unlock_init();
+#endif
+
     uart_init(194000); // 初始化串口1
     Log_Init();        // 创建互斥锁
 #if ADC_DMA_OPEN
@@ -79,7 +83,6 @@ int main(void)
     vTaskStartScheduler(); // 启动任务调度器
     while (1)
     {
-
     }
 }
 

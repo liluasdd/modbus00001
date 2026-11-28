@@ -29,6 +29,8 @@
 "..\..\output\sys_monitor.o"
 "..\..\output\bsp_watchdog.o"
 "..\..\output\log_queue.o"
+"..\..\output\bkp_storage.o"
+"..\..\output\app_flash.o"
 "..\..\output\ctiic.o"
 "..\..\output\ctp.o"
 "..\..\output\lcd.o"

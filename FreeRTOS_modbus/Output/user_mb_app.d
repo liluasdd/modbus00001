@@ -97,3 +97,4 @@
 ..\..\output\user_mb_app.o: ..\..\software\inc\led.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\oled.h
 ..\..\output\user_mb_app.o: ..\..\software\inc\log_queue.h
+..\..\output\user_mb_app.o: ..\..\software\inc\bkp_storage.h

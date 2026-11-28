@@ -98,3 +98,4 @@
 ..\..\output\portserial.o: ..\..\software\inc\led.h
 ..\..\output\portserial.o: ..\..\software\inc\oled.h
 ..\..\output\portserial.o: ..\..\software\inc\log_queue.h
+..\..\output\portserial.o: ..\..\software\inc\bkp_storage.h

@@ -98,3 +98,4 @@
 ..\..\output\tim.o: ..\..\software\inc\led.h
 ..\..\output\tim.o: ..\..\software\inc\oled.h
 ..\..\output\tim.o: ..\..\software\inc\log_queue.h
+..\..\output\tim.o: ..\..\software\inc\bkp_storage.h

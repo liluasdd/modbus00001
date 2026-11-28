@@ -98,5 +98,6 @@
 ..\..\output\ctp.o: ..\..\software\inc\led.h
 ..\..\output\ctp.o: ..\..\software\inc\oled.h
 ..\..\output\ctp.o: ..\..\software\inc\log_queue.h
+..\..\output\ctp.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\ctp.o: ..\..\software\app_tft_lcd\touch.h
 ..\..\output\ctp.o: ..\..\software\app_tft_lcd\ctiic.h

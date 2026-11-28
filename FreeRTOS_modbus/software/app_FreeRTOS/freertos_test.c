@@ -100,7 +100,8 @@ void task2(void *pvParams)
 
                     Led_scan();
                     ADC_DMA_scan();
-                    Log_Send(LOG_INFO, "BAT:%d", g_bat_v);
+                    // Log_Send(LOG_INFO, "BAT:%d", g_bat_v);// 发送给任务三，打印电池电压
+                    // Log_Printf("g_bat_v:%d\r\n", g_bat_v);// 打印电池电压
                 }
                 // if (R_Task == 2)
                 {

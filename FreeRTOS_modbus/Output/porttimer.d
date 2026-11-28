@@ -98,3 +98,4 @@
 ..\..\output\porttimer.o: ..\..\software\inc\led.h
 ..\..\output\porttimer.o: ..\..\software\inc\oled.h
 ..\..\output\porttimer.o: ..\..\software\inc\log_queue.h
+..\..\output\porttimer.o: ..\..\software\inc\bkp_storage.h

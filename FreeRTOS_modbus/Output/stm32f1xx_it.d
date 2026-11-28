@@ -97,4 +97,5 @@
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\led.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\oled.h
 ..\..\output\stm32f1xx_it.o: ..\..\software\inc\log_queue.h
+..\..\output\stm32f1xx_it.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\stm32f1xx_it.o: ..\..\Users\stm32f1xx_it.h

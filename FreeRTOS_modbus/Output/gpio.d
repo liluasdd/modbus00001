@@ -98,3 +98,4 @@
 ..\..\output\gpio.o: ..\..\software\inc\led.h
 ..\..\output\gpio.o: ..\..\software\inc\oled.h
 ..\..\output\gpio.o: ..\..\software\inc\log_queue.h
+..\..\output\gpio.o: ..\..\software\inc\bkp_storage.h

@@ -15,14 +15,14 @@ void APPGPIO_INIT(void)
     gpio_initstruct.Pull = GPIO_PULLUP;         // 需要外部上拉
     gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
     /////*===== PA6: IIC_SCL  PA7: IIC_SDA  =====*/
-    gpio_initstruct.Pin = IIC_scl_pin;
-    HAL_GPIO_Init(IIC_scl_port, &gpio_initstruct);
+    gpio_initstruct.Pin = I2C_SCL_PIN;
+    HAL_GPIO_Init(I2C_SCL_PORT, &gpio_initstruct);
 
-    gpio_initstruct.Pin = IIC_sda_pin;
+    gpio_initstruct.Pin = I2C_SDA_PIN;
     // gpio_initstruct.Mode = GPIO_MODE_OUTPUT_OD; // 改为开漏输出
     // gpio_initstruct.Pull = GPIO_PULLUP;
     // gpio_initstruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(IIC_sda_port, &gpio_initstruct);
+    HAL_GPIO_Init(I2C_SDA_PORT, &gpio_initstruct);
 
     /////*=====输出=====*/
     // 调用GPIO初始化函数

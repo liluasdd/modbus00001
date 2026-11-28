@@ -98,3 +98,4 @@
 ..\..\output\ctiic.o: ..\..\software\inc\led.h
 ..\..\output\ctiic.o: ..\..\software\inc\oled.h
 ..\..\output\ctiic.o: ..\..\software\inc\log_queue.h
+..\..\output\ctiic.o: ..\..\software\inc\bkp_storage.h

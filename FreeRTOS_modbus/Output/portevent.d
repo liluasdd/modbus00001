@@ -98,3 +98,4 @@
 ..\..\output\portevent.o: ..\..\software\inc\led.h
 ..\..\output\portevent.o: ..\..\software\inc\oled.h
 ..\..\output\portevent.o: ..\..\software\inc\log_queue.h
+..\..\output\portevent.o: ..\..\software\inc\bkp_storage.h

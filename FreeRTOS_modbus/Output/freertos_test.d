@@ -97,6 +97,7 @@
 ..\..\output\freertos_test.o: ..\..\software\inc\led.h
 ..\..\output\freertos_test.o: ..\..\software\inc\oled.h
 ..\..\output\freertos_test.o: ..\..\software\inc\log_queue.h
+..\..\output\freertos_test.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\freertos_test.o: ..\..\software\inc\freertos_test.h
 ..\..\output\freertos_test.o: ..\..\software\app_tft_lcd\touch.h
 ..\..\output\freertos_test.o: ..\..\software\app_tft_lcd\CTP.h

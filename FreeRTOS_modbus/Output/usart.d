@@ -98,3 +98,4 @@
 ..\..\output\usart.o: ..\..\software\inc\led.h
 ..\..\output\usart.o: ..\..\software\inc\oled.h
 ..\..\output\usart.o: ..\..\software\inc\log_queue.h
+..\..\output\usart.o: ..\..\software\inc\bkp_storage.h

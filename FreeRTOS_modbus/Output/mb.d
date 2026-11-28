@@ -98,5 +98,6 @@
 ..\..\output\mb.o: ..\..\software\inc\led.h
 ..\..\output\mb.o: ..\..\software\inc\oled.h
 ..\..\output\mb.o: ..\..\software\inc\log_queue.h
+..\..\output\mb.o: ..\..\software\inc\bkp_storage.h
 ..\..\output\mb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 ..\..\output\mb.o: ..\..\STM32MB\STM32MB\modbus\include\mbfunc.h

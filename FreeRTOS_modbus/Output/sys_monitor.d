@@ -98,3 +98,4 @@
 ..\..\output\sys_monitor.o: ..\..\software\inc\led.h
 ..\..\output\sys_monitor.o: ..\..\software\inc\oled.h
 ..\..\output\sys_monitor.o: ..\..\software\inc\log_queue.h
+..\..\output\sys_monitor.o: ..\..\software\inc\bkp_storage.h

@@ -97,3 +97,4 @@
 ..\..\output\key.o: ..\..\software\inc\led.h
 ..\..\output\key.o: ..\..\software\inc\oled.h
 ..\..\output\key.o: ..\..\software\inc\log_queue.h
+..\..\output\key.o: ..\..\software\inc\bkp_storage.h
